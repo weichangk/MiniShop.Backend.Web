@@ -1,0 +1,371 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>用户管理</title>
+		<link rel="stylesheet" href="~/component/pear/css/pear.css" />
+	</head>
+    <body class="pear-container">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <form class="layui-form" action="">
+                    <div class="layui-form-item">
+                        @if (User.Claims.FirstOrDefault(s => s.Type == "rank").Value.Contains("Shop"))
+                        {
+                            <div class="layui-form-item layui-inline">
+                                <label class="layui-form-label">门店</label>
+                                <div class="layui-input-inline">
+                                    <select id="OptionStore" name="store" lay-filter="SelectStore">
+                                        <option value="">请选择一个门店</option>
+                                    </select>
+                                </div>
+                            </div>
+                        }
+                        <div class="layui-form-item layui-inline">
+                            <label class="layui-form-label">职位</label>
+                            <div class="layui-input-inline">
+                                <select id="OptionRank" name="rank" lay-filter="SelectRank">
+                                    <option value="">请选择一个职位</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-inline">
+                            <label class="layui-form-label">用户</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" placeholder="" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-inline">
+                            <label class="layui-form-label">手机</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="phone" placeholder="" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-inline">
+                            <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="user-query">
+                                <i class="layui-icon layui-icon-search"></i>
+                                查询
+                            </button>
+                            <button type="reset" class="pear-btn pear-btn-md">
+                                <i class="layui-icon layui-icon-refresh"></i>
+                                重置
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <table id="user-table" lay-filter="user-table"></table>
+            </div>
+        </div>
+
+        <script type="text/html" id="user-toolbar">
+            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+                <i class="layui-icon layui-icon-add-1"></i>
+                新增
+            </button>
+            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+                <i class="layui-icon layui-icon-delete"></i>
+                删除
+            </button>
+        </script>
+
+        <script type="text/html" id="user-bar">
+            <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
+            <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+        </script>
+
+        <script type="text/html" id="user-enable">
+            <input type="checkbox" name="isFreeze" value="{{d.userName}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="user-enable" {{ d.isFreeze== false ? 'checked' : '' }} />
+        </script>
+
+        <script type="text/html" id="user-createTime">
+            {{layui.util.toDateString(d.createdTime, 'yyyy-MM-dd')}}
+        </script>
+
+        <script src="~/component/layui/layui.js"></script>
+        <script src="~/component/pear/pear.js"></script>
+        <script>
+            layui.use(['table', 'form', 'jquery', 'common'], function () {
+                let table = layui.table;
+                let form = layui.form;
+                let $ = layui.jquery;
+                let common = layui.common;
+
+                let cols = [
+                    [{
+                        type: 'checkbox'
+                    },
+                    {
+                        title: '门店',
+                        field: 'storeName',
+                        align: 'center',
+                    },
+                    {
+                        title: '用户',
+                        field: 'userName',
+                        align: 'center',
+                    },
+                    {
+                        title: '手机',
+                        field: 'phoneNumber',
+                        align: 'center'
+                    },
+                    {
+                        title: '邮箱',
+                        field: 'email',
+                        align: 'center'
+                    },
+                    {
+                        title: '职位',
+                        field: 'rankDes',
+                        align: 'center'
+                    },
+                    {
+                        title: '启用',
+                        field: 'isFreeze',
+                        align: 'center',
+                        templet: '#user-enable'
+                    },
+                    {
+                        title: '注册',
+                        field: 'createdTime',
+                        align: 'center',
+                        templet: '#user-createTime'
+                    },
+                    {
+                        title: '操作',
+                        toolbar: '#user-bar',
+                        align: 'center',
+                        width: 130
+                    }
+                    ]
+                ]
+
+                table.render({
+                    elem: '#user-table',
+                    url: 'GetPage',
+                    page: true,//开启分页
+                    cols: cols,
+                    skin: 'line',
+                    toolbar: '#user-toolbar',
+                    defaultToolbar: [{
+                        title: '刷新',
+                        layEvent: 'refresh',
+                        icon: 'layui-icon-refresh',
+                    }, 'filter', 'print', 'exports']
+                });
+
+                table.on('tool(user-table)', function (obj) {
+                    if (obj.event === 'remove') {
+                        window.remove(obj);
+                    } else if (obj.event === 'edit') {
+                        window.edit(obj);
+                    }
+                });
+
+                table.on('toolbar(user-table)', function (obj) {
+                    if (obj.event === 'add') {
+                        window.add();
+                    } else if (obj.event === 'refresh') {
+                        window.refresh();
+                    } else if (obj.event === 'batchRemove') {
+                        window.batchRemove(obj);
+                    }
+                });
+
+                form.on('submit(user-query)', function (data) {
+                    table.reload('user-table', {
+                        url: 'GetPageWhereQuery',
+                        page: {
+                            curr:1,//重新从第一页开始
+                        },
+                        where: data.field
+                    })
+                    return false;
+                });
+
+                form.on('switch(user-enable)', function (obj) {
+                    window.changeEnable(obj);
+                });
+
+                window.add = function () {
+                    layer.open({
+                        type: 2,
+                        title: '新增',
+                        shade: 0.1,
+                        area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '550px'],
+                        content: '/user/add',
+                    });
+                };
+
+                window.edit = function (obj) {
+                    layer.open({
+                        type: 2,
+                        title: '修改',
+                        shade: 0.1,
+                        area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '400px'],
+                        content: '/user/update?name=' + obj.data['userName'],
+                    });
+                };
+
+                window.changeEnable = function (obj) {
+                    $.ajax({
+                        url: "/User/ChangeFreezeState?name=" + obj.value + "&freeze=" + !obj.elem.checked,
+                        dataType: 'json',
+                        type: 'patch',
+                        success: function (result) {
+                            if (result.success) {
+                                layer.msg(result.msg, { icon: 1, time: 1000 }, function () {
+                                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                                });
+                            } else {
+                                parent.layer.open({
+                                    type: 2,
+                                    title: '',
+                                    shade: 0.1,
+                                    area: ['900px', '600px'],
+                                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                });
+                                window.refresh();//暂时找不到如果屏蔽角色为店长禁止更改checked，或还原checked的办法，目前就先刷新还原吧。。
+                            }
+                        }
+                    })
+                };
+
+                window.remove = function (obj) {
+                    layer.confirm('确定要删除该用户', {
+                        icon: 3,
+                        title: '提示'
+                    }, function (index) {
+                        layer.close(index);
+                        let loading = layer.load();
+                        $.ajax({
+                            url: "/user/delete?name=" + obj.data['userName'],
+                            dataType: 'json',
+                            type: 'delete',
+                            success: function (result) {
+                                layer.close(loading);
+                                if (result.success) {
+                                    layer.msg(result.msg, {
+                                        icon: 1,
+                                        time: 1000
+                                    }, function () {
+                                        //obj.del();
+                                        table.reload('user-table');
+                                    });
+                                } else {
+                                    parent.layer.open({
+                                        type: 2,
+                                        title: '',
+                                        shade: 0.1,
+                                        area: ['900px', '600px'],
+                                        content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                    });
+                                }
+                            }
+                        })
+                    });
+                };
+
+                window.batchRemove = function (obj) {
+
+                    var checkUserNames = common.checkField(obj, 'userName');
+
+                    if (checkUserNames === "") {
+                        layer.msg("未选中数据", {
+                            icon: 3,
+                            time: 1000
+                        });
+                        return false;
+                    }
+
+                    layer.confirm('确定要删除这些用户', {
+                        icon: 3,
+                        title: '提示'
+                    }, function (index) {
+                        layer.close(index);
+                        let loading = layer.load();
+                        $.ajax({
+                            url: "/user/batchDelete?names=" + checkUserNames,
+                            dataType: 'json',
+                            type: 'delete',
+                            success: function (result) {
+                                layer.close(loading);
+                                if (result.success) {
+                                    layer.msg(result.msg, {
+                                        icon: 1,
+                                        time: 1000
+                                    }, function () {
+                                        table.reload('user-table');
+                                    });
+                                } else {
+                                    parent.layer.open({
+                                        type: 2,
+                                        title: '',
+                                        shade: 0.1,
+                                        area: ['900px', '600px'],
+                                        content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                    });
+                                }
+                            }
+                        })
+                    });
+                };
+
+                window.refresh = function (param) {
+                    table.reload('user-table',{
+                        url: 'GetPage'
+                    });
+                };
+
+                //门店绑定
+                BindStores($);
+
+                //职位绑定
+                BindRank($);
+            });
+
+            function BindStores($) {
+                $.get('GetStoresByCurrentShop', function (result) {
+                    layui.use('form', function () {
+                        var form = layui.form;
+                        if (result.success) {
+                            var str = '';
+                            //var data = $.parseJSON(result.data);//转成Json对象
+                            $("#OptionStore option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                            $.each(result.data, function (i, obj) {
+                                str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                            });//遍历循环遍历
+                            $(str).appendTo("#OptionStore");//绑定
+                            //$("#OptionStore option:eq(1)").attr("selected", 'selected'); //默认选择第一个选项
+                            form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                        }
+                    });
+                });
+            };
+
+            function BindRank($) {
+                $.get('GetRankScopeByCurrentRankForQueryUser', function (result) {
+                    layui.use('form', function () {
+                        var form = layui.form;
+                        if (result.success) {
+                            var str = ''; //声明字符串
+                            //var data = $.parseJSON(result.data);//转成Json对象
+                            $("#OptionRank option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                            $.each(result.data, function (i, obj) {
+                                str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                            });//遍历循环遍历
+                            $(str).appendTo("#OptionRank");//绑定
+                            //$("#OptionRank option:eq(1)").attr("selected", 'selected'); //默认选择第一个选项
+                            form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                        }
+                    });
+                });
+            };
+
+        </script>
+    </body>
+</html>

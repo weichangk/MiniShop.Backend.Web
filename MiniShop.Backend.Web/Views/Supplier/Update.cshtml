@@ -1,0 +1,146 @@
+﻿@model SupplierDto
+
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/component/pear/css/pear.css" />
+</head>
+<body>
+    <form class="layui-form" asp-controller="Supplier" asp-action="Update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess">
+        <div class="mainBox">
+            <div class="main-container">
+                <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+                <input type="hidden" id="State" name="State" value="@Model.State" />
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 20%">名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Name" value="@Model.Name" lay-verify="nameCheck" autocomplete="off" placeholder="请输入供应名称" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 20%">联系人</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Contacts" value="@Model.Contacts" lay-verify="nameCheck" autocomplete="off" placeholder="请输入供应商联系人" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 20%">手机号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Phone" value="@Model.Phone" lay-verify="phone" autocomplete="off" placeholder="请输入供应商联系手机号" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 20%">地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Address" value="@Model.Address" lay-verify="addressCheck" autocomplete="off" placeholder="请输入供应商地址" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 20%">状态</label>
+                    <div class="layui-input-block">
+                        <select id="OptionState" lay-filter="SelectState" lay-verify="required">
+                            <option value="">请选择一个状态</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    提交
+                </button>
+                <button type="reset" class="pear-btn pear-btn-sm">
+                    <i class="layui-icon layui-icon-refresh"></i>
+                    重置
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <script src="~/component/layui/layui.js"></script>
+    <script src="~/component/pear/pear.js"></script>
+    <script src="~/js/verify.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+
+    <script>
+        layui.use(['form','jquery'],function(){
+            let form = layui.form;
+            let $ = layui.jquery;
+
+            form.verify({
+                nameCheck: function (value) {
+                    if (!str_2_32_len(value))
+                        return '请输入正确的供应商名称！2到32位！'
+                },
+                nullablePhone: function (value) {
+                    if (!nullablePhoneCheck(value))
+                        return '请输入正确的手机号！';
+                },
+                addressCheck: function (value) {
+                    if (!str_0_64_len(value))
+                        return '请输入正确的供应商地址！2到32位！'
+                },
+            });
+
+            //绑定供应商状态
+            BindState();
+
+            //选择状态更新@Model.State
+            form.on('select(SelectState)', function(data){
+                $('#State').val(data.value);
+	        });
+
+        });
+
+        var onSuccess = function(result){
+            if(result.success)
+            {
+                layer.msg(result.msg,{icon:1,time:1000},function(){
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    parent.layui.table.reload("supplier-table",{
+                        url: 'GetPageByShopId'
+                    });
+                });
+            }
+            else
+            {
+                parent.layer.open({
+                    type: 2,
+                    title: '',
+                    shade: 0.1,
+                    area: ['900px', '600px'],
+                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                });
+            }
+        };
+
+        function BindState() {
+            $.get('GetSupplierStatus', function (result) {
+                layui.use('form', function () {
+                    var form = layui.form;
+                    if (result.success) {
+                        var str = ''; //声明字符串
+                        var currentState = $('#State').val();//当前职位
+                        //var data = $.parseJSON(result.data);//转成Json对象
+                        $("#OptionState option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                        $.each(result.data, function (i, obj) {
+                            str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                        });//遍历循环遍历
+                        $(str).appendTo("#OptionState");//绑定
+                        $('#OptionState').find("option[value=" + currentState + "]").attr("selected", true); //默认选择
+                        form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                    }
+                });
+            });
+        };
+
+    </script>
+
+</body>
+</html>

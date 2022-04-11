@@ -1,0 +1,764 @@
+[
+	{
+		"id": 10,
+		"title": "基础数据",
+		"icon": "layui-icon layui-icon-console",
+		"type": 0,
+		"href": "",
+		"children": [
+			{
+				"id": 1010,
+				"title": "商品信息",
+				"icon": "layui-icon layui-icon-console",
+				"type": 0,
+				"children": [
+					{
+						"id": 101010,
+						"title": "商品档案",
+						"icon": "layui-icon layui-icon-face-smile",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "Item/Index"
+					},
+					{
+						"id": 101011,
+						"title": "商品类别",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "Categorie/Index"
+					},
+					{
+						"id": 101012,
+						"title": "商品单位",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "Unit/Index"
+					},
+					{
+						"id": 101013,
+						"title": "商品设置",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/select.html"
+					}
+				]
+			},
+			{
+				"id": 1011,
+				"title": "门店信息",
+				"icon": "layui-icon layui-icon-console",
+				"type": 0,
+				"children": [
+					{
+						"id": 101110,
+						"title": "门店管理",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/table.html"
+					}
+				]
+			},
+			{
+				"id": 1012,
+				"title": "更多功能",
+				"icon": "layui-icon layui-icon-console",
+				"type": 0,
+				"children": [
+					{
+						"id": 101210,
+						"title": "商品设置",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 101211,
+						"title": "商品调价",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/notice.html"
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": 11,
+		"title": "销售管理",
+		"icon": "layui-icon layui-icon-component",
+		"type": 0,
+		"href": "",
+		"children": [
+			{
+				"id": 1110,
+				"title": "基础信息",
+				"icon": "layui-icon layui-icon-console",
+				"type": 0,
+				"children": [
+					{
+						"id": 111010,
+						"title": "POS登记",
+						"icon": "layui-icon layui-icon-face-smile",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/button.html"
+					},
+					{
+						"id": 111011,
+						"title": "付款方式",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/form.html"
+					},
+					{
+						"id": 111012,
+						"title": "销售设置",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/icon.html"
+					}
+				]
+			},
+			{
+				"id": 1111,
+				"title": "零售查询",
+				"icon": "layui-icon layui-icon-console",
+				"type": 0,
+				"children": [
+					{
+						"id": 111110,
+						"title": "销售汇总",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/table.html"
+					},
+					{
+						"id": 111111,
+						"title": "流水报表",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/step.html"
+					},
+					{
+						"id": 111112,
+						"title": "营业概况",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/treetable.html"
+					},
+					{
+						"id": 111113,
+						"title": "收银员提成",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/dtree.html"
+					}
+				]
+			},
+			{
+				"id": 1112,
+				"title": "收银查询",
+				"icon": "layui-icon layui-icon-console",
+				"type": 0,
+				"children": [
+					{
+						"id": 111210,
+						"title": "收银对账",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 111211,
+						"title": "收银员交接班",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/notice.html"
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": 13,
+		"title": "促销管理",
+		"icon": "layui-icon layui-icon-auz",
+		"type": 0,
+		"href": "",
+		"children": [
+			{
+				"id": 1310,
+				"title": "促销业务",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 0,
+				"children": [
+					{
+						"id": 131010,
+						"title": "促销计划",
+						"icon": "layui-icon layui-icon-face-smile",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/button.html"
+					}
+				]
+			},
+			{
+				"id": 1311,
+				"title": "促销查询",
+				"icon": "layui-icon layui-icon-console",
+				"type": 0,
+				"children": [
+					{
+						"id": 131110,
+						"title": "当前促销查询",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": 14,
+		"title": "会员管理",
+		"icon": "layui-icon layui-icon-face-cry",
+		"type": 0,
+		"href": "",
+		"children": [
+			{
+				"id": 1410,
+				"title": "会员信息",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 0,
+				"children": [
+					{
+						"id": 141010,
+						"title": "会员资料",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 141011,
+						"title": "会员类别",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 141012,
+						"title": "会员设置",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					}
+				]
+			},
+			{
+				"id": 1411,
+				"title": "会员储值",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 0,
+				"children": [
+					{
+						"id": 141110,
+						"title": "储值设置",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 141111,
+						"title": "充值设备授权",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 141112,
+						"title": "操作员授权",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 141113,
+						"title": "充值优惠规则",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 141114,
+						"title": "积分转储值",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					}
+				]
+			},
+			{
+				"id": 1412,
+				"title": "积分业务",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 0,
+				"children": [
+					{
+						"id": 141210,
+						"title": "积分设置",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 141211,
+						"title": "礼品管理",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 141212,
+						"title": "积分兑换",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 141213,
+						"title": "积分清零",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					}
+				]
+			},
+			{
+				"id": 1413,
+				"title": "会员查询",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 0,
+				"children": [
+					{
+						"id": 141310,
+						"title": "会员消费明细",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 141311,
+						"title": "会员积分明细",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 141312,
+						"title": "会员储值明细",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					}
+				]
+			},
+			{
+				"id": 1414,
+				"title": "短信管理",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 0,
+				"children": [
+					{
+						"id": 141410,
+						"title": "短信设置",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 141411,
+						"title": "短信发送查询",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 141412,
+						"title": "短信发送",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": 15,
+		"title": "采购管理",
+		"icon": "layui-icon layui-icon-set-fill",
+		"type": 0,
+		"href": "",
+		"children": [
+			{
+				"id": 1510,
+				"title": "基础信息",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 0,
+				"children": [
+					{
+						"id": 151010,
+						"title": "采购设置",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 151011,
+						"title": "供应商档案",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "Supplier/Index"
+					}
+				]
+			},
+			{
+				"id": 1511,
+				"title": "采购业务",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 0,
+				"children": [
+					{
+						"id": 151110,
+						"title": "采购订单",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "PurchaseOder/Index"
+					},
+					{
+						"id": 151111,
+						"title": "采购收货",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 151112,
+						"title": "采购退货",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					}
+				]
+			},
+
+			{
+				"id": 1512,
+				"title": "采购查询",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 0,
+				"children": [
+					{
+						"id": 151210,
+						"title": "采购汇总",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 151211,
+						"title": "采购订单查询",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": 16,
+		"title": "库存管理",
+		"icon": "layui-icon layui-icon-template-1",
+		"type": 0,
+		"href": "",
+		"children": [
+			{
+				"id": 1610,
+				"title": "库存查询",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 0,
+				"children": [
+					{
+						"id": 161010,
+						"title": "商品库存查询",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": 17,
+		"title": "批发管理 ",
+		"icon": "layui-icon layui-icon-chart",
+		"type": 0,
+		"href": "",
+		"children": [
+			{
+				"id": 1710,
+				"title": "基础信息",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 0,
+				"children": [
+					{
+						"id": 171010,
+						"title": "批发设置",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 171011,
+						"title": "批发客户档案",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					}
+				]
+			},
+			{
+				"id": 1711,
+				"title": "批发业务",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 0,
+				"children": [
+					{
+						"id": 171110,
+						"title": "批发订单",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 171111,
+						"title": "批发销售单",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 171112,
+						"title": "批发退货单",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					}
+				]
+			},
+			{
+				"id": 1712,
+				"title": "批发查询",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 0,
+				"children": [
+					{
+						"id": 171210,
+						"title": "批发汇总",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": 18,
+		"title": "结算管理",
+		"icon": "layui-icon layui-icon-util",
+		"type": 0,
+		"href": "",
+		"children": [
+			{
+				"id": 1810,
+				"title": "供应商结算",
+				"icon": "layui-icon layui-icon-util",
+				"type": 0,
+				"children": [
+					{
+						"id": 181010,
+						"title": "供应商对账单",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 181011,
+						"title": "供应商结算单",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					}
+				]
+			},
+			{
+				"id": 1811,
+				"title": "客户结算",
+				"icon": "layui-icon layui-icon-util",
+				"type": 0,
+				"children": [
+					{
+						"id": 181110,
+						"title": "客户对账单",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 181111,
+						"title": "客户结算单",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					}
+				]
+			},
+			{
+				"id": 1812,
+				"title": "结算查询",
+				"icon": "layui-icon layui-icon-util",
+				"type": 0,
+				"children": [
+					{
+						"id": 181210,
+						"title": "供应商账款",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					},
+					{
+						"id": 181211,
+						"title": "客户账款",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 1,
+						"openType": "_iframe",
+						"href": "view/document/drawer.html"
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": 19,
+		"title": "系统管理 ",
+		"icon": "layui-icon layui-icon-util",
+		"type": 0,
+		"href": "",
+		"children": [
+			{
+				"id": 1910,
+				"title": "商店管理",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_iframe",
+				"href": "Shop/Index"
+			},
+			{
+				"id": 1911,
+				"title": "门店管理",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_iframe",
+				"href": "store/Index"
+			},
+			{
+				"id": 1912,
+				"title": "用户管理",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_iframe",
+				"href": "User/Index"
+			},
+			{
+				"id": 1913,
+				"title": "续费管理",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_iframe",
+				"href": "Shop/Renew"
+			},
+			{
+				"id": 1914,
+				"title": "系统日志",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_iframe",
+				"href": "view/document/drawer.html"
+			},
+			{
+				"id": 1915,
+				"title": "调试参数",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_iframe",
+				"href": "Home/Privacy"
+			}
+		]
+	}
+]

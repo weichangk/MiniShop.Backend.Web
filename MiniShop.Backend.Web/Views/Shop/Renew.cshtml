@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Renew Page";
+}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>商店资料</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/component/pear/css/pear.css" />
+</head>
+<body>
+    <div class="main-container">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <form class="layui-card-body" asp-controller="Shop" asp-action="Renew" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess">
+                </form>
+                <div id="currentTableId"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/component/layui/layui.js"></script>
+    <script src="~/component/pear/pear.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+
+    <script>
+        layui.use(['form', 'jquery', 'table', 'layer', 'card'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let layer = layui.layer;
+            let card = layui.card;
+
+            card.render({
+                elem: '#currentTableId',
+                url: 'GetRenews', 
+                data: [], // 静态数据 
+                page: true, // 是否分页
+                limit: 8, // 每页数量
+                linenum: 4, // 每行数量
+                clickItem: function (data) { // 单击事件
+                    //console.log(data)
+                }
+            })
+        });
+
+        var onSuccess = function (result) {
+            if (result.success) {
+                layer.msg(result.msg, { icon: 1, time: 1000 });
+            }
+            else {
+                parent.layer.open({
+                    type: 2,
+                    title: '',
+                    shade: 0.1,
+                    area: ['900px', '600px'],
+                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                });
+            }
+        };
+    </script>
+
+</body>
+</html>

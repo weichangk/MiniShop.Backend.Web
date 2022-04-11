@@ -1,0 +1,147 @@
+﻿@model UserDto
+
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/component/pear/css/pear.css" />
+</head>
+<body>
+    <form class="layui-form" asp-controller="User" asp-action="Update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess">
+        <div class="mainBox">
+            <div class="main-container">
+                <div class="main-container">
+                    <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+                    <input type="hidden" id="Rank" name="Rank" value="@Model.Rank" />
+                    <input type="hidden" id="IsFreeze" name="IsFreeze" value="@Model.IsFreeze" />
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 20%">用户名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="UserName" value="@Model.UserName" lay-verify="userName" autocomplete="off" placeholder="请输入用户名" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 20%">手机号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" lay-verify="nullablePhone" autocomplete="off" placeholder="请输入手机号" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 20%">邮箱</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Email" value="@Model.Email" lay-verify="nullableEmail" autocomplete="off" placeholder="请输入邮箱" class="layui-input">
+                        </div>
+                    </div>
+                    @* 老板职位屏蔽职位修改选择 *@
+                    @if (Model.Rank != MiniShop.Backend.Model.Enums.EnumRole.ShopManager)
+                    {
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 20%">职位</label>
+                            <div class="layui-input-block">
+                                <select id="OptionRank" lay-filter="SelectRank" lay-verify="required">
+                                    <option value="">请选择一个职位</option>
+                                </select>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="user-save">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    提交
+                </button>
+                <button type="reset" class="pear-btn pear-btn-sm">
+                    <i class="layui-icon layui-icon-refresh"></i>
+                    重置
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <script src="~/component/layui/layui.js"></script>
+    <script src="~/component/pear/pear.js"></script>
+    <script src="~/js/verify.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+
+    <script>
+        layui.use(['form','jquery'],function(){
+            let form = layui.form;
+            let $ = layui.jquery;
+
+            form.verify({
+                nullableEmail:function(value){
+                    if(!nullableEmailCheck(value))
+                        return '请输入正确的邮箱！';
+                },
+                nullablePhone:function(value){
+                    if(!nullablePhoneCheck(value))
+                        return '请输入正确的手机号！';
+                },
+                userName: function (value) {
+                    if (!userNameCheck(value))
+                        return '请输入正确的用户名！4到16位（字母，数字，下划线，减号）'
+                },
+            });
+
+            //绑定职位
+            BindRank();
+
+            //选择职位更新@Model.Rank
+            form.on('select(SelectRank)', function(data){
+                $('#Rank').val(data.value);
+	        });
+
+        });
+
+        var onSuccess = function(result){
+            if(result.success)
+            {
+                layer.msg(result.msg,{icon:1,time:1000},function(){
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    parent.layui.table.reload("user-table",{
+                        url: 'GetPage'
+                    });
+                });
+            }
+            else
+            {
+                parent.layer.open({
+                    type: 2,
+                    title: '',
+                    shade: 0.1,
+                    area: ['900px', '600px'],
+                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                });
+            }
+        };
+
+        function BindRank() {
+            $.get('GetRankScopeByCurrentRankForUpdateUser', function (result) {
+                layui.use('form', function () {
+                    var form = layui.form;
+                    if (result.success) {
+                        var str = ''; //声明字符串
+                        var currentRank = $('#Rank').val();//当前职位
+                        //var data = $.parseJSON(result.data);//转成Json对象
+                        $("#OptionRank option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                        $.each(result.data, function (i, obj) {
+                            str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                        });//遍历循环遍历
+                        $(str).appendTo("#OptionRank");//绑定
+                        $('#OptionRank').find("option[value=" + currentRank + "]").attr("selected", true); //默认选择
+                        form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                    }
+                });
+            });
+        };
+
+    </script>
+
+</body>
+</html>

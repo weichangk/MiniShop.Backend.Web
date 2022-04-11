@@ -1,0 +1,204 @@
+﻿@model UserCreateDto
+
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/component/pear/css/pear.css" />
+</head>
+
+<body>
+    <form class="layui-form" asp-controller="User" asp-action="Add" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess">
+        <div class="mainBox">
+            <div class="main-container">
+                <input type="hidden" id="ShopId" name="ShopId" value="@Model.ShopId" />
+                <input type="hidden" id="StoreId" name="StoreId" value="@Model.StoreId" />
+                <input type="hidden" id="Rank" name="Rank" value="@Model.Rank" />
+                @if (User.Claims.FirstOrDefault(s => s.Type == "rank").Value.Contains("Shop"))
+                {
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 20%">门店</label>
+                        <div class="layui-input-block">
+                            <select id="OptionStore" lay-filter="SelectStore" lay-verify="required">
+                                <option value="">请选择一个门店</option>
+                            </select>
+                        </div>
+                    </div>
+                }
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 20%">角色</label>
+                    <div class="layui-input-block">
+                        <select id="OptionRank" lay-filter="SelectRank" lay-verify="required">
+                            <option value="">请选择一个职位</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 20%">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="UserName" value="@Model.UserName" lay-verify="userName" autocomplete="off" placeholder="请输入用户名" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 20%">手机号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" lay-verify="nullablePhone" autocomplete="off" placeholder="请输入手机号" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 20%">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Email" value="@Model.Email" lay-verify="nullableEmail" autocomplete="off" placeholder="请输入邮箱" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 20%">密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="PassWord" value="@Model.PassWord" lay-verify="pass" autocomplete="off" placeholder="请输入密码" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 20%">确认密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="ConfirmPassWord" value="@Model.ConfirmPassWord" lay-verify="required|confirmPass" autocomplete="off" placeholder="请输入确认密码" class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="user-save">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    提交
+                </button>
+                <button type="reset" class="pear-btn pear-btn-sm">
+                    <i class="layui-icon layui-icon-refresh"></i>
+                    重置
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <script src="~/component/layui/layui.js"></script>
+    <script src="~/component/pear/pear.js"></script>
+    <script src="~/js/verify.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+
+    <script>
+        layui.use(['form', 'jquery'], function () {
+            let form = layui.form;
+            let $ = layui.jquery;
+
+            form.verify({
+                confirmPass: function (value) {
+                    if ($('input[name=PassWord]').val() !== value)
+                        return '两次密码输入不一致！';
+                },
+                nullableEmail: function (value) {
+                    if (!nullableEmailCheck(value))
+                        return '请输入正确的邮箱！';
+                },
+                nullablePhone: function (value) {
+                    if (!nullablePhoneCheck(value))
+                        return '请输入正确的手机号！';
+                },
+                userName: function (value) {
+                    if (!userNameCheck(value))
+                        return '请输入正确的用户名！4到16位（字母，数字，下划线，减号）'
+                },
+                pass: function (value) {
+                    if (!passCheck(value))
+                        return '请输入正确的密码！最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符'
+                },
+            });
+
+            //绑定门店
+            BindStores();
+
+            //选择门店更新@Model.StoreId
+            form.on('select(SelectStore)', function (data) {
+                $('#StoreId').val(data.value);
+            });
+
+            //绑定职位
+            BindRank();
+
+            //选择职位更新@Model.Rank
+            form.on('select(SelectRank)', function (data) {
+                $('#Rank').val(data.value);
+            });
+        });
+
+        var onSuccess = function (result) {
+            if (result.success) 
+            {
+                layer.msg(result.msg, { icon: 1, time: 1000 }, function () {
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    parent.layui.table.reload("user-table",{
+                        url: 'GetPage',
+                        //page: {
+                        //    curr: ,//最后一页
+                        //},
+                    });
+                });
+            } 
+            else
+            {
+                parent.layer.open({
+                    type: 2,
+                    title: '',
+                    shade: 0.1,
+                    area: ['900px', '600px'],
+                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                });
+            }
+        };
+
+        function BindStores() {
+            $.get('GetStoresByCurrentShop', function (result) {
+                layui.use('form', function () {
+                    var form = layui.form;
+                    if (result.success) {
+                        var str = '';
+                        var currentStoreId = $('#StoreId').val();//当前门店ID
+                        //var data = $.parseJSON(result.data);//转成Json对象
+                        $("#OptionStore option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                        $.each(result.data, function (i, obj) {
+                            str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                        });//遍历循环遍历
+                        $(str).appendTo("#OptionStore");//绑定
+                        $('#OptionStore').find("option[value=" + currentStoreId + "]").attr("selected", true); //默认选择
+                        form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                    }
+                });
+            });
+        };
+
+        function BindRank() {
+            $.get('GetRankScopeByCurrentRankForAddUser', function (result) {
+                layui.use('form', function () {
+                    var form = layui.form;
+                    if (result.success) {
+                        var str = ''; //声明字符串
+                        //var data = $.parseJSON(result.data);//转成Json对象
+                        $("#OptionRank option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                        $.each(result.data, function (i, obj) {
+                            str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                        });//遍历循环遍历
+                        $(str).appendTo("#OptionRank");//绑定
+                        //$("#OptionRank option:eq(1)").attr("selected", 'selected'); //默认选择第一个选项
+                        //form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                    }
+                });
+            });
+        };
+
+
+    </script>
+
+</body>
+</html>
+
