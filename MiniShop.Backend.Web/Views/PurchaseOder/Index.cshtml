@@ -189,18 +189,13 @@
 
 
                 window.add = function () {
-                    //layer.open({
-                    //    type: 2,
-                    //    title: '新增',
-                    //    shade: 0.1,
-                    //    area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '500px'],
-                    //    content: '/purchaseoder/add',
-                    //});
-                    $.ajax({
-                        url: "/purchaseoder/add",
-                        dataType: 'json',
-                        type: 'get'
-                    })
+                    layer.open({
+                        type: 2,
+                        title: '新增',
+                        shade: 0.1,
+                        area: [common.isModile() ? '100%' : '1024px', common.isModile() ? '100%' : '768px'],
+                        content: '/purchaseoder/add',
+                    });
                 }
 
                 window.edit = function (obj) {

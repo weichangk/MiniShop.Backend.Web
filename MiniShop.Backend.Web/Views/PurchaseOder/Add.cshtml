@@ -27,24 +27,34 @@
 </head>
 <body class="pear-container">
     <div class="layui-card">
-		<div class="layui-card-body layui-text">
-			<div id="toolbar">
-				<div>
-					<button type="button" class="layui-btn layui-btn-sm" data-type="addRow" title="添加一行">
-						<i class="layui-icon layui-icon-add-1"></i> 添加一行
-					</button>					
+        <div class="layui-card-body">
+			<form class="layui-form" action="">			
+				<div class="layui-card-body layui-text">
+					<div class="layui-form-item layui-inline">
+						<label class="layui-form-label">供应商</label>
+						<div class="layui-input-inline">
+							<select id="OptionSupplier" name="supplier" lay-filter="SelectSupplier">
+								<option value="">请选择一个供应商</option>
+							</select>
+						</div>
+					</div>	
+					<div class="layui-form-item layui-inline">
+						<button type="button" class="layui-btn pear-btn-md pear-btn-primary" data-type="addRow" title="添加">
+							<i class="layui-icon layui-icon-add-1"></i> 添加
+						</button>	
+						<button type="button" name="btnSave" class="pear-btn pear-btn-md pear-btn-primary" data-type="save">
+							<i class="layui-icon layui-icon-ok-circle"></i>
+							保存
+						</button>
+					</div>
+					<div id="tableRes" class="table-overlay">
+						<table id="dataTable" lay-filter="dataTable" class="layui-hide"></table>
+					</div>
 				</div>
-			</div>
-			<div id="tableRes" class="table-overlay">
-				<table id="dataTable" lay-filter="dataTable" class="layui-hide"></table>
-			</div>
-			<div id="action" class="text-center">
-				<button type="button" name="btnSave" class="layui-btn" data-type="save"><i class="layui-icon layui-icon-ok-circle"></i>保存</button>				
-				<button type="reset" name="btnReset" class="layui-btn layui-btn-primary">取消</button>
-			</div>
-		</div>
-    </div>
+			</form>
+        </div>
 
+    </div>
 
 
     <script src="~/component/layui/layui.js"></script>
@@ -103,17 +113,14 @@
 				even: false, //不开启隔行背景
 				cols: [[
 					{title: '序号', type: 'numbers'},
-					{field: 'type', title: '分类（type）', templet: function(d){
-						var options = viewObj.renderSelectOptions(viewObj.typeData, {valueField: "id", textField: "name", selectedValue: d.type});
-						return '<a lay-event="type"></a><select name="type" lay-filter="type"><option value="">请选择分类</option>' + options + '</select>';
-					}},
-					{field: 'name', title: '名称（name）', edit: 'text'},
-					{field: 'state', title: '是否启用（state）', event: 'state', templet: function(d){
-						var html = ['<input type="checkbox" name="state" lay-skin="switch" lay-text="是|否"'];
-						html.push(d.state > 0 ? ' checked' : '');
-						html.push('>');
-						return html.join('');
-					}},					
+					{field: 'itemCode', title: '货号', edit: 'text'},
+					{field: 'itemName', title: '品名', edit: 'text'},
+					{field: 'unit', title: '单位', edit: 'text'},
+					{field: 'price', title: '售价', edit: 'text'},
+					{field: 'PurchasePrice', title: '进货价', edit: 'text'},
+					{field: 'number', title: '数量', edit: 'text'},
+					{field: 'giveNumber', title: '赠送数量', edit: 'text'},
+					{field: 'amount', title: '小计', edit: 'text'},				
 					{field: 'tempId', title: '操作', templet: function(d){
 						return '<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" lay-id="'+ d.tempId +'"><i class="layui-icon layui-icon-delete"></i>移除</a>';
 					}}
