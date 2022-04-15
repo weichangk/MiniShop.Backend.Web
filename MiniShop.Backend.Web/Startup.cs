@@ -61,7 +61,7 @@ namespace MiniShop.Backend.Web
 
             services.AddHttpClient();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
             // 配置cookie策略
             services.Configure<CookiePolicyOptions>(options =>

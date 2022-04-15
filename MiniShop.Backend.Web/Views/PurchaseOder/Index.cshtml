@@ -37,12 +37,9 @@
     </div>
 
     <script type="text/html" id="purchaseoder-toolbar">
-        <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" validate-menu-url="Shop/Renew" validate-menu-id="1913" validate-menu-title="续费管理">
+        <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
             <i class="layui-icon layui-icon-add-1"></i>            
             新增
-@*            <i class="layui-icon layui-icon-add-1" validate-menu-url="purchaseoder/add" validate-menu-id="15111001" validate-menu-title="新增采购订单">
-            </i>            
-            新增*@
         </button>
         <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
             <i class="layui-icon layui-icon-delete"></i>
@@ -171,7 +168,7 @@
 
                 table.on('toolbar(purchaseoder-table)', function (obj) {
                     if (obj.event === 'add') {
-                        //window.add();
+                        window.add();
                     } else if (obj.event === 'refresh') {
                         window.refresh();
                     } else if (obj.event === 'batchRemove') {
@@ -191,20 +188,20 @@
                 });
 
 
-                //window.add = function () {
-                //    //layer.open({
-                //    //    type: 2,
-                //    //    title: '新增',
-                //    //    shade: 0.1,
-                //    //    area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '500px'],
-                //    //    content: '/purchaseoder/add',
-                //    //});
-                //    $.ajax({
-                //        url: "/purchaseoder/add",
-                //        dataType: 'json',
-                //        type: 'get'
-                //    })
-                //}
+                window.add = function () {
+                    //layer.open({
+                    //    type: 2,
+                    //    title: '新增',
+                    //    shade: 0.1,
+                    //    area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '500px'],
+                    //    content: '/purchaseoder/add',
+                    //});
+                    $.ajax({
+                        url: "/purchaseoder/add",
+                        dataType: 'json',
+                        type: 'get'
+                    })
+                }
 
                 window.edit = function (obj) {
                     layer.open({
