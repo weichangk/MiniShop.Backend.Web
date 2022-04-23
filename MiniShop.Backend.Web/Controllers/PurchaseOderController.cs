@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MiniShop.Backend.Model.Dto;
@@ -15,10 +16,13 @@ namespace MiniShop.Backend.Web.Controllers
     public class PurchaseOderController : BaseController
     {
         private readonly IPurchaseOderApi _purchaseOderApi;
+        private readonly ISupplierApi _supplierApi;
         public PurchaseOderController(ILogger<PurchaseOderController> logger, IMapper mapper, IUserInfo userInfo,
-            IPurchaseOderApi purchaseOderApi) : base(logger, mapper, userInfo)
+            IPurchaseOderApi purchaseOderApi,
+            ISupplierApi supplierApi) : base(logger, mapper, userInfo)
         {
             _purchaseOderApi = purchaseOderApi;
+            _supplierApi = supplierApi;
         }
 
         [HttpGet]
@@ -28,20 +32,42 @@ namespace MiniShop.Backend.Web.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetSuppliersByCurrentShopAsync()
+        {
+            var result = await ExecuteApiResultModelAsync(() => { return _supplierApi.GetByShopIdAsync(_userInfo.ShopId); });
+            if (!result.Success)
+            {
+                return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });
+            }
+            if (result.Data != null)
+            {
+                List<dynamic> supplierSelect = new List<dynamic>();
+                foreach (var item in result.Data)
+                {
+                    var op = new { opValue = item.Id, opName = item.Name };
+                    supplierSelect.Add(op);
+                }
+                return Json(new Result() { Success = true, Data = supplierSelect });
+            }
+            return Json(new Result() { Success = false });
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Add()
         {
             PurchaseOderCreateDto model = new PurchaseOderCreateDto
             {
-                //ShopId = _userInfo.ShopId,
-                //Code = maxCode,
+                ShopId = _userInfo.ShopId,
+                OderNo = Guid.NewGuid().ToString(),//生成唯一单号
+                OperatorName = _userInfo.UserName,
             };
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAsync(PurchaseOderCreateDto model)
+        public IActionResult Add(PurchaseOderCreateDto model)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.AddAsync(model); });
+            var result =  ExecuteApiResultModelAsync(() => { return _purchaseOderApi.AddAsync(model); }).Result;
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 

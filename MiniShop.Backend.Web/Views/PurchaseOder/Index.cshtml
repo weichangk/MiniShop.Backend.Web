@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>采购订单管理</title>
+    <title>采购订单-列表</title>
     <link rel="stylesheet" href="~/component/pear/css/pear.css" />
 </head>
 <body class="pear-container">
@@ -189,21 +189,23 @@
 
 
                 window.add = function () {
-                    layer.open({
+                    let index = layer.open({
                         type: 2,
-                        title: '新增',
+                        title: '新增订单',
                         shade: 0.1,
-                        area: [common.isModile() ? '100%' : '1024px', common.isModile() ? '100%' : '768px'],
+                        area: ['1280px', '768px'],
                         content: '/purchaseoder/add',
+                        //maxmin: true
                     });
+                    layer.full(index)
                 }
 
                 window.edit = function (obj) {
                     layer.open({
                         type: 2,
-                        title: '修改',
+                        title: '修改订单',
                         shade: 0.1,
-                        area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '400px'],
+                        area: ['1280px', '768px'],
                         content: '/purchaseoder/update?id=' + obj.data['id'],
                     });
                 }

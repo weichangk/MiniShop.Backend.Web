@@ -19,7 +19,7 @@ namespace MiniShop.Backend.Web.HttpApis
         ITask<ResultModel<PurchaseOderDto>> GetByIdAsync(int id);
 
         [HttpGet("/api/PurchaseOder/GetByOderNoOnShop")]
-        ITask<ResultModel<CategorieDto>> GetByOderNoOnShop(Guid shopId, string oderNo);
+        ITask<ResultModel<PurchaseOderDto>> GetByOderNoOnShop(Guid shopId, string oderNo);
         
         [HttpGet("/api/PurchaseOder/GetPageOnShop")]
         ITask<ResultModel<PagedList<PurchaseOderDto>>> GetPageOnShopAsync(int pageIndex, int pageSize, Guid shopId);

@@ -1,241 +1,282 @@
-﻿<!DOCTYPE html>
+﻿@model PurchaseOderCreateDto
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>采购订单管理</title>
+    <title>采购订单-新增</title>
     <link rel="stylesheet" href="~/component/pear/css/pear.css" />
-
-	<style type="text/css">
-		/*您可以将下列样式写入自己的样式表中*/
-		.childBody{padding: 15px;}
-	
-		/*layui 元素样式改写*/
-		.layui-btn-sm{line-height: normal; font-size: 12.5px;}		
-		.layui-table-view .layui-table-body{min-height: 256px;}
-		.layui-table-cell .layui-input.layui-unselect{height: 30px; line-height: 30px;}
-	
-		/*设置 layui 表格中单元格内容溢出可见样式*/
-		.table-overlay .layui-table-view,
-		.table-overlay .layui-table-box,
-		.table-overlay .layui-table-body{overflow: visible;}
-		.table-overlay .layui-table-cell{height: auto; overflow: visible;}
-	
-		/*文本对齐方式*/
-		.text-center{text-align: center;}
-	</style>
-
 </head>
 <body class="pear-container">
     <div class="layui-card">
         <div class="layui-card-body">
-			<form class="layui-form" action="">			
-				<div class="layui-card-body layui-text">
-					<div class="layui-form-item layui-inline">
-						<label class="layui-form-label">供应商</label>
-						<div class="layui-input-inline">
-							<select id="OptionSupplier" name="supplier" lay-filter="SelectSupplier">
-								<option value="">请选择一个供应商</option>
-							</select>
-						</div>
-					</div>	
-					<div class="layui-form-item layui-inline">
-						<button type="button" class="layui-btn pear-btn-md pear-btn-primary" data-type="addRow" title="添加">
-							<i class="layui-icon layui-icon-add-1"></i> 添加
-						</button>	
-						<button type="button" name="btnSave" class="pear-btn pear-btn-md pear-btn-primary" data-type="save">
-							<i class="layui-icon layui-icon-ok-circle"></i>
-							保存
-						</button>
-					</div>
-					<div id="tableRes" class="table-overlay">
-						<table id="dataTable" lay-filter="dataTable" class="layui-hide"></table>
-					</div>
-				</div>
-			</form>
-        </div>
+            <form class="layui-form" id="Form">
+                <div class="layui-card">
+                    <input type="hidden" id="ShopId" name="ShopId" value="@Model.ShopId" />
+                    <input type="hidden" id="SupplierId" name="SupplierId" value="@Model.SupplierId" />
+                    <input type="hidden" id="SupplierName" name="SupplierName" value="@Model.SupplierName" />
+                    <input type="hidden" id="OperatorName" name="OperatorName" value="@Model.OperatorName" />
+                    <input type="hidden" id="CreatedTime" name="CreatedTime" value="@Model.CreatedTime" />
+                    <input type="hidden" id="AuditState" name="AuditState" value="@Model.AuditState" />
+                    <input type="hidden" id="OrderState" name="OrderState" value="@Model.OrderState" />
+                    <input type="hidden" id="OrderCreatedFlag" name="OrderCreatedFlag" value="@Model.OrderCreatedFlag" />
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-inline">
+                            <label class="layui-form-label">订单号</label>
+                            <div class="layui-input-inline" style="width: 290px;">
+                                <input type="text" id="OderNo" name="OderNo" value="@Model.OderNo" placeholder="" class="layui-input" readonly="true">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-inline">
+                            <label class="layui-form-label">供应商</label>
+                            <div class="layui-input-block" style="width: 290px;">
+                                <select id="OptionSupplier" lay-filter="SelectSupplier" lay-verify="required">
+                                    <option value="">请选择一个供应商</option>
+                                </select>
+                            </div>
+                        </div>	
+                        <div class="layui-form-item layui-inline">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-inline" style="width: 290px;">
+                                <input type="text" id="Remark" name="Remark" value="@Model.Remark" placeholder="" class="layui-input">
+                            </div>
+                        </div>			
+                        <div class="layui-form-item layui-inline" style="margin-left: 60px;">
+                            <button class="pear-btn pear-btn-md pear-btn-primary" type="button" lay-submit lay-filter="purchaseoder-create">
+                                <i class="layui-icon layui-icon-ok"></i>
+                                生成单号
+                            </button>
+                        </div>	
+                        <div class="layui-form-item layui-inline">
+                            <button class="pear-btn pear-btn-md pear-btn-primary" type="button" lay-submit lay-filter="purchaseoder-examine">
+                                <i class="layui-icon layui-icon-ok"></i>
+                                审核订单
+                            </button>
+                        </div>	
+                    </div>
+                </div>
 
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <table id="purchaseoder-table" lay-filter="purchaseoder-table"></table>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
 
+    <script type="text/html" id="purchaseoder-toolbar">
+        <button class="pear-btn pear-btn-primary pear-btn-md" type="button" lay-event="add">
+            <i class="layui-icon layui-icon-add-1"></i>            
+            新增商品
+        </button>
+        <button class="pear-btn pear-btn-danger pear-btn-md" type="button" lay-event="batchRemove">
+            <i class="layui-icon layui-icon-delete"></i>
+            删除商品
+        </button>
+    </script>
+
+    <script type="text/html" id="purchaseoder-bar">
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
+        <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+    </script>
+
+    <script type="text/html" id="purchaseoder-createTime">
+        {{layui.util.toDateString(d.createdTime, 'yyyy-MM-dd')}}
+    </script>
+    <script type="text/html" id="purchaseoder-auditTime">
+        {{layui.util.toDateString(d.auditTime, 'yyyy-MM-dd')}}
+    </script>
+
     <script src="~/component/layui/layui.js"></script>
     <script src="~/component/pear/pear.js"></script>
-	<script type="text/javascript">
-		//准备视图对象
-		window.viewObj = {
-			tbData: [{
-				tempId: new Date().valueOf(),
-				type: 2,
-				name: '测试项名称',
-				state: 1
-			}],
-			typeData: [
-				{id: 1, name: '分类一'},
-				{id: 2, name: '分类二'},
-				{id: 3, name: '分类三'},
-				{id: 4, name: '分类四'}
-			],
-			renderSelectOptions: function(data, settings){
-				settings =  settings || {};
-				var valueField = settings.valueField || 'value',
-					textField = settings.textField || 'text',
-					selectedValue = settings.selectedValue || "";
-				var html = [];
-				for(var i=0, item; i < data.length; i++){
-					item = data[i];
-					html.push('<option value="');
-					html.push(item[valueField]);
-					html.push('"');
-					if(selectedValue && item[valueField] == selectedValue ){						
-						html.push(' selected="selected"');
-					}			
-					html.push('>');		
-					html.push(item[textField]);
-					html.push('</option>');
-				}
-				return html.join('');
-			}
-		};
-	
-		//layui 模块化引用
-		layui.use(['jquery', 'table', 'layer'], function(){
-			var $ = layui.$, table = layui.table, form = layui.form, layer = layui.layer;
-					
-			//数据表格实例化			
-			var tbWidth = $("#tableRes").width();
-			var layTableId = "layTable";
-			var tableIns = table.render({
-				elem: '#dataTable',
-				id: layTableId,
-				data: viewObj.tbData,
-				width: tbWidth,
-				page: true,
-				loading: true,
-				even: false, //不开启隔行背景
-				cols: [[
-					{title: '序号', type: 'numbers'},
-					{field: 'itemCode', title: '货号', edit: 'text'},
-					{field: 'itemName', title: '品名', edit: 'text'},
-					{field: 'unit', title: '单位', edit: 'text'},
-					{field: 'price', title: '售价', edit: 'text'},
-					{field: 'PurchasePrice', title: '进货价', edit: 'text'},
-					{field: 'number', title: '数量', edit: 'text'},
-					{field: 'giveNumber', title: '赠送数量', edit: 'text'},
-					{field: 'amount', title: '小计', edit: 'text'},				
-					{field: 'tempId', title: '操作', templet: function(d){
-						return '<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" lay-id="'+ d.tempId +'"><i class="layui-icon layui-icon-delete"></i>移除</a>';
-					}}
-				]],
-				done: function(res, curr, count){
-					viewObj.tbData = res.data;
-				}
-			});
-		
-			//定义事件集合
-			var active = {
-				addRow: function(){	//添加一行
-					var oldData = table.cache[layTableId];
-					console.log(oldData);
-					var newRow = {tempId: new Date().valueOf(), type: null, name: '请填写名称', state: 0};
-					oldData.push(newRow);
-					tableIns.reload({
-						data : oldData
-					});
-				},
-				updateRow: function(obj){
-					var oldData = table.cache[layTableId];				
-					console.log(oldData);
-					for(var i=0, row; i < oldData.length; i++){
-						row = oldData[i];
-						if(row.tempId == obj.tempId){
-							$.extend(oldData[i], obj);
-							return;
-						}
-					}
-					tableIns.reload({
-						data : oldData
-					});
-				},
-				removeEmptyTableCache: function(){
-					var oldData = table.cache[layTableId];		
-					for(var i=0, row; i < oldData.length; i++){
-						row = oldData[i];
-						if(!row || !row.tempId){
-							oldData.splice(i, 1);    //删除一项
-						}
-						continue;
-					}
-					tableIns.reload({
-						data : oldData
-					});
-				},
-				save: function(){
-					var oldData = table.cache[layTableId];	
-					console.log(oldData);	
-					for(var i=0, row; i < oldData.length; i++){
-						row = oldData[i];
-						if(!row.type){
-							layer.msg("检查每一行，请选择分类！", { icon: 5 }); //提示
-							return;
-						}
-					}
-					document.getElementById("jsonResult").innerHTML = JSON.stringify(table.cache[layTableId], null, 2);	//使用JSON.stringify() 格式化输出JSON字符串		
-				}
-			}
-		
-			//激活事件
-			var activeByType = function (type, arg) {
-				if(arguments.length === 2){					
-					active[type] ? active[type].call(this, arg) : '';
-				}else{
-					active[type] ? active[type].call(this) : '';
-				}
-			}
-		
-			//注册按钮事件
-			$('.layui-btn[data-type]').on('click', function () {
-				var type = $(this).data('type');
-				activeByType(type);
-			});
-		
-			//监听select下拉选中事件
-			form.on('select(type)', function(data){
-				var elem = data.elem; //得到select原始DOM对象
-				$(elem).prev("a[lay-event='type']").trigger("click");
-			});
-		
-			 //监听工具条
-			table.on('tool(dataTable)', function (obj) {
-				var data = obj.data, event = obj.event, tr = obj.tr; //获得当前行 tr 的DOM对象;
-				console.log(data);
-				switch(event){
-					case "type":
-						//console.log(data);
-						var select = tr.find("select[name='type']");
-						if(select){						
-							var selectedVal = select.val();
-							if(!selectedVal){
-								layer.tips("请选择一个分类", select.next('.layui-form-select'), { tips: [3, '#FF5722'] }); //吸附提示
-							}
-							console.log(selectedVal);
-							$.extend(obj.data, {'type': selectedVal});
-							activeByType('updateRow', obj.data);	//更新行记录对象
-						}
-						break;
-					case "state":
-						var stateVal = tr.find("input[name='state']").prop('checked') ? 1 : 0;
-						$.extend(obj.data, {'state': stateVal})	
-						activeByType('updateRow', obj.data);	//更新行记录对象
-						break;						
-					case "del":
-						layer.confirm('真的删除行么？', function(index){
-						  obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
-						  layer.close(index);
-						  activeByType('removeEmptyTableCache');
-						});
-						break;						
-				}
-			});
-		});
-	</script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+
+    <script>
+        layui.use(['table', 'form', 'jquery', 'common'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let common = layui.common;
+
+            let cols = [
+                [{
+                    type: 'checkbox'
+                },
+                {
+                    title: 'ID',
+                    field: 'id',
+                    align: 'center',
+                    width: 100
+                },
+                {
+                    title: '货号',
+                    field: 'itemCode',
+                    align: 'center',
+                },
+                {
+                    title: '品名',
+                    field: 'itemName',
+                    align: 'center'
+                },
+                {
+                    title: '单位',
+                    field: 'unitName',
+                    align: 'center'
+                },
+                {
+                    title: '进货价',
+                    field: 'purchasePrice',
+                    align: 'center'
+                },
+                {
+                    title: '实际进货价',
+                    field: 'RealPurchasePrice',
+                    align: 'center'
+                },
+                {
+                    title: '数量',
+                    field: 'number',
+                    align: 'center'
+                },
+                {
+                    title: '赠送数量',
+                    field: 'giveNumber',
+                    align: 'center'
+                },
+                {
+                    title: '小计',
+                    field: 'amount',
+                    align: 'center',
+                    templet: '#purchaseoder-createTime'
+                },
+                {
+                    title: '操作',
+                    toolbar: '#purchaseoder-bar',
+                    align: 'center',
+                    width: 130
+                }
+                ]
+            ]
+
+            table.render({
+                elem: '#purchaseoder-table',
+                //url: '@Url.Action("GetByOderNo","PurchaseOderItem", new {oderNo="111"})', 
+                url: '/PurchaseOderItem/GetPageByOderNo?oderNo=' + $('#OderNo').val(), 
+                page: true,//开启分页
+                cols: cols,
+                skin: 'line',
+                toolbar: '#purchaseoder-toolbar',
+                defaultToolbar: [{
+                    title: '刷新',
+                    layEvent: 'refresh',
+                    icon: 'layui-icon-refresh',
+                }, 'filter', 'print', 'exports']
+            });
+
+            table.on('tool(purchaseoder-table)', function (obj) {
+                if (obj.event === 'remove') {
+                    window.remove(obj);
+                } else if (obj.event === 'edit') {
+                    window.edit(obj);
+                }
+            });
+
+            table.on('toolbar(purchaseoder-table)', function (obj) {
+                if (obj.event === 'add') {
+                    window.add();
+                } else if (obj.event === 'refresh') {
+                    window.refresh();
+                } else if (obj.event === 'batchRemove') {
+                    window.batchRemove(obj);
+                }
+            });
+
+            form.on('submit(purchaseoder-create)', function(data){
+                @* var dataObject = JSON.stringify({
+                    OderNo: $('#OderNo').val(),
+                }); *@
+                $.ajax({
+                        url:'@Url.Action("Add","PurchaseOder")', 
+                        type:"post",
+                        //contentType: 'application/json; charset=utf-8', // 如果指定contenttype就导致控制器方法参数对象获取不到值！！！ 原因是jq用form格式传输的，所以后端就按form来解析的
+                        dataType:"json",
+                        data: data.field,
+                        success: function (result) {
+                            if(result.success)
+                            {
+                                $('#OrderCreatedFlag').val(true);//单号创建成功标志
+                                layer.msg(result.msg, { icon: 1, time: 1000 });
+                            }else {
+                                parent.layer.open({
+                                    type: 2,
+                                    title: '',
+                                    shade: 0.1,
+                                    area: ['900px', '600px'],
+                                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                });
+                            }
+                        }
+                    });
+            });
+
+            window.add = function () {
+                if($('#OrderCreatedFlag').val() !== true)
+                {
+                    layer.msg("请先生成单号再新增商品", {icon: 1, time: 1000 });
+                    return;
+                };
+                let index = layer.open({
+                    type: 2,
+                    title: '新增商品',
+                    shade: 0.1,
+                    area: ['1280px', '768px'],
+                    content: '/purchaseoderitem/add',
+                    //maxmin: true,
+                    success: function(layero, index) {
+                        var body = layer.getChildFrame('body', index); //获取子页面的dom对象
+                        var iframe = window['layui-layer-iframe' + index];
+                        var data = {
+                            ShopId: $('#ShopId').val(),
+                            OderNo: $('#OderNo').val(),
+                        };
+                        iframe.GetParentIframeData(data)
+                    },
+                });
+                layer.full(index);
+            };
+
+            //绑定供应商
+            BindSupplier($);
+
+            //选择供应商更新@Model.Id
+            form.on('select(SelectSupplier)', function (data) {
+                $('#SupplierId').val(data.value);
+                $('#SupplierName').val($("#OptionSupplier option:selected").text());
+            });
+        });
+            
+        function BindSupplier($) {
+            $.get('GetSuppliersByCurrentShop', function (result) {
+                layui.use('form', function () {
+                    var form = layui.form;
+                    if (result.success) {
+                        var str = '';
+                        var currentSupplierId = $('#SupplierId').val();//当前门店ID
+                        //var data = $.parseJSON(result.data);//转成Json对象
+                        $("#OptionSupplier option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                        $.each(result.data, function (i, obj) {
+                            str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                        });//遍历循环遍历
+                        $(str).appendTo("#OptionSupplier");//绑定
+                        $('#OptionSupplier').find("option[value=" + currentSupplierId + "]").attr("selected", true); //默认选择
+                        form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                    }
+                });
+            });
+        };
+    </script>
+
 </body>
 </html>

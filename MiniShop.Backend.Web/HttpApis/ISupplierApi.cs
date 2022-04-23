@@ -21,6 +21,9 @@ namespace MiniShop.Backend.Web.HttpApis
         [HttpGet("/api/supplier/GetByCodeOnShop")]
         ITask<ResultModel<CategorieDto>> GetByCodeOnShop(Guid shopId, int code);
 
+        [HttpGet("/api/supplier/GetByShopId")]
+        ITask<ResultModel<List<CategorieDto>>> GetByShopIdAsync(Guid shopId);
+
         [HttpGet("/api/supplier/GetMaxCodeByShopId")]
         ITask<ResultModel<int>> GetMaxCodeByShopIdAsync(Guid shopId);
         

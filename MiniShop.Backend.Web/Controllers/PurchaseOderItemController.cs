@@ -1,8 +1,7 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MiniShop.Backend.Model.Dto;
-using MiniShop.Backend.Model.Enums;
 using MiniShop.Backend.Web.Code;
 using MiniShop.Backend.Web.HttpApis;
 using MiniShop.Backend.Web.Models;
@@ -13,57 +12,32 @@ using System.Threading.Tasks;
 
 namespace MiniShop.Backend.Web.Controllers
 {
-    public class ItemController : BaseController
+    public class PurchaseOderItemController : BaseController
     {
-        private readonly IItemApi _itemApi;
-        public ItemController(ILogger<ItemController> logger, IMapper mapper, IUserInfo userInfo,
-            IItemApi itemApi) : base(logger, mapper, userInfo)
+        private readonly IPurchaseOderItemApi _purchaseOderItemApi;
+        public PurchaseOderItemController(ILogger<PurchaseOderItemController> logger, IMapper mapper, IUserInfo userInfo,
+            IPurchaseOderItemApi purchaseOderItemApi) : base(logger, mapper, userInfo)
         {
-            _itemApi = itemApi;
-        }
-
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult SelectItem()
-        {
-            return View();
+            _purchaseOderItemApi = purchaseOderItemApi;
         }
 
         [HttpGet]
         public IActionResult Add()
         {
-            ItemCreateDto model = new ItemCreateDto
-            {
-                //Code = "0000000000000",
-                ShopId = _userInfo.ShopId,
-                State = EnumItemStatus.Normal,
-                Type = EnumItemType.Normal,
-                PriceType = EnumPriceType.General,
-                CategorieId = 0,
-                CategorieName = "无类别",
-                SupplierId = 0,
-                SupplierName = "自采购供应商",
-                UnitId = 0,
-                UnitName = "无单位",
-            };
+            PurchaseOderItemCreateDto model = new PurchaseOderItemCreateDto();
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAsync(ItemCreateDto model)
+        public async Task<IActionResult> AddAsync(PurchaseOderItemCreateDto model)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _itemApi.AddAsync(model); });
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.AddAsync(model); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 
         public async Task<IActionResult> UpdateAsync(int id)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _itemApi.GetByIdAsync(id); });
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.GetByIdAsync(id); });
             if (result.Success)
             {
                 return View(result.Data);
@@ -72,10 +46,10 @@ namespace MiniShop.Backend.Web.Controllers
         }
       
         [HttpPost]
-        public async Task<IActionResult> UpdateAsync(ItemDto model)
+        public async Task<IActionResult> UpdateAsync(PurchaseOderItemDto model)
         {
-            var dto = _mapper.Map<ItemUpdateDto>(model);
-            var result = await ExecuteApiResultModelAsync(() => { return _itemApi.UpdateAsync(dto); });
+            var dto = _mapper.Map<PurchaseOderItemUpdateDto>(model);
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.UpdateAsync(dto); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 
@@ -83,7 +57,17 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPageOnShopAsync(int page, int limit)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _itemApi.GetPageOnShopAsync(page, limit, _userInfo.ShopId); });
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.GetPageOnShopAsync(page, limit, _userInfo.ShopId); });
+            if (!result.Success)
+            {
+                return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });
+            }
+            return Json(new Table() { Data = result.Data.Item, Count = result == null ? 0 : result.Data.Total });
+        }
+
+        public async Task<IActionResult> GetPageByOderNoAsync(int page, int limit, string oderNo)
+        {
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.GetPageByShopIdOderNoAsync(page, limit, _userInfo.ShopId, oderNo); });
             if (!result.Success)
             {
                 return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });
@@ -93,11 +77,10 @@ namespace MiniShop.Backend.Web.Controllers
 
         [ResponseCache(Duration = 0)]
         [HttpGet]
-        public async Task<IActionResult> GetPageOnShopWhereQueryAsync(int page, int limit, string code, string name)
+        public async Task<IActionResult> GetPageOnShopWhereQueryAsync(int page, int limit, string oderNo)
         {
-            code = System.Web.HttpUtility.UrlEncode(code);
-            name = System.Web.HttpUtility.UrlEncode(name);
-            var result = await ExecuteApiResultModelAsync(() => { return _itemApi.GetPageOnShopWhereQuery(page, limit, _userInfo.ShopId, code, name); });
+            oderNo = System.Web.HttpUtility.UrlEncode(oderNo);
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.GetPageOnShopWhereQuery(page, limit, _userInfo.ShopId, oderNo); });
             if (!result.Success)
             {
                 return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });
@@ -108,7 +91,7 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _itemApi.DeleteAsync(id); });
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.DeleteAsync(id); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 
@@ -124,12 +107,12 @@ namespace MiniShop.Backend.Web.Controllers
 
             if (idsIntList.Count > 0)
             {
-                var result = await ExecuteApiResultModelAsync(() => { return _itemApi.BatchDeleteAsync(idsIntList); });
+                var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.BatchDeleteAsync(idsIntList); });
                 return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
             }
             else
             {
-                return Json(new Result() { Success = false, Msg = "查找不到要删除的商品", Status = (int)HttpStatusCode.NotFound });
+                return Json(new Result() { Success = false, Msg = "查找不到要删除的单位", Status = (int)HttpStatusCode.NotFound });
             }
 
         }
