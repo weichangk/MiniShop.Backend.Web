@@ -79,7 +79,8 @@
                         title: 'ID',
                         field: 'id',
                         align: 'center',
-                        width: 100
+                        width: 100,
+                        hide: true
                     },
                     {
                         title: '条码',
@@ -95,11 +96,6 @@
                         title: '类别',
                         field: 'categorieName',
                         align: 'center',
-                    },
-                    {
-                        title: '供应商',
-                        field: 'supplierName',
-                        align: 'center'
                     },
                     {
                         title: '单位',
@@ -191,13 +187,14 @@
 
 
                 window.add = function () {
-                    layer.open({
+                    let index = layer.open({
                         type: 2,
-                        title: '新增',
+                        title: '新增商品',
                         shade: 0.1,
-                        area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '500px'],
+                        area: [common.isModile() ? '100%' : '1280px', common.isModile() ? '100%' : '760px'],
                         content: '/item/add',
                     });
+                    layer.full(index);
                 }
 
                 window.edit = function (obj) {

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MiniShop.Backend.Model.Code;
 using MiniShop.Backend.Model.Dto;
 using MiniShop.Backend.Model.Enums;
 using MiniShop.Backend.Web.Code;
@@ -21,6 +22,27 @@ namespace MiniShop.Backend.Web.Controllers
         {
             _itemApi = itemApi;
         }
+
+        [HttpGet]
+        public IActionResult GetItemTypes()
+        {
+            List<dynamic> selects = new List<dynamic>(){
+                new { opValue = EnumItemType.Normal.ToString(), opName = EnumItemType.Normal.ToDescription()},
+            };
+            return Json(new Result() { Success = true, Data = selects });
+        }
+
+        [HttpGet]
+        public IActionResult GetItemPriceTypes()
+        {
+            List<dynamic> selects = new List<dynamic>(){
+                new { opValue = EnumPriceType.General.ToString(), opName = EnumPriceType.General.ToDescription()},
+                new { opValue = EnumPriceType.Count.ToString(), opName = EnumPriceType.Count.ToDescription()},
+                new { opValue = EnumPriceType.Weight.ToString(), opName = EnumPriceType.Weight.ToDescription()},
+            };
+            return Json(new Result() { Success = true, Data = selects });
+        }
+
 
         [HttpGet]
         public IActionResult Index()
@@ -45,11 +67,7 @@ namespace MiniShop.Backend.Web.Controllers
                 Type = EnumItemType.Normal,
                 PriceType = EnumPriceType.General,
                 CategorieId = 0,
-                CategorieName = "无类别",
-                SupplierId = 0,
-                SupplierName = "自采购供应商",
                 UnitId = 0,
-                UnitName = "无单位",
             };
             return View(model);
         }

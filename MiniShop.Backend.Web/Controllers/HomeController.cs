@@ -194,11 +194,7 @@ namespace MiniShop.Backend.Web.Controllers
                         Type = EnumItemType.Normal,
                         PriceType = EnumPriceType.General,
                         CategorieId = systemCategorie.Data.Id,
-                        CategorieName = systemCategorie.Data.Name,
-                        SupplierId = systemSupplier.Data.Id,
-                        SupplierName = systemSupplier.Data.Name,
                         UnitId = systemUnit.Data.Id,
-                        UnitName = systemUnit.Data.Name,
                     };
                     var addItem = await ExecuteApiResultModelAsync(() => { return _itemApi.InsertAsync(itemCreateDto); });
                     if (!addItem.Success)
