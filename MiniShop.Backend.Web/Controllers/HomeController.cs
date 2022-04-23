@@ -90,7 +90,7 @@ namespace MiniShop.Backend.Web.Controllers
                     Email = _userInfo.Email,
                     ValidDate = System.DateTime.Now.AddDays(7),
                 };
-                var addShop = await ExecuteApiResultModelAsync(() => { return _shopApi.AddAsync(shopCreateDto); });
+                var addShop = await ExecuteApiResultModelAsync(() => { return _shopApi.InsertAsync(shopCreateDto); });
                 if (!addShop.Success)
                 {
                     return RedirectToAction("Error", "Error", new { statusCode = addShop.Status, errorMsg = addShop.Msg });
@@ -112,14 +112,14 @@ namespace MiniShop.Backend.Web.Controllers
                     Contacts = _userInfo.UserName,
                     Phone = _userInfo.PhoneNumber,
                 };
-                var addStore = await ExecuteApiResultModelAsync(() => { return _storeApi.AddAsync(storeCreateDto); });
+                var addStore = await ExecuteApiResultModelAsync(() => { return _storeApi.InsertAsync(storeCreateDto); });
                 if (!addStore.Success)
                 {
                     return RedirectToAction("Error", "Error", new { statusCode = addStore.Status, errorMsg = addStore.Msg });
                 }
             }
 
-            var queryCategorie = await ExecuteApiResultModelAsync(() => { return _categorieApi.GetByCodeOnShop(_userInfo.ShopId, 0); });
+            var queryCategorie = await ExecuteApiResultModelAsync(() => { return _categorieApi.GetByShopIdCodeAsync(_userInfo.ShopId, 0); });
             if (!queryCategorie.Success)
             {
                 return RedirectToAction("Error", "Error", new { statusCode = queryShop.Status, errorMsg = queryShop.Msg });
@@ -134,14 +134,14 @@ namespace MiniShop.Backend.Web.Controllers
                     Level = 0,
                     ParentCode = 0,
                 };
-                var addCategorie = await ExecuteApiResultModelAsync(() => { return _categorieApi.AddAsync(categorieCreateDto); });
+                var addCategorie = await ExecuteApiResultModelAsync(() => { return _categorieApi.InsertAsync(categorieCreateDto); });
                 if (!addCategorie.Success)
                 {
                     return RedirectToAction("Error", "Error", new { statusCode = addCategorie.Status, errorMsg = addCategorie.Msg });
                 }
             }
 
-            var queryUnit = await ExecuteApiResultModelAsync(() => { return _unitApi.GetByCodeOnShop(_userInfo.ShopId, 0); });
+            var queryUnit = await ExecuteApiResultModelAsync(() => { return _unitApi.GetByShopIdCodeAsync(_userInfo.ShopId, 0); });
             if (queryUnit.Data == null)
             {
                 UnitCreateDto unitCreateDto = new UnitCreateDto
@@ -150,14 +150,14 @@ namespace MiniShop.Backend.Web.Controllers
                     Code = 0,
                     Name = "无单位",
                 };
-                var addUnit = await ExecuteApiResultModelAsync(() => { return _unitApi.AddAsync(unitCreateDto); });
+                var addUnit = await ExecuteApiResultModelAsync(() => { return _unitApi.InsertAsync(unitCreateDto); });
                 if (!addUnit.Success)
                 {
                     return RedirectToAction("Error", "Error", new { statusCode = addUnit.Status, errorMsg = addUnit.Msg });
                 }
             }
 
-            var querySupplier = await ExecuteApiResultModelAsync(() => { return _supplierApi.GetByCodeOnShop(_userInfo.ShopId, 0); });
+            var querySupplier = await ExecuteApiResultModelAsync(() => { return _supplierApi.GetByShopIdCodeAsync(_userInfo.ShopId, 0); });
             if (querySupplier.Data == null)
             {
                 SupplierCreateDto supplierCreateDto = new SupplierCreateDto
@@ -168,19 +168,19 @@ namespace MiniShop.Backend.Web.Controllers
                     Contacts = "无",
                     Phone = "18211111111",
                 };
-                var addSupplier = await ExecuteApiResultModelAsync(() => { return _supplierApi.AddAsync(supplierCreateDto); });
+                var addSupplier = await ExecuteApiResultModelAsync(() => { return _supplierApi.InsertAsync(supplierCreateDto); });
                 if (!addSupplier.Success)
                 {
                     return RedirectToAction("Error", "Error", new { statusCode = addSupplier.Status, errorMsg = addSupplier.Msg });
                 }
             }
 
-            var queryItem = await ExecuteApiResultModelAsync(() => { return _itemApi.GetByCodeOnShop(_userInfo.ShopId, "0000000000000"); });
+            var queryItem = await ExecuteApiResultModelAsync(() => { return _itemApi.GetByShopIdCodeAsync(_userInfo.ShopId, "0000000000000"); });
             if (queryItem.Data == null)
             {
-                var systemCategorie = await ExecuteApiResultModelAsync(() => { return _categorieApi.GetByCodeOnShop(_userInfo.ShopId, 0); });
-                var systemUnit = await ExecuteApiResultModelAsync(() => { return _unitApi.GetByCodeOnShop(_userInfo.ShopId, 0); });
-                var systemSupplier = await ExecuteApiResultModelAsync(() => { return _supplierApi.GetByCodeOnShop(_userInfo.ShopId, 0); });
+                var systemCategorie = await ExecuteApiResultModelAsync(() => { return _categorieApi.GetByShopIdCodeAsync(_userInfo.ShopId, 0); });
+                var systemUnit = await ExecuteApiResultModelAsync(() => { return _unitApi.GetByShopIdCodeAsync(_userInfo.ShopId, 0); });
+                var systemSupplier = await ExecuteApiResultModelAsync(() => { return _supplierApi.GetByShopIdCodeAsync(_userInfo.ShopId, 0); });
                 if (systemCategorie.Success && systemCategorie .Data !=null 
                     && systemUnit.Success && systemUnit.Data != null 
                     && systemSupplier.Success && systemSupplier.Data != null)
@@ -200,7 +200,7 @@ namespace MiniShop.Backend.Web.Controllers
                         UnitId = systemUnit.Data.Id,
                         UnitName = systemUnit.Data.Name,
                     };
-                    var addItem = await ExecuteApiResultModelAsync(() => { return _itemApi.AddAsync(itemCreateDto); });
+                    var addItem = await ExecuteApiResultModelAsync(() => { return _itemApi.InsertAsync(itemCreateDto); });
                     if (!addItem.Success)
                     {
                         return RedirectToAction("Error", "Error", new { statusCode = addItem.Status, errorMsg = addItem.Msg });

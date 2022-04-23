@@ -43,7 +43,7 @@ namespace MiniShop.Backend.Web.Controllers
         public async Task<IActionResult> SaveAsync(ShopDto model)
         {
             var dto = _mapper.Map<ShopUpdateDto>(model);
-            var result = await ExecuteApiAsync(() => { return _shopApi.PutUpdateAsync(dto); });
+            var result = await ExecuteApiAsync(() => { return _shopApi.UpdateAsync(dto); });
             return result;
         }
 
@@ -109,7 +109,7 @@ namespace MiniShop.Backend.Web.Controllers
         {
             var doc = new JsonPatchDocument<ShopUpdateDto>();
             doc.Replace(item => item.ValidDate, validDate.AddDays(day));
-            var result = await ExecuteApiResultModelAsync(() => { return _shopApi.PatchUpdateByIdAsync(id, doc); });
+            var result = await ExecuteApiResultModelAsync(() => { return _shopApi.PatchAsync(id, doc); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
     }

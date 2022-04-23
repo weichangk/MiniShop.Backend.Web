@@ -30,7 +30,7 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            var maxCodeResult = await _unitApi.GetMaxCodeByShopId(_userInfo.ShopId);
+            var maxCodeResult = await _unitApi.GetMaxCodeByShopIdAsync(_userInfo.ShopId);
             if (!maxCodeResult.Success)
             {
                 return Json(new Result() { Success = maxCodeResult.Success, Status = maxCodeResult.Status, Msg = maxCodeResult.Msg });
@@ -51,7 +51,7 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAsync(UnitCreateDto model)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _unitApi.AddAsync(model); });
+            var result = await ExecuteApiResultModelAsync(() => { return _unitApi.InsertAsync(model); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 
@@ -77,7 +77,7 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPageOnShopAsync(int page, int limit)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _unitApi.GetPageOnShopAsync(page, limit, _userInfo.ShopId); });
+            var result = await ExecuteApiResultModelAsync(() => { return _unitApi.GetPageByShopIdAsync(page, limit, _userInfo.ShopId); });
             if (!result.Success)
             {
                 return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });
@@ -91,7 +91,7 @@ namespace MiniShop.Backend.Web.Controllers
         {
             code = System.Web.HttpUtility.UrlEncode(code);
             name = System.Web.HttpUtility.UrlEncode(name);
-            var result = await ExecuteApiResultModelAsync(() => { return _unitApi.GetPageOnShopWhereQueryCodeOrName(page, limit, _userInfo.ShopId, code, name); });
+            var result = await ExecuteApiResultModelAsync(() => { return _unitApi.GetPageByShopIdWhereQueryAsync(page, limit, _userInfo.ShopId, code, name); });
             if (!result.Success)
             {
                 return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });

@@ -15,34 +15,34 @@ namespace MiniShop.Backend.Web.HttpApis
     [JsonReturn]
     public interface IUnitApi : IHttpApi
     {
-        [HttpGet("/api/unit")]
+        [HttpGet("/api/unit/GetByIdAsync")]
         ITask<ResultModel<UnitDto>> GetByIdAsync(int id);
 
-        [HttpGet("/api/unit/GetByCodeOnShop")]
-        ITask<ResultModel<CategorieDto>> GetByCodeOnShop(Guid shopId, int code);
+        [HttpGet("/api/unit/GetByShopIdCodeAsync")]
+        ITask<ResultModel<CategorieDto>> GetByShopIdCodeAsync(Guid shopId, int code);
 
-        [HttpGet("/api/unit/GetMaxCodeByShopId")]
-        ITask<ResultModel<int>> GetMaxCodeByShopId(Guid shopId);
+        [HttpGet("/api/unit/GetMaxCodeByShopIdAsync")]
+        ITask<ResultModel<int>> GetMaxCodeByShopIdAsync(Guid shopId);
         
-        [HttpGet("/api/unit/GetPageOnShop")]
-        ITask<ResultModel<PagedList<UnitDto>>> GetPageOnShopAsync(int pageIndex, int pageSize, Guid shopId);
+        [HttpGet("/api/unit/GetPageByShopIdAsync")]
+        ITask<ResultModel<PagedList<UnitDto>>> GetPageByShopIdAsync(int pageIndex, int pageSize, Guid shopId);
 
-        [HttpGet("/api/unit/GetPageOnShopWhereQueryCodeOrName")]
-        ITask<ResultModel<PagedList<UnitDto>>> GetPageOnShopWhereQueryCodeOrName(int pageIndex, int pageSize, Guid shopId, string code, string name);
+        [HttpGet("/api/unit/GetPageByShopIdWhereQueryAsync")]
+        ITask<ResultModel<PagedList<UnitDto>>> GetPageByShopIdWhereQueryAsync(int pageIndex, int pageSize, Guid shopId, string code, string name);
 
-        [HttpDelete("/api/unit")]
+        [HttpDelete("/api/unit/DeleteAsync")]
         ITask<ResultModel<UnitDto>> DeleteAsync(int id);
 
-        [HttpDelete("/api/unit/BatchDelete")]
+        [HttpDelete("/api/unit/BatchDeleteAsync")]
         ITask<ResultModel<UnitDto>> BatchDeleteAsync([JsonContent] List<int> ids);
 
-        [HttpPost("/api/unit")]
-        ITask<ResultModel<UnitCreateDto>> AddAsync([JsonContent] UnitCreateDto model);
+        [HttpPost("/api/unit/InsertAsync")]
+        ITask<ResultModel<UnitCreateDto>> InsertAsync([JsonContent] UnitCreateDto model);
 
-        [HttpPut("/api/unit")]
+        [HttpPut("/api/unit/UpdateAsync")]
         ITask<ResultModel<UnitUpdateDto>> UpdateAsync([JsonContent] UnitUpdateDto model);
 
-        [HttpPatch("/api/unit")]
-        ITask<ResultModel<UnitDto>> PatchUpdateAsync(int id, [JsonContent] JsonPatchDocument<UnitUpdateDto> doc);
+        [HttpPatch("/api/unit/PatchAsync")]
+        ITask<ResultModel<UnitDto>> PatchAsync(int id, [JsonContent] JsonPatchDocument<UnitUpdateDto> doc);
     }
 }

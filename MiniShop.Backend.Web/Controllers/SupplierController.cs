@@ -67,7 +67,7 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAsync(SupplierCreateDto model)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _supplierApi.AddAsync(model); });
+            var result = await ExecuteApiResultModelAsync(() => { return _supplierApi.InsertAsync(model); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 

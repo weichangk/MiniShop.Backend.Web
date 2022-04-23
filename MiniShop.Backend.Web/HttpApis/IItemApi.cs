@@ -15,31 +15,31 @@ namespace MiniShop.Backend.Web.HttpApis
     [JsonReturn]
     public interface IItemApi : IHttpApi
     {
-        [HttpGet("/api/item")]
+        [HttpGet("/api/item/GetByIdAsync")]
         ITask<ResultModel<ItemDto>> GetByIdAsync(int id);
 
-        [HttpGet("/api/item/GetByCodeOnShop")]
-        ITask<ResultModel<ItemDto>> GetByCodeOnShop(Guid shopId, string code);
+        [HttpGet("/api/item/GetByShopIdCodeAsync")]
+        ITask<ResultModel<ItemDto>> GetByShopIdCodeAsync(Guid shopId, string code);
         
-        [HttpGet("/api/item/GetPageOnShop")]
-        ITask<ResultModel<PagedList<ItemDto>>> GetPageOnShopAsync(int pageIndex, int pageSize, Guid shopId);
+        [HttpGet("/api/item/GetPageByShopIdAsync")]
+        ITask<ResultModel<PagedList<ItemDto>>> GetPageByShopIdAsync(int pageIndex, int pageSize, Guid shopId);
 
-        [HttpGet("/api/item/GetPageOnShopWhereQuery")]
-        ITask<ResultModel<PagedList<ItemDto>>> GetPageOnShopWhereQuery(int pageIndex, int pageSize, Guid shopId, string code, string name);
+        [HttpGet("/api/item/GetPageByShopIdWhereQueryAsync")]
+        ITask<ResultModel<PagedList<ItemDto>>> GetPageByShopIdWhereQueryAsync(int pageIndex, int pageSize, Guid shopId, string code, string name);
 
-        [HttpDelete("/api/item")]
+        [HttpDelete("/api/item/DeleteAsync")]
         ITask<ResultModel<ItemDto>> DeleteAsync(int id);
 
-        [HttpDelete("/api/item/BatchDelete")]
+        [HttpDelete("/api/item/BatchDeleteAsync")]
         ITask<ResultModel<ItemDto>> BatchDeleteAsync([JsonContent] List<int> ids);
 
-        [HttpPost("/api/item")]
-        ITask<ResultModel<ItemCreateDto>> AddAsync([JsonContent] ItemCreateDto model);
+        [HttpPost("/api/item/InsertAsync")]
+        ITask<ResultModel<ItemCreateDto>> InsertAsync([JsonContent] ItemCreateDto model);
 
-        [HttpPut("/api/item")]
+        [HttpPut("/api/item/UpdateAsync")]
         ITask<ResultModel<ItemUpdateDto>> UpdateAsync([JsonContent] ItemUpdateDto model);
 
-        [HttpPatch("/api/item")]
-        ITask<ResultModel<ItemDto>> PatchUpdateAsync(int id, [JsonContent] JsonPatchDocument<ItemUpdateDto> doc);
+        [HttpPatch("/api/item/PatchAsync")]
+        ITask<ResultModel<ItemDto>> PatchAsync(int id, [JsonContent] JsonPatchDocument<ItemUpdateDto> doc);
     }
 }

@@ -15,34 +15,34 @@ namespace MiniShop.Backend.Web.HttpApis
     [JsonReturn]
     public interface ICategorieApi : IHttpApi
     {
-        [HttpGet("/api/categorie")]
+        [HttpGet("/api/categorie/GetByIdAsync")]
         ITask<ResultModel<CategorieDto>> GetByIdAsync(int id);
 
-        [HttpGet("/api/categorie/GetByCodeOnShop")]
-        ITask<ResultModel<CategorieDto>> GetByCodeOnShop(Guid shopId, int code);
+        [HttpGet("/api/categorie/GetByShopIdCodeAsync")]
+        ITask<ResultModel<CategorieDto>> GetByShopIdCodeAsync(Guid shopId, int code);
 
-        [HttpGet("/api/categorie/GetMaxCodeByLevelOnShop")]
-        ITask<ResultModel<int>> GetMaxCodeByLevelOnShop(Guid shopId, int level);
+        [HttpGet("/api/categorie/GetMaxCodeByShopIdLevelAsync")]
+        ITask<ResultModel<int>> GetMaxCodeByShopIdLevelAsync(Guid shopId, int level);
         
-        [HttpGet("/api/categorie/GetPageOnShop")]
-        ITask<ResultModel<PagedList<CategorieDto>>> GetPageOnShopAsync(int pageIndex, int pageSize, Guid shopId);
+        [HttpGet("/api/categorie/GetPageByShopIdAsync")]
+        ITask<ResultModel<PagedList<CategorieDto>>> GetPageByShopIdAsync(int pageIndex, int pageSize, Guid shopId);
 
-        [HttpGet("/api/categorie/GetPageOnShopWhereQueryCodeOrName")]
-        ITask<ResultModel<PagedList<CategorieDto>>> GetPageOnShopWhereQueryCodeOrName(int pageIndex, int pageSize, Guid shopId, string code, string name);
+        [HttpGet("/api/categorie/GetPageByShopIdWhereQueryAsync")]
+        ITask<ResultModel<PagedList<CategorieDto>>> GetPageByShopIdWhereQueryAsync(int pageIndex, int pageSize, Guid shopId, string code, string name);
 
-        [HttpDelete("/api/categorie")]
+        [HttpDelete("/api/categorie/DeleteAsync")]
         ITask<ResultModel<CategorieDto>> DeleteAsync(int id);
 
-        [HttpDelete("/api/categorie/BatchDelete")]
+        [HttpDelete("/api/categorie/BatchDeleteAsync")]
         ITask<ResultModel<CategorieDto>> BatchDeleteAsync([JsonContent] List<int> ids);
 
-        [HttpPost("/api/categorie")]
-        ITask<ResultModel<CategorieCreateDto>> AddAsync([JsonContent] CategorieCreateDto model);
+        [HttpPost("/api/categorie/InsertAsync")]
+        ITask<ResultModel<CategorieCreateDto>> InsertAsync([JsonContent] CategorieCreateDto model);
 
-        [HttpPut("/api/categorie")]
+        [HttpPut("/api/categorie/UpdateAsync")]
         ITask<ResultModel<CategorieUpdateDto>> UpdateAsync([JsonContent] CategorieUpdateDto model);
 
-        [HttpPatch("/api/categorie")]
-        ITask<ResultModel<CategorieDto>> PatchUpdateAsync(int id, [JsonContent] JsonPatchDocument<CategorieUpdateDto> doc);
+        [HttpPatch("/api/categorie/PatchAsync")]
+        ITask<ResultModel<CategorieDto>> PatchAsync(int id, [JsonContent] JsonPatchDocument<CategorieUpdateDto> doc);
     }
 }

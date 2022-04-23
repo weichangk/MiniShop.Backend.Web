@@ -183,12 +183,12 @@ namespace MiniShop.Backend.Web.Controllers
             {
                 case EnumRole.ShopManager:
                 case EnumRole.ShopAssistant:
-                    result = await ExecuteApiResultModelAsync(() => { return _userApi.GetPageByRankOnShopAsync(page, limit, _userInfo.ShopId, _userInfo.Rank); });
+                    result = await ExecuteApiResultModelAsync(() => { return _userApi.GetPageByShopIdRankAsync(page, limit, _userInfo.ShopId, _userInfo.Rank); });
                     break;
                 case EnumRole.StoreManager:
                 case EnumRole.StoreAssistant:
                 case EnumRole.Cashier:
-                    result = await ExecuteApiResultModelAsync(() => { return _userApi.GetPageByRankOnStoreAsync(page, limit, _userInfo.ShopId, _userInfo.StoreId, _userInfo.Rank); });
+                    result = await ExecuteApiResultModelAsync(() => { return _userApi.GetPageByShopIdStoreIdRankAsync(page, limit, _userInfo.ShopId, _userInfo.StoreId, _userInfo.Rank); });
                     break;
             }
             if (!result.Success)
@@ -210,12 +210,12 @@ namespace MiniShop.Backend.Web.Controllers
             {
                 case EnumRole.ShopManager:
                 case EnumRole.ShopAssistant:
-                    result = await ExecuteApiResultModelAsync(() => { return _userApi.GetPageByRankOnShopWhereQueryStoreOrRankOrNameOrPhoneAsync(page, limit, _userInfo.ShopId, _userInfo.Rank, store, rank, name, phone); });
+                    result = await ExecuteApiResultModelAsync(() => { return _userApi.GetPageByShopIdStoreIdRankWhereQueryWithStoreIdAsync(page, limit, _userInfo.ShopId, _userInfo.Rank, store, rank, name, phone); });
                     break;
                 case EnumRole.StoreManager:
                 case EnumRole.StoreAssistant:
                 case EnumRole.Cashier:
-                     result = await ExecuteApiResultModelAsync(() => { return _userApi.GetPageByRankOnShopWhereQueryStoreOrRankOrNameOrPhoneAsync(page, limit, _userInfo.ShopId, _userInfo.Rank, _userInfo.StoreId, rank, name, phone); });
+                     result = await ExecuteApiResultModelAsync(() => { return _userApi.GetPageByShopIdStoreIdRankWhereQueryWithStoreIdAsync(page, limit, _userInfo.ShopId, _userInfo.Rank, _userInfo.StoreId, rank, name, phone); });
                     break;
                 default:
                     break;
@@ -242,7 +242,7 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAsync(UserCreateDto model)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _userApi.AddAsync(_userInfo.Rank, model); });
+            var result = await ExecuteApiResultModelAsync(() => { return _userApi.InsertByRankAsync(_userInfo.Rank, model); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 
@@ -261,7 +261,7 @@ namespace MiniShop.Backend.Web.Controllers
         public async Task<IActionResult> UpdateAsync(UserDto model)
         {
             var dto = _mapper.Map<UserUpdateDto>(model);
-            var result = await ExecuteApiResultModelAsync(() => { return _userApi.PutUpdateAsync(_userInfo.Rank, dto); });
+            var result = await ExecuteApiResultModelAsync(() => { return _userApi.UpdateByRankAsync(_userInfo.Rank, dto); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 
@@ -270,14 +270,14 @@ namespace MiniShop.Backend.Web.Controllers
         {
             var doc = new JsonPatchDocument<UserUpdateDto>();
             doc.Replace(item => item.IsFreeze, freeze);
-            var result = await ExecuteApiResultModelAsync(() => { return _userApi.PatchUpdateByNameAsync(_userInfo.Rank, name, doc); });
+            var result = await ExecuteApiResultModelAsync(() => { return _userApi.PatchUpdateByRankNameAsync(_userInfo.Rank, name, doc); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteAsync(string name)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _userApi.DeleteByNameAsync(_userInfo.Rank, name); });
+            var result = await ExecuteApiResultModelAsync(() => { return _userApi.DeleteByRankNameAsync(_userInfo.Rank, name); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 
@@ -285,7 +285,7 @@ namespace MiniShop.Backend.Web.Controllers
         public async Task<IActionResult> BatchDeleteAsync(string names)
         {
             List<string> namesList = names.Split(",").ToList();
-            var result = await ExecuteApiResultModelAsync(() => { return _userApi.BatchDeleteByNamesAsync(_userInfo.Rank, namesList); });
+            var result = await ExecuteApiResultModelAsync(() => { return _userApi.BatchDeleteByRankNamesAsync(_userInfo.Rank, namesList); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 

@@ -42,7 +42,7 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAsync(StoreCreateDto model)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _storeApi.AddAsync(model); });
+            var result = await ExecuteApiResultModelAsync(() => { return _storeApi.InsertAsync(model); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 
@@ -68,7 +68,7 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPageOnShopAsync(int page, int limit)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _storeApi.GetPageOnShopAsync(page, limit, _userInfo.ShopId); });
+            var result = await ExecuteApiResultModelAsync(() => { return _storeApi.GetPageByShopIdAsync(page, limit, _userInfo.ShopId); });
             if (!result.Success)
             {
                 return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });
@@ -88,7 +88,7 @@ namespace MiniShop.Backend.Web.Controllers
             {
                 name = System.Web.HttpUtility.UrlEncode(name);
             }
-            var result = await ExecuteApiResultModelAsync(() => { return _storeApi.GetPageOnShopWhereQueryNameAsync(page, limit, _userInfo.ShopId, name); });
+            var result = await ExecuteApiResultModelAsync(() => { return _storeApi.GetPageByShopIdWhereQueryAsync(page, limit, _userInfo.ShopId, name); });
             if (!result.Success)
             {
                 return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });

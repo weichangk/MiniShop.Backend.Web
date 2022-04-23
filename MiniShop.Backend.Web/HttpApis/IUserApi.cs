@@ -16,34 +16,34 @@ namespace MiniShop.Backend.Web.HttpApis
     [JsonReturn]
     public interface IUserApi : IHttpApi
     {
-        [HttpGet("/api/User")]
+        [HttpGet("/api/User/GetByNameAsync")]
         ITask<ResultModel<UserDto>> GetByNameAsync(string name);
 
-        [HttpGet("/api/User/GetPageByRankOnShop")]
-        ITask<ResultModel<PagedList<UserDto>>> GetPageByRankOnShopAsync(int pageIndex, int pageSize, Guid shopId, EnumRole rank);
+        [HttpGet("/api/User/GetPageByShopIdRankAsync")]
+        ITask<ResultModel<PagedList<UserDto>>> GetPageByShopIdRankAsync(int pageIndex, int pageSize, Guid shopId, EnumRole rank);
 
-        [HttpGet("/api/User/GetPageByRankOnStore")]
-        ITask<ResultModel<PagedList<UserDto>>> GetPageByRankOnStoreAsync(int pageIndex, int pageSize, Guid shopId, Guid storeId, EnumRole rank);
+        [HttpGet("/api/User/GetPageByShopIdStoreIdRankAsync")]
+        ITask<ResultModel<PagedList<UserDto>>> GetPageByShopIdStoreIdRankAsync(int pageIndex, int pageSize, Guid shopId, Guid storeId, EnumRole rank);
 
-        [HttpGet("/api/User/GetPageByRankOnShopWhereQueryRankOrNameOrPhone")]
-        ITask<ResultModel<PagedList<UserDto>>> GetPageByRankOnShopWhereQueryRankOrNameOrPhoneAsync(int pageIndex, int pageSize, Guid shopId, EnumRole rank, EnumRole? queryRank, string queryName, string queryPhone);
+        [HttpGet("/api/User/GetPageByShopIdStoreIdRankWhereQueryAsync")]
+        ITask<ResultModel<PagedList<UserDto>>> GetPageByShopIdStoreIdRankWhereQueryAsync(int pageIndex, int pageSize, Guid shopId, EnumRole rank, EnumRole? queryRank, string queryName, string queryPhone);
 
-        [HttpGet("/api/User/GetPageByRankOnShopWhereQueryStoreOrRankOrNameOrPhone")]
-        ITask<ResultModel<PagedList<UserDto>>> GetPageByRankOnShopWhereQueryStoreOrRankOrNameOrPhoneAsync(int pageIndex, int pageSize, Guid shopId, EnumRole rank, Guid? queryStore, EnumRole? queryRank, string queryName, string queryPhone);
+        [HttpGet("/api/User/GetPageByShopIdStoreIdRankWhereQueryWithStoreIdAsync")]
+        ITask<ResultModel<PagedList<UserDto>>> GetPageByShopIdStoreIdRankWhereQueryWithStoreIdAsync(int pageIndex, int pageSize, Guid shopId, EnumRole rank, Guid? queryStore, EnumRole? queryRank, string queryName, string queryPhone);
 
-        [HttpDelete("/api/User")]
-        ITask<ResultModel<string>> DeleteByNameAsync(EnumRole rank, string name);
+        [HttpDelete("/api/User/DeleteByRankNameAsync")]
+        ITask<ResultModel<string>> DeleteByRankNameAsync(EnumRole rank, string name);
 
-        [HttpDelete("/api/User/BatchDelete")]
-        ITask<ResultModel<string>> BatchDeleteByNamesAsync(EnumRole rank, [JsonContent] List<string> names);
+        [HttpDelete("/api/User/BatchDeleteByRankNamesAsync")]
+        ITask<ResultModel<string>> BatchDeleteByRankNamesAsync(EnumRole rank, [JsonContent] List<string> names);
 
-        [HttpPost("/api/User")]
-        ITask<ResultModel<UserDto>> AddAsync(EnumRole rank, [JsonContent] UserCreateDto model);
+        [HttpPost("/api/User/InsertByRankAsync")]
+        ITask<ResultModel<UserDto>> InsertByRankAsync(EnumRole rank, [JsonContent] UserCreateDto model);
 
-        [HttpPut("/api/User")]
-        ITask<ResultModel<UserDto>> PutUpdateAsync(EnumRole rank, [JsonContent] UserUpdateDto model);
+        [HttpPut("/api/User/UpdateByRankAsync")]
+        ITask<ResultModel<UserDto>> UpdateByRankAsync(EnumRole rank, [JsonContent] UserUpdateDto model);
 
-        [HttpPatch("/api/User")]
-        ITask<ResultModel<UserDto>> PatchUpdateByNameAsync(EnumRole rank, string name, JsonPatchDocument<UserUpdateDto> doc);
+        [HttpPatch("/api/User/PatchUpdateByRankNameAsync")]
+        ITask<ResultModel<UserDto>> PatchUpdateByRankNameAsync(EnumRole rank, string name, JsonPatchDocument<UserUpdateDto> doc);
     }
 }

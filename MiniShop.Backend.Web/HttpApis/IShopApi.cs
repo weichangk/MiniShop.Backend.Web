@@ -13,19 +13,16 @@ namespace MiniShop.Backend.Web.HttpApis
     [JsonReturn]
     public interface IShopApi : IHttpApi
     {
-        [HttpGet("/api/Shop")]
-        ITask<ResultModel<ShopDto>> GetByIdAsync(int id);
-
-        [HttpGet("/api/Shop/GetByShopId")]
+        [HttpGet("/api/Shop/GetByShopIdAsync")]
         ITask<ResultModel<ShopDto>> GetByShopIdAsync(Guid shopId);
  
-        [HttpPost("/api/Shop")]
-        ITask<ResultModel<ShopCreateDto>> AddAsync([JsonContent] ShopCreateDto model);
+        [HttpPost("/api/Shop/InsertAsync")]
+        ITask<ResultModel<ShopCreateDto>> InsertAsync([JsonContent] ShopCreateDto model);
 
-        [HttpPut("/api/Shop")]
-        ITask<ResultModel<ShopUpdateDto>> PutUpdateAsync([JsonContent] ShopUpdateDto model);
+        [HttpPut("/api/Shop/UpdateAsync")]
+        ITask<ResultModel<ShopUpdateDto>> UpdateAsync([JsonContent] ShopUpdateDto model);
 
-        [HttpPatch("/api/Shop")]
-        ITask<ResultModel<UserDto>> PatchUpdateByIdAsync(int id, [JsonContent] JsonPatchDocument<ShopUpdateDto> doc);
+        [HttpPatch("/api/Shop/PatchAsync")]
+        ITask<ResultModel<UserDto>> PatchAsync(int id, [JsonContent] JsonPatchDocument<ShopUpdateDto> doc);
     }
 }
