@@ -7,6 +7,7 @@ using MiniShop.Backend.Model.Enums;
 using MiniShop.Backend.Web.Code;
 using MiniShop.Backend.Web.HttpApis;
 using MiniShop.Backend.Web.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -43,6 +44,27 @@ namespace MiniShop.Backend.Web.Controllers
             return Json(new Result() { Success = true, Data = selects });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAutoItemCode()
+        {
+            byte[] buffer = _userInfo.ShopId.ToByteArray();
+            long shopCode = BitConverter.ToInt64(buffer, 0);
+            Random rd = new Random();
+            int rdCode = rd.Next(0, 99999);
+            string itemCode = $"690{shopCode.ToString().Substring(0,4)}{rdCode.ToString().PadLeft(5,'0')}";
+            
+            //EAN13条形码校验位计算规则为：奇数位和的三倍+偶数位和对10取余，若余数为0，则校验位为0，若余数不为零，则校验位为10-余数。
+            int EAN = ((itemCode[1] + itemCode[3] + itemCode[5] + itemCode[7] + itemCode[9] + itemCode[11]) * 3 + (itemCode[0] + itemCode[2] + itemCode[4] + itemCode[6] + itemCode[8] + itemCode[10])) % 10;
+            int EAN13 = EAN == 0 ? 0 : 10 - EAN;
+
+            itemCode = $"{itemCode}{EAN13}";
+            var queryItem = await ExecuteApiResultModelAsync(() => { return _itemApi.GetByShopIdCodeAsync(_userInfo.ShopId, itemCode); });
+            if (queryItem.Data != null)
+            {
+                await GetAutoItemCode();
+            }
+            return Json(new Result() { Success = true, Data = itemCode });
+        }
 
         [HttpGet]
         public IActionResult Index()

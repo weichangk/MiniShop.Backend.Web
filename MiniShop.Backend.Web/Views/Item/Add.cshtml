@@ -10,83 +10,94 @@
 </head>
 
 <body>
-    <form class="layui-form" asp-controller="Categorie" asp-action="Add" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess"
+    <form class="layui-form" asp-controller="Item" asp-action="Add" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess"
         style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
-                <input type="hidden" id="ShopId" asp-for="ShopId"/>
-                <input type="hidden" id="CategorieId" asp-for="CategorieId"/>
-                <input type="hidden" id="UnitId" asp-for="UnitId"/>
-                <input type="hidden" id="Type" asp-for="Type"/>
-                <input type="hidden" id="PriceType" asp-for="PriceType"/>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">条码</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Code" value="@Model.Code" readonly="" lay-verify="" autocomplete="off" placeholder="请输入商品条码" class="layui-input" required />
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">名称</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Name" value="@Model.Name" lay-verify="" autocomplete="off" placeholder="请输入类别名称" class="layui-input" />
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">类别</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Name" value="" lay-verify="" autocomplete="off" placeholder="请输入类别名称" class="layui-input" />
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">单位</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="UnitCategorieName" value="" lay-verify="" autocomplete="off" placeholder="请输入类别名称" class="layui-input" />
-                    </div>
-                </div>      
-                <div class="layui-form-item">
-                    <label class="layui-form-label">进货价</label>
-                    <div class="layui-input-block">
-                        <input type="number" name="PurchasePrice" value="@Model.PurchasePrice" lay-verify="" autocomplete="off" placeholder="请输入进货价" class="layui-input" required />
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">售价</label>
-                    <div class="layui-input-block">
-                        <input type="number" name="Price" value="@Model.Price" lay-verify="" autocomplete="off" placeholder="请输入售价" class="layui-input" required />
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">类型</label>
-                    <div class="layui-input-block">
-                        <select id="OptionItemType" lay-filter="SelectItemType" lay-verify="required">
-                            <option value="">请选择一个类型</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">计价</label>
-                    <div class="layui-input-block">
-                        <select id="OptionItemPriceType" lay-filter="SelectItemPriceType" lay-verify="required">
-                            <option value="">请选择一个计价方式</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">图片</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Picture" value="@Model.Picture" lay-verify="" autocomplete="off" placeholder="请上传图片" class="layui-input" />
-                    </div>
-                </div>
 
-                <div class="layui-form-item">
-                    <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter=""
-                    style="margin-left: 333px;">
-                        <i class="layui-icon layui-icon-ok"></i>
-                        提交
-                    </button>
-                    <button type="reset" class="pear-btn pear-btn-sm">
-                        <i class="layui-icon layui-icon-refresh"></i>
-                        重置
-                    </button>
+        <input type="hidden" id="ShopId" asp-for="ShopId"/>
+        <input type="hidden" id="CategorieId" asp-for="CategorieId"/>
+        <input type="hidden" id="UnitId" asp-for="UnitId"/>
+        <input type="hidden" id="Type" asp-for="Type"/>
+        <input type="hidden" id="PriceType" asp-for="PriceType"/>
+        <div class="layui-form-item">
+             <div class="layui-inline" style="width: 350px;">
+                <label class="layui-form-label">货号</label>
+                <div class="layui-input-block">
+                    <input type="text" id="Code" name="Code" value="@Model.Code" lay-verify="required|CodeRangeCheck" autocomplete="off" placeholder="请输入商品货号" class="layui-input"/>
                 </div>
+             </div>
+             <div class="layui-inline" style="margin-bottom: 13px;">
+                <button type="button" id="AutoItemCode" class="pear-btn pear-btn-primary pear-btn-sm">
+                    <i class="layui-icon layui-icon-refresh"></i>
+                    生成货号
+                </button>
+             </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Model.Name" lay-verify="required|NameCheck" autocomplete="off" placeholder="请输入类别名称" class="layui-input"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">类别</label>
+            <div class="layui-input-block">
+                <input type="text" id="CategorieName" name="CategorieName" value="" readonly="true" lay-verify="required" autocomplete="off" placeholder="请选择类别" class="layui-input"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">单位</label>
+            <div class="layui-input-block">
+                <input type="text" id="UnitName" name="UnitName" value="" readonly="true" lay-verify="required" autocomplete="off" placeholder="请选择单位" class="layui-input"/>
+            </div>
+        </div>      
+        <div class="layui-form-item">
+            <label class="layui-form-label">进货价</label>
+            <div class="layui-input-block">
+                <input type="number" step="0.01" name="PurchasePrice" value="@Model.PurchasePrice" lay-verify="required|PurchasePriceCheck" autocomplete="off" placeholder="请输入进货价" class="layui-input"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">售价</label>
+            <div class="layui-input-block">
+                <input type="number" step="0.01" name="Price" value="@Model.Price" lay-verify="required|PriceCheck" autocomplete="off" placeholder="请输入售价" class="layui-input"/>
+            </div>
+        </div>
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-block">
+                    <select id="OptionItemType" lay-filter="SelectItemType" lay-verify="required">
+                        <option value="">请选择一个类型</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">计价</label>
+            <div class="layui-input-block">
+                <select id="OptionItemPriceType" lay-filter="SelectItemPriceType" lay-verify="required">
+                    <option value="">请选择一个计价方式</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片</label>
+            <div class="layui-input-block">
+                <input type="text" name="Picture" value="@Model.Picture" lay-verify="" autocomplete="off" placeholder="请上传图片" class="layui-input"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter=""
+            style="margin-left: 333px;">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+            <button type="reset" class="pear-btn pear-btn-sm">
+                <i class="layui-icon layui-icon-refresh"></i>
+                重置
+            </button>
+        </div>
 
     </form>
 
@@ -102,11 +113,25 @@
             let $ = layui.jquery;
 
             form.verify({
-                nameCheck: function (value) {
-                    if (!str_2_32_len(value))
-                        return '请输入正确的类别名称！2到32位！'
+                CodeRangeCheck: function (value) {
+                    if (!StrLenRangeVerify(value, 8, 24))
+                        return '请输入正确的商品条码！8到24位！'
+                },
+                NameCheck: function (value) {
+                    if (!StrLenRangeVerify(value, 2, 32))
+                        return '请输入正确的商品名称！2到32位！'
+                },
+                PurchasePriceCheck: function (value) {
+                    if (!NumberRangeVerify(value, 0.01, 99999))
+                        return '请输入正确的进货价！0.01到99999元！'
+                },
+                PriceCheck: function (value) {
+                    if (!NumberRangeVerify(value, 0.01, 99999))
+                        return '请输入正确的售价！0.01到99999元！'
                 },
             });
+
+            $('#AutoItemCode').on("click", BindAutoItemCode);
 
             BindItemType();
             form.on('select(SelectItemType)', function (data) {
@@ -117,6 +142,19 @@
             form.on('select(SelectItemPriceType)', function (data) {
                 $('#PriceType').val(data.value);
             });
+
+            $('#CategorieName').on("click", OpenCategorieSelect);
+            window.GetSelectCategorieData = function (data) { 
+                $('#CategorieId').val(data.id);
+                $('#CategorieName').val(data.name);
+            };
+
+            $('#UnitName').on("click", OpenUnitSelect);
+            window.GetSelectUnitData = function (data) { 
+                $('#UnitId').val(data.id);
+                $('#UnitName').val(data.name);
+            };
+
         });
 
         var onSuccess = function (result) {
@@ -124,7 +162,7 @@
             {
                 layer.msg(result.msg, { icon: 1, time: 1000 }, function () {
                     parent.layer.close(parent.layer.getFrameIndex(window.name));
-                    parent.layui.table.reload("categorie-table",{
+                    parent.layui.table.reload("item-table",{
                         url: 'GetPageOnShop',
                     });
                 });
@@ -141,6 +179,18 @@
             }
         };
 
+        function BindAutoItemCode() {
+            $.get('GetAutoItemCode', function (result) {
+                layui.use('form', function () {
+                    var form = layui.form;
+                    if (result.success) {
+                        $('#Code').val(result.data);
+                        $("#Code").focus(); 
+                    }
+                });
+            });
+        };
+
         function BindItemType() {
             $.get('GetItemTypes', function (result) {
                 layui.use('form', function () {
@@ -153,8 +203,8 @@
                             str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
                         });//遍历循环遍历
                         $(str).appendTo("#OptionItemType");//绑定
-                        //$("#OptionItemType option:eq(1)").attr("selected", 'selected'); //默认选择第一个选项
-                        //form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                        $("#OptionItemType option:eq(1)").attr("selected", 'selected'); //默认选择第一个选项
+                        form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
                     }
                 });
             });
@@ -172,13 +222,42 @@
                             str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
                         });//遍历循环遍历
                         $(str).appendTo("#OptionItemPriceType");//绑定
-                        //$("#OptionItemPriceType option:eq(1)").attr("selected", 'selected'); //默认选择第一个选项
-                        //form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                        $("#OptionItemPriceType option:eq(1)").attr("selected", 'selected'); //默认选择第一个选项
+                        form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
                     }
                 });
             });
         };
 
+        function OpenCategorieSelect(){
+            let index = layer.open({
+                type: 2,
+                title: '选择类别',
+                shade: 0.1,
+                area: ['1280px', '768px'],
+                content: '/categorie/select',
+                success : function () {            
+                },
+                cancel: function(){
+                }
+            });
+            layer.full(index)
+        };
+
+        function OpenUnitSelect(){
+            let index = layer.open({
+                type: 2,
+                title: '选择单位',
+                shade: 0.1,
+                area: ['1280px', '768px'],
+                content: '/unit/select',
+                success : function () {            
+                },
+                cancel: function(){
+                }
+            });
+            layer.full(index)
+        };
     </script>
 
 </body>

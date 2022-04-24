@@ -52,3 +52,21 @@ function str_0_64_len(str) {
         return true;
     }
 }
+
+function StrLenRangeVerify(str, min, max) {
+    var pattern = '^.{' + min + ',' + max + '}$';
+    var reg = new RegExp(pattern);
+    if (!str.match(reg)) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function NumberRangeVerify(num, min, max) {
+    if (num >= min && num <= max) {
+        return true;
+    } else {
+        return false;
+    }
+}

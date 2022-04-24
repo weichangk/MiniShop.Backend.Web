@@ -28,6 +28,12 @@ namespace MiniShop.Backend.Web.Controllers
         }
 
         [HttpGet]
+        public IActionResult Select()
+        {
+            return View();
+        }
+        
+        [HttpGet]
         public async Task<IActionResult> Add()
         {
             var maxCodeResult = await _unitApi.GetMaxCodeByShopIdAsync(_userInfo.ShopId);

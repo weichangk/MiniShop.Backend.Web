@@ -193,6 +193,14 @@
                         shade: 0.1,
                         area: [common.isModile() ? '100%' : '1280px', common.isModile() ? '100%' : '760px'],
                         content: '/item/add',
+                        success : function () {       
+                            var body = layer.getChildFrame('body', index);
+                            //使用 layer.open 打开子窗体时焦点还在父窗体的按键上 子窗体设置 autofocus="autofocus" 属性无效！
+                            //在打开子窗体成功后给子窗体设置焦点
+                            body.find("#Code").focus();                                                       
+                        },
+                        cancel: function(){
+                        }
                     });
                     layer.full(index);
                 }
