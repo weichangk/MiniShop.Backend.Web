@@ -41,5 +41,8 @@ namespace MiniShop.Backend.Web.HttpApis
 
         [HttpPatch("/api/item/PatchAsync")]
         ITask<ResultModel<ItemDto>> PatchAsync(int id, [JsonContent] JsonPatchDocument<ItemUpdateDto> doc);
+
+        [HttpPost("/api/item/UploadImgAsync")]
+        ITask<ResultModel<dynamic>> UploadImgAsync(string key, [JsonContent] string base64);
     }
 }

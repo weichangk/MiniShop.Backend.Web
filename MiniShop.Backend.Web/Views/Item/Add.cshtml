@@ -18,6 +18,7 @@
         <input type="hidden" id="UnitId" asp-for="UnitId"/>
         <input type="hidden" id="Type" asp-for="Type"/>
         <input type="hidden" id="PriceType" asp-for="PriceType"/>
+        <input type="hidden" id="PictureBase64" asp-for="PictureBase64"/>
         <div class="layui-form-item">
              <div class="layui-inline" style="width: 350px;">
                 <label class="layui-form-label">货号</label>
@@ -83,10 +84,14 @@
         <div class="layui-form-item">
             <label class="layui-form-label">图片</label>
             <div class="layui-input-block">
-                <input type="text" name="Picture" value="@Model.Picture" lay-verify="" autocomplete="off" placeholder="请上传图片" class="layui-input"/>
+                <div class="layui-upload">
+                    <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="uploadImgBtn">上传图片</button>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="uploadImgPreview" src="">
+                    </div>
+                </div>
             </div>
         </div>
-
         <div class="layui-form-item">
             <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter=""
             style="margin-left: 333px;">
@@ -108,9 +113,10 @@
     <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
 
     <script>
-        layui.use(['form', 'jquery'], function () {
+        layui.use(['form', 'jquery', 'upload'], function () {
             let form = layui.form;
             let $ = layui.jquery;
+            let upload = layui.upload;
 
             form.verify({
                 CodeRangeCheck: function (value) {
@@ -155,6 +161,28 @@
                 $('#UnitName').val(data.name);
             };
 
+            $('#filechange').on('change', function () {
+                var oFReader = new FileReader();    
+                var file = document.getElementById('filechange').files[0];
+                oFReader.readAsDataURL(file);
+                oFReader.onloadend = function(oFRevent){
+                    var src = oFRevent.target.result;
+                    alert(src)
+                }
+            });
+            //获取图片地址即可
+            upload.render({
+                elem: "#uploadImgBtn",
+                url: "",//不在此上传，获取到图片连接(base64)即可，在新建商品api中调用 cos api 上传
+                auto: false, //不自动上传
+                choose: function (obj) {
+                    //预览本地图片，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#PictureBase64').val(result);
+                        $("#uploadImgPreview").attr("src", result);//图片连接(base64)
+                    });
+                }
+            });
         });
 
         var onSuccess = function (result) {

@@ -97,7 +97,19 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAsync(ItemCreateDto model)
         {
+            if(!string.IsNullOrEmpty(model.PictureBase64))
+            {
+                model.Picture = $"{_userInfo.ShopId}-{model.Code}";
+            }
             var result = await ExecuteApiResultModelAsync(() => { return _itemApi.InsertAsync(model); });
+            if(result.Success && !string.IsNullOrEmpty(model.PictureBase64))
+            {
+                var uploadImg = await ExecuteApiResultModelAsync(() => { return _itemApi.UploadImgAsync(model.Picture, model.PictureBase64); });
+                if(!uploadImg.Success)
+                {
+                    result.Msg = "图片上传失败";
+                }
+            }
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 
