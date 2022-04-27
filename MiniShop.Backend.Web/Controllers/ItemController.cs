@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MiniShop.Backend.Model.Code;
 using MiniShop.Backend.Model.Dto;
@@ -17,10 +18,12 @@ namespace MiniShop.Backend.Web.Controllers
 {
     public class ItemController : BaseController
     {
+        private readonly IConfiguration _configuration;
         private readonly IItemApi _itemApi;
-        public ItemController(ILogger<ItemController> logger, IMapper mapper, IUserInfo userInfo,
+        public ItemController(ILogger<ItemController> logger, IMapper mapper, IUserInfo userInfo, IConfiguration configuration,
             IItemApi itemApi) : base(logger, mapper, userInfo)
         {
+            _configuration = configuration;
             _itemApi = itemApi;
         }
 
@@ -115,6 +118,7 @@ namespace MiniShop.Backend.Web.Controllers
 
         public async Task<IActionResult> UpdateAsync(int id)
         {
+            ViewBag.MinishopItemimgCosDomain = _configuration["MinishopItemimgCosDomain"];
             var result = await ExecuteApiResultModelAsync(() => { return _itemApi.GetByIdAsync(id); });
             if (result.Success)
             {

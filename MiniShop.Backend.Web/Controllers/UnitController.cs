@@ -41,7 +41,7 @@ namespace MiniShop.Backend.Web.Controllers
             {
                 return Json(new Result() { Success = maxCodeResult.Success, Status = maxCodeResult.Status, Msg = maxCodeResult.Msg });
             }
-            int maxCode = maxCodeResult.Data == 0 ? 100 : maxCodeResult.Data;
+            int maxCode = maxCodeResult.Data == 0 ? 100 : maxCodeResult.Data + 1;
             if (maxCode == 999)
             {
                 return Json(new Result() { Success = false, Msg = "该商店拥有的单位数量已达上限", Status = (int)HttpStatusCode.BadRequest });
