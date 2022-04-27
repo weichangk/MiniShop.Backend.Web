@@ -127,7 +127,16 @@ namespace MiniShop.Backend.Web.Controllers
         public async Task<IActionResult> UpdateAsync(ItemDto model)
         {
             var dto = _mapper.Map<ItemUpdateDto>(model);
+            dto.Picture = $"{_userInfo.ShopId}-{dto.Code}";
             var result = await ExecuteApiResultModelAsync(() => { return _itemApi.UpdateAsync(dto); });
+            if(result.Success && !string.IsNullOrEmpty(dto.PictureBase64))
+            {
+                var uploadImg = await ExecuteApiResultModelAsync(() => { return _itemApi.UploadImgAsync(dto.Picture, dto.PictureBase64); });
+                if(!uploadImg.Success)
+                {
+                    result.Msg = "图片上传失败";
+                }
+            }
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 
@@ -160,7 +169,16 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteAsync(int id)
         {
+            var item = await ExecuteApiResultModelAsync(() => { return _itemApi.GetByIdAsync(id); });
             var result = await ExecuteApiResultModelAsync(() => { return _itemApi.DeleteAsync(id); });
+            if(result.Success && item.Success)
+            {            
+                var deleteImg = await ExecuteApiResultModelAsync(() => { return _itemApi.DeleteImgAsync(item.Data.Picture); });
+                if(!deleteImg.Success)
+                {
+                    result.Msg = "图片删除失败";
+                }
+            }
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 
@@ -169,14 +187,28 @@ namespace MiniShop.Backend.Web.Controllers
         {
             List<string> idsStrList = ids.Split(",").ToList();
             List<int> idsIntList = new List<int>();
+            List<string> pictures = new List<string>();
             foreach (var id in idsStrList)
             {
                 idsIntList.Add(int.Parse(id));
+                var item = await ExecuteApiResultModelAsync(() => { return _itemApi.GetByIdAsync(int.Parse(id)); });
+                if(item.Success)
+                {
+                    pictures.Add(item.Data.Picture);
+                }
             }
 
             if (idsIntList.Count > 0)
             {
                 var result = await ExecuteApiResultModelAsync(() => { return _itemApi.BatchDeleteAsync(idsIntList); });
+                if(result.Success)
+                {
+                    var deleteImg = await ExecuteApiResultModelAsync(() => { return _itemApi.BatchDeleteImgAsync(pictures); });
+                    if(!deleteImg.Success)
+                    {
+                        result.Msg = "图片删除失败";
+                    }
+                }
                 return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
             }
             else

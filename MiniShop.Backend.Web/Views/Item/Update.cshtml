@@ -1,4 +1,4 @@
-﻿@model CategorieDto
+﻿@model ItemDto
 
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
@@ -9,30 +9,89 @@
 	<link rel="stylesheet" href="~/component/pear/css/pear.css" />
 </head>
 <body>
-    <form class="layui-form" asp-controller="Categorie" asp-action="Update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess">
-        <div class="mainBox">
-            <div class="main-container">
-                <input type="hidden" asp-for="Id" />
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">类别名称</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Name" value="@Model.Name" lay-verify="nameCheck" autocomplete="off" placeholder="请输入门店名称" class="layui-input">
+    <form class="layui-form" asp-controller="Item" asp-action="Update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess" 
+        style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" id="ShopId" asp-for="ShopId"/>
+        <input type="hidden" id="Code" asp-for="Code"/>
+        <input type="hidden" id="CategorieId" asp-for="CategorieId"/>
+        <input type="hidden" id="UnitId" asp-for="UnitId"/>
+        <input type="hidden" id="Type" asp-for="Type"/>
+        <input type="hidden" id="PriceType" asp-for="PriceType"/>
+        <input type="hidden" id="Picture" asp-for="Picture"/>
+        <input type="hidden" id="PictureBase64" asp-for="PictureBase64"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-block">
+                <input type="text" id="Name" name="Name" value="@Model.Name" lay-verify="required|NameCheck" autocomplete="off" placeholder="请输入商品名称" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">类别</label>
+            <div class="layui-input-block">
+                <input type="text" id="CategorieName" name="CategorieName" value="@Model.CategorieName" readonly="true" lay-verify="required" autocomplete="off" placeholder="请选择类别" class="layui-input"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">单位</label>
+            <div class="layui-input-block">
+                <input type="text" id="UnitName" name="UnitName" value="@Model.UnitName" readonly="true" lay-verify="required" autocomplete="off" placeholder="请选择单位" class="layui-input"/>
+            </div>
+        </div>      
+        <div class="layui-form-item">
+            <label class="layui-form-label">进货价</label>
+            <div class="layui-input-block">
+                <input type="number" step="0.01" name="PurchasePrice" value="@Model.PurchasePrice" lay-verify="required|PurchasePriceCheck" autocomplete="off" placeholder="请输入进货价" class="layui-input"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">售价</label>
+            <div class="layui-input-block">
+                <input type="number" step="0.01" name="Price" value="@Model.Price" lay-verify="required|PriceCheck" autocomplete="off" placeholder="请输入售价" class="layui-input"/>
+            </div>
+        </div>
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-block">
+                    <select id="OptionItemType" lay-filter="SelectItemType" lay-verify="required">
+                        <option value="">请选择一个类型</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">计价</label>
+            <div class="layui-input-block">
+                <select id="OptionItemPriceType" lay-filter="SelectItemPriceType" lay-verify="required">
+                    <option value="">请选择一个计价方式</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片</label>
+            <div class="layui-input-block">
+                <div class="layui-upload">
+                    <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="uploadImgBtn">上传图片</button>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="uploadImgPreview" src="https://minishop-itemimg-1309645229.cos.ap-guangzhou.myqcloud.com/@(Model.Picture)">
                     </div>
                 </div>
             </div>
         </div>
-        <div class="bottom">
-            <div class="button-container">
-                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="">
-                    <i class="layui-icon layui-icon-ok"></i>
-                    提交
-                </button>
-                <button type="reset" class="pear-btn pear-btn-sm">
-                    <i class="layui-icon layui-icon-refresh"></i>
-                    重置
-                </button>
-            </div>
+        <div class="layui-form-item">
+            <button id="submit" type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter=""
+            style="margin-left: 333px;">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+            <button type="reset" class="pear-btn pear-btn-sm">
+                <i class="layui-icon layui-icon-refresh"></i>
+                重置
+            </button>
         </div>
+
     </form>
 
     <script src="~/component/layui/layui.js"></script>
@@ -42,17 +101,61 @@
     <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
 
     <script>
-        layui.use(['form','jquery'],function(){
+        layui.use(['form','jquery', 'upload'],function(){
             let form = layui.form;
             let $ = layui.jquery;
+            let upload = layui.upload;
 
             form.verify({
-                nameCheck: function (value) {
-                    if (!str_2_32_len(value))
-                        return '请输入正确的类别名称！2到32位！'
+                NameCheck: function (value) {
+                    if (!StrLenRangeVerify(value, 2, 32))
+                        return '请输入正确的商品名称！2到32位！'
+                },
+                PurchasePriceCheck: function (value) {
+                    if (!NumberRangeVerify(value, 0.01, 99999))
+                        return '请输入正确的进货价！0.01到99999元！'
+                },
+                PriceCheck: function (value) {
+                    if (!NumberRangeVerify(value, 0.01, 99999))
+                        return '请输入正确的售价！0.01到99999元！'
                 },
             });
 
+            BindItemType();
+            form.on('select(SelectItemType)', function (data) {
+                $('#Type').val(data.value);
+            });
+
+            BindItemPriceType();
+            form.on('select(SelectItemPriceType)', function (data) {
+                $('#PriceType').val(data.value);
+            });
+
+            $('#CategorieName').on("click", OpenCategorieSelect);
+            window.GetSelectCategorieData = function (data) { 
+                $('#CategorieId').val(data.id);
+                $('#CategorieName').val(data.name);
+            };
+
+            $('#UnitName').on("click", OpenUnitSelect);
+            window.GetSelectUnitData = function (data) { 
+                $('#UnitId').val(data.id);
+                $('#UnitName').val(data.name);
+            };
+
+            //获取图片地址即可
+            upload.render({
+                elem: "#uploadImgBtn",
+                url: "",//不在此上传，获取到图片连接(base64)即可，在更新商品api中调用 cos api 上传
+                auto: false, //不自动上传
+                choose: function (obj) {
+                    //预览本地图片，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#PictureBase64').val(result);
+                        $("#uploadImgPreview").attr("src", result);//图片连接(base64)
+                    });
+                }
+            });
         });
 
         var onSuccess = function(result){
@@ -60,7 +163,7 @@
             {
                 layer.msg(result.msg,{icon:1,time:1000},function(){
                     parent.layer.close(parent.layer.getFrameIndex(window.name));
-                    parent.layui.table.reload("categorie-table",{
+                    parent.layui.table.reload("item-table",{
                         url: 'GetPageOnShop'
                     });
                 });
@@ -75,6 +178,74 @@
                     content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
                 });
             }
+        };
+
+        function BindItemType() {
+            $.get('GetItemTypes', function (result) {
+                layui.use('form', function () {
+                    var form = layui.form;
+                    if (result.success) {
+                        var str = ''; //声明字符串
+                        //var data = $.parseJSON(result.data);//转成Json对象
+                        $("#OptionItemType option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                        $.each(result.data, function (i, obj) {
+                            str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                        });//遍历循环遍历
+                        $(str).appendTo("#OptionItemType");//绑定
+                        $("#OptionItemType option:eq(1)").attr("selected", 'selected'); //默认选择第一个选项
+                        form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                    }
+                });
+            });
+        };
+
+        function BindItemPriceType() {
+            $.get('GetItemPriceTypes', function (result) {
+                layui.use('form', function () {
+                    var form = layui.form;
+                    if (result.success) {
+                        var str = ''; //声明字符串
+                        //var data = $.parseJSON(result.data);//转成Json对象
+                        $("#OptionItemPriceType option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                        $.each(result.data, function (i, obj) {
+                            str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                        });//遍历循环遍历
+                        $(str).appendTo("#OptionItemPriceType");//绑定
+                        $("#OptionItemPriceType option:eq(1)").attr("selected", 'selected'); //默认选择第一个选项
+                        form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                    }
+                });
+            });
+        };
+
+        function OpenCategorieSelect(){
+            let index = layer.open({
+                type: 2,
+                title: '选择类别',
+                shade: 0.1,
+                area: ['1280px', '768px'],
+                content: '/categorie/select',
+                success : function () {            
+                },
+                cancel: function(){
+                }
+            });
+            layer.full(index)
+        };
+
+        function OpenUnitSelect(){
+            let index = layer.open({
+                type: 2,
+                title: '选择单位',
+                shade: 0.1,
+                area: ['1280px', '768px'],
+                content: '/unit/select',
+                success : function () {            
+                },
+                cancel: function(){
+                }
+            });
+            layer.full(index)
         };
 
     </script>

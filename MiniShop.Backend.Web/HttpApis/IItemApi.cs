@@ -44,5 +44,11 @@ namespace MiniShop.Backend.Web.HttpApis
 
         [HttpPost("/api/item/UploadImgAsync")]
         ITask<ResultModel<dynamic>> UploadImgAsync(string key, [JsonContent] string base64);
+
+        [HttpPost("/api/item/DeleteImgAsync")]
+        ITask<ResultModel<dynamic>> DeleteImgAsync(string key);
+
+        [HttpPost("/api/item/BatchDeleteImgAsync")]
+        ITask<ResultModel<dynamic>> BatchDeleteImgAsync([JsonContent] List<string> keys);
     }
 }

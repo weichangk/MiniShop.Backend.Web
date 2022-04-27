@@ -161,15 +161,6 @@
                 $('#UnitName').val(data.name);
             };
 
-            $('#filechange').on('change', function () {
-                var oFReader = new FileReader();    
-                var file = document.getElementById('filechange').files[0];
-                oFReader.readAsDataURL(file);
-                oFReader.onloadend = function(oFRevent){
-                    var src = oFRevent.target.result;
-                    alert(src)
-                }
-            });
             //获取图片地址即可
             upload.render({
                 elem: "#uploadImgBtn",
