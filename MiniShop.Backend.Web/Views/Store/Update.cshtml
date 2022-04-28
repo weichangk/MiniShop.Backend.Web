@@ -9,49 +9,45 @@
 	<link rel="stylesheet" href="~/component/pear/css/pear.css" />
 </head>
 <body>
-    <form class="layui-form" asp-controller="Store" asp-action="Update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess">
-        <div class="mainBox">
-            <div class="main-container">
-                <input type="hidden" asp-for="Id" />
-                <input type="hidden" asp-for="ShopId" />
-                <input type="hidden" asp-for="StoreId" />
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">门店名</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Name" value="@Model.Name" lay-verify="storeNameCheck" autocomplete="off" placeholder="请输入门店名称" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">联系人</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Contacts" value="@Model.Contacts" lay-verify="contactsCheck" autocomplete="off" placeholder="请输入联系人" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">手机号</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Phone" value="@Model.Phone" lay-verify="nullablePhone" autocomplete="off" placeholder="请输入手机号" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">地  址</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Address" value="@Model.Address" lay-verify="addressCheck" autocomplete="off" placeholder="请输入地址" class="layui-input">
-                    </div>
-                </div>
+    <form class="layui-form" asp-controller="Store" asp-action="Update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess" 
+        style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ShopId" />
+        <input type="hidden" asp-for="StoreId" />
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">门店名</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Model.Name" lay-verify="required|storeNameCheck" autocomplete="off" placeholder="请输入门店名称" class="layui-input">
             </div>
         </div>
-        <div class="bottom">
-            <div class="button-container">
-                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="">
-                    <i class="layui-icon layui-icon-ok"></i>
-                    提交
-                </button>
-                <button type="reset" class="pear-btn pear-btn-sm">
-                    <i class="layui-icon layui-icon-refresh"></i>
-                    重置
-                </button>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">联系人</label>
+            <div class="layui-input-block">
+                <input type="text" name="Contacts" value="@Model.Contacts" lay-verify="required|contactsCheck" autocomplete="off" placeholder="请输入联系人" class="layui-input">
             </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">手机号</label>
+            <div class="layui-input-block">
+                <input type="text" name="Phone" value="@Model.Phone" lay-verify="nullablePhone" autocomplete="off" placeholder="请输入手机号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">地  址</label>
+            <div class="layui-input-block">
+                <input type="text" name="Address" value="@Model.Address" lay-verify="addressCheck" autocomplete="off" placeholder="请输入地址" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button id="submit" type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="" style="margin-left: 333px;">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+            <button type="reset" class="pear-btn pear-btn-sm">
+                <i class="layui-icon layui-icon-refresh"></i>
+                重置
+            </button>
         </div>
     </form>
 
@@ -72,15 +68,15 @@
                         return '请输入正确的手机号！';
                 },
                 storeNameCheck: function (value) {
-                    if (!str_2_32_len(value))
+                    if (!StrLenRangeVerify(value, 2, 32))
                         return '请输入正确的门店名！2到32位！'
                 },
                 contactsCheck: function (value) {
-                    if (!str_2_32_len(value))
+                    if (!StrLenRangeVerify(value, 2, 32))
                         return '请输入正确的联系人！2到32位！';
                 },
                 addressCheck: function (value) {
-                    if (!str_0_64_len(value))
+                    if (!StrLenRangeVerify(value, 0, 64))
                         return '请输入正确的地址！0到64位！';
                 },
             });

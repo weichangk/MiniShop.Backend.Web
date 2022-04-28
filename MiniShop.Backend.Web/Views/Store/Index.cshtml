@@ -157,27 +157,42 @@
 
 
                 window.add = function () {
-                    layer.open({
+                    @* layer.open({
                         type: 2,
                         title: '新增',
                         shade: 0.1,
                         area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '500px'],
                         content: '/store/add',
+                    }); *@
+                    let index = layer.open({
+                        type: 2,
+                        title: '',
+                        shade: 0.1,
+                        area: [common.isModile() ? '100%' : '1280px', common.isModile() ? '100%' : '760px'],
+                        content: '/Error/Error?statusCode=404&errorMsg=暂时不支持多门店功能',
                     });
+                    layer.full(index);
                 }
 
                 window.edit = function (obj) {
-                    layer.open({
+                    let index = layer.open({
                         type: 2,
-                        title: '修改',
+                        title: '修改门店',
                         shade: 0.1,
-                        area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '400px'],
+                        area: [common.isModile() ? '100%' : '1280px', common.isModile() ? '100%' : '760px'],
                         content: '/store/update/' + obj.data['id'],
+                        success : function () {       
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#submit").focus();                                                       
+                        },
+                        cancel: function(){
+                        }
                     });
+                    layer.full(index);
                 }
 
                 window.remove = function (obj) {
-                    layer.confirm('确定要删除该用户', {
+                    layer.confirm('确定要删除该门店', {
                         icon: 3,
                         title: '提示'
                     }, function (index) {
@@ -198,13 +213,14 @@
                                         table.reload('store-table');
                                     });
                                 } else {
-                                    parent.layer.open({
+                                    let index = layer.open({
                                         type: 2,
                                         title: '',
                                         shade: 0.1,
-                                        area: ['900px', '600px'],
+                                        area: [common.isModile() ? '100%' : '1280px', common.isModile() ? '100%' : '760px'],
                                         content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
                                     });
+                                    layer.full(index);
                                 }
                             }
                         })
@@ -243,13 +259,14 @@
                                             table.reload('store-table');
                                     });
                                 } else {
-                                    parent.layer.open({
+                                    let index = layer.open({
                                         type: 2,
                                         title: '',
                                         shade: 0.1,
-                                        area: ['900px', '600px'],
+                                        area: [common.isModile() ? '100%' : '1280px', common.isModile() ? '100%' : '760px'],
                                         content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
                                     });
+                                    layer.full(index);
                                 }
                             }
                         })
