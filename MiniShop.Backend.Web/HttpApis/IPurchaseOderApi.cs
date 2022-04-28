@@ -15,31 +15,31 @@ namespace MiniShop.Backend.Web.HttpApis
     [JsonReturn]
     public interface IPurchaseOderApi : IHttpApi
     {
-        [HttpGet("/api/PurchaseOder")]
+        [HttpGet("/api/PurchaseOder/GetByIdAsync")]
         ITask<ResultModel<PurchaseOderDto>> GetByIdAsync(int id);
 
-        [HttpGet("/api/PurchaseOder/GetByOderNoOnShop")]
-        ITask<ResultModel<PurchaseOderDto>> GetByOderNoOnShop(Guid shopId, string oderNo);
+        [HttpGet("/api/PurchaseOder/GetByShopIdOderNoAsync")]
+        ITask<ResultModel<PurchaseOderDto>> GetByShopIdOderNoAsync(Guid shopId, string oderNo);
         
-        [HttpGet("/api/PurchaseOder/GetPageOnShop")]
-        ITask<ResultModel<PagedList<PurchaseOderDto>>> GetPageOnShopAsync(int pageIndex, int pageSize, Guid shopId);
+        [HttpGet("/api/PurchaseOder/GetPageByShopIdAsync")]
+        ITask<ResultModel<PagedList<PurchaseOderDto>>> GetPageByShopIdAsync(int pageIndex, int pageSize, Guid shopId);
 
-        [HttpGet("/api/PurchaseOder/GetPageOnShopWhereQuery")]
-        ITask<ResultModel<PagedList<PurchaseOderDto>>> GetPageOnShopWhereQuery(int pageIndex, int pageSize, Guid shopId, int storeId, string oderNo);
+        [HttpGet("/api/PurchaseOder/GetPageByShopIdWhereQueryAsync")]
+        ITask<ResultModel<PagedList<PurchaseOderDto>>> GetPageByShopIdWhereQueryAsync(int pageIndex, int pageSize, Guid shopId, int storeId, string oderNo);
 
-        [HttpDelete("/api/PurchaseOder")]
+        [HttpDelete("/api/PurchaseOder/DeleteAsync")]
         ITask<ResultModel<PurchaseOderDto>> DeleteAsync(int id);
 
-        [HttpDelete("/api/PurchaseOder/BatchDelete")]
+        [HttpDelete("/api/PurchaseOder/BatchDeleteAsync")]
         ITask<ResultModel<PurchaseOderDto>> BatchDeleteAsync([JsonContent] List<int> ids);
 
-        [HttpPost("/api/PurchaseOder")]
-        ITask<ResultModel<PurchaseOderCreateDto>> AddAsync([JsonContent] PurchaseOderCreateDto model);
+        [HttpPost("/api/PurchaseOder/InsertAsync")]
+        ITask<ResultModel<PurchaseOderCreateDto>> InsertAsync([JsonContent] PurchaseOderCreateDto model);
 
-        [HttpPut("/api/PurchaseOder")]
+        [HttpPut("/api/PurchaseOder/UpdateAsync")]
         ITask<ResultModel<PurchaseOderUpdateDto>> UpdateAsync([JsonContent] PurchaseOderUpdateDto model);
 
-        [HttpPatch("/api/PurchaseOder")]
-        ITask<ResultModel<PurchaseOderDto>> PatchUpdateAsync(int id, [JsonContent] JsonPatchDocument<PurchaseOderUpdateDto> doc);
+        [HttpPatch("/api/PurchaseOder/PatchAsync")]
+        ITask<ResultModel<PurchaseOderDto>> PatchAsync(int id, [JsonContent] JsonPatchDocument<PurchaseOderUpdateDto> doc);
     }
 }

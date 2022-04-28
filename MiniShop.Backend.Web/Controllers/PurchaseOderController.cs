@@ -55,20 +55,22 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            PurchaseOderCreateDto model = new PurchaseOderCreateDto
-            {
-                ShopId = _userInfo.ShopId,
-                OderNo = Guid.NewGuid().ToString(),//生成唯一单号
-                OperatorName = _userInfo.UserName,
-            };
+            PurchaseOderCreateDto model = await Task.FromResult(
+                new PurchaseOderCreateDto
+                {
+                    ShopId = _userInfo.ShopId,
+                    OderNo = Guid.NewGuid().ToString(),//生成唯一单号
+                    OperatorName = _userInfo.UserName,
+                }
+            );
             return View(model);
         }
 
         [HttpPost]
         public IActionResult Add(PurchaseOderCreateDto model)
         {
-            var result =  ExecuteApiResultModelAsync(() => { return _purchaseOderApi.AddAsync(model); }).Result;
-            return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
+            var result =  ExecuteApiResultModelAsync(() => { return _purchaseOderApi.InsertAsync(model); }).Result;
+            return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
         }
 
         public async Task<IActionResult> UpdateAsync(int id)
@@ -93,7 +95,7 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPageOnShopAsync(int page, int limit)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.GetPageOnShopAsync(page, limit, _userInfo.ShopId); });
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.GetPageByShopIdAsync(page, limit, _userInfo.ShopId); });
             if (!result.Success)
             {
                 return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });
@@ -106,7 +108,7 @@ namespace MiniShop.Backend.Web.Controllers
         public async Task<IActionResult> GetPageOnShopWhereQueryAsync(int page, int limit, int storeId, string oderNo)
         {
             oderNo = System.Web.HttpUtility.UrlEncode(oderNo);
-            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.GetPageOnShopWhereQuery(page, limit, _userInfo.ShopId, storeId, oderNo); });
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.GetPageByShopIdWhereQueryAsync(page, limit, _userInfo.ShopId, storeId, oderNo); });
             if (!result.Success)
             {
                 return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });

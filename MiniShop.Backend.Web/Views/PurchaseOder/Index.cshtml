@@ -76,17 +76,13 @@
                         title: 'ID',
                         field: 'id',
                         align: 'center',
-                        width: 100
+                        width: 100,
+                        hide: true
                     },
                     {
                         title: '单号',
                         field: 'oderNo',
                         align: 'center',
-                    },
-                    {
-                        title: '门店',
-                        field: 'storeName',
-                        align: 'center'
                     },
                     {
                         title: '供应商',
@@ -195,19 +191,32 @@
                         shade: 0.1,
                         area: ['1280px', '768px'],
                         content: '/purchaseoder/add',
-                        //maxmin: true
+                        //maxmin: true,
+                        success : function () {       
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#createOderNoBtn").focus();                                                       
+                        },
+                        cancel: function(){
+                        }
                     });
-                    layer.full(index)
+                    layer.full(index);
                 }
 
                 window.edit = function (obj) {
-                    layer.open({
+                    let index = layer.open({
                         type: 2,
                         title: '修改订单',
                         shade: 0.1,
                         area: ['1280px', '768px'],
                         content: '/purchaseoder/update?id=' + obj.data['id'],
+                        success : function () {       
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#OptionSupplier").focus();                                                       
+                        },
+                        cancel: function(){
+                        }
                     });
+                    layer.full(index);
                 }
 
                 window.remove = function (obj) {
@@ -232,13 +241,14 @@
                                         table.reload('purchaseoder-table');
                                     });
                                 } else {
-                                    parent.layer.open({
+                                    let index = layer.open({
                                         type: 2,
                                         title: '',
                                         shade: 0.1,
-                                        area: ['900px', '600px'],
+                                        area: ['1280px', '760px'],
                                         content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
                                     });
+                                    layer.full(index);
                                 }
                             }
                         })
@@ -277,13 +287,14 @@
                                             table.reload('purchaseoder-table');
                                     });
                                 } else {
-                                    parent.layer.open({
+                                    let index = layer.open({
                                         type: 2,
                                         title: '',
                                         shade: 0.1,
-                                        area: ['900px', '600px'],
+                                        area: ['1280px', '760px'],
                                         content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
                                     });
+                                    layer.full(index);
                                 }
                             }
                         })

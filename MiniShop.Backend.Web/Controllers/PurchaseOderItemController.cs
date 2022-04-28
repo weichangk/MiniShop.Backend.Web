@@ -31,7 +31,7 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAsync(PurchaseOderItemCreateDto model)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.AddAsync(model); });
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.InsertAsync(model); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 
@@ -57,7 +57,7 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPageOnShopAsync(int page, int limit)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.GetPageOnShopAsync(page, limit, _userInfo.ShopId); });
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.GetPageByShopIdAsync(page, limit, _userInfo.ShopId); });
             if (!result.Success)
             {
                 return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });
@@ -65,22 +65,9 @@ namespace MiniShop.Backend.Web.Controllers
             return Json(new Table() { Data = result.Data.Item, Count = result == null ? 0 : result.Data.Total });
         }
 
-        public async Task<IActionResult> GetPageByOderNoAsync(int page, int limit, string oderNo)
+        public async Task<IActionResult> GetPageByShopIdPurchaseOderIdAsync(int page, int limit, int purchaseOderId)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.GetPageByShopIdOderNoAsync(page, limit, _userInfo.ShopId, oderNo); });
-            if (!result.Success)
-            {
-                return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });
-            }
-            return Json(new Table() { Data = result.Data.Item, Count = result == null ? 0 : result.Data.Total });
-        }
-
-        [ResponseCache(Duration = 0)]
-        [HttpGet]
-        public async Task<IActionResult> GetPageOnShopWhereQueryAsync(int page, int limit, string oderNo)
-        {
-            oderNo = System.Web.HttpUtility.UrlEncode(oderNo);
-            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.GetPageOnShopWhereQuery(page, limit, _userInfo.ShopId, oderNo); });
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.GetPageByShopIdPurchaseOderIdAsync(page, limit, _userInfo.ShopId, purchaseOderId); });
             if (!result.Success)
             {
                 return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });
