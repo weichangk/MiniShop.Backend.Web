@@ -9,29 +9,24 @@
 	<link rel="stylesheet" href="~/component/pear/css/pear.css" />
 </head>
 <body>
-    <form class="layui-form" asp-controller="Categorie" asp-action="Update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess">
-        <div class="mainBox">
-            <div class="main-container">
-                <input type="hidden" asp-for="Id" />
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">类别名称</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Name" value="@Model.Name" lay-verify="nameCheck" autocomplete="off" placeholder="请输入门店名称" class="layui-input">
-                    </div>
-                </div>
+    <form class="layui-form" asp-controller="Categorie" asp-action="Update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess" 
+    style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+        <input type="hidden" asp-for="Id" />
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">类别名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Model.Name" lay-verify="required|nameCheck" autocomplete="off" placeholder="请输入门店名称" class="layui-input">
             </div>
         </div>
-        <div class="bottom">
-            <div class="button-container">
-                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="">
-                    <i class="layui-icon layui-icon-ok"></i>
-                    提交
-                </button>
-                <button type="reset" class="pear-btn pear-btn-sm">
-                    <i class="layui-icon layui-icon-refresh"></i>
-                    重置
-                </button>
-            </div>
+        <div class="layui-form-item">
+            <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="" style="margin-left: 333px;">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+            <button type="reset" class="pear-btn pear-btn-sm">
+                <i class="layui-icon layui-icon-refresh"></i>
+                重置
+            </button>
         </div>
     </form>
 
@@ -48,8 +43,8 @@
 
             form.verify({
                 nameCheck: function (value) {
-                    if (!str_2_32_len(value))
-                        return '请输入正确的类别名称！2到32位！'
+                    if (!StrLenRangeVerify(value, 1, 24))
+                        return '请输入正确的类别名称！1到24位！'
                 },
             });
 

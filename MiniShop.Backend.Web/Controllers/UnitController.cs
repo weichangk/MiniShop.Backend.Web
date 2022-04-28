@@ -129,7 +129,7 @@ namespace MiniShop.Backend.Web.Controllers
             }
             else
             {
-                return Json(new Result() { Success = false, Msg = "查找不到要删除的单位", Status = (int)HttpStatusCode.NotFound });
+                return Json(new Result() { Success = false, Msg = "没有选择要删除的单位", Status = (int)HttpStatusCode.NotFound });
             }
 
         }

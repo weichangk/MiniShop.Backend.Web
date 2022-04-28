@@ -152,23 +152,37 @@
 
 
                 window.add = function () {
-                    layer.open({
+                    let index = layer.open({
                         type: 2,
                         title: '新增',
                         shade: 0.1,
-                        area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '500px'],
+                        area: [common.isModile() ? '100%' : '1280px', common.isModile() ? '100%' : '760px'],
                         content: '/categorie/add',
+                        success : function () {       
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#name").focus();                                                       
+                        },
+                        cancel: function(){
+                        }
                     });
+                    layer.full(index);
                 }
 
                 window.edit = function (obj) {
-                    layer.open({
+                    let index = layer.open({
                         type: 2,
                         title: '修改',
                         shade: 0.1,
-                        area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '400px'],
+                        area: [common.isModile() ? '100%' : '1280px', common.isModile() ? '100%' : '760px'],
                         content: '/categorie/update/' + obj.data['id'],
+                        success : function () {       
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#submit").focus();                                                       
+                        },
+                        cancel: function(){
+                        }
                     });
+                    layer.full(index);
                 }
 
                 window.remove = function (obj) {

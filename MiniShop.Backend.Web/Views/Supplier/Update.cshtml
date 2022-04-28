@@ -9,56 +9,53 @@
 	<link rel="stylesheet" href="~/component/pear/css/pear.css" />
 </head>
 <body>
-    <form class="layui-form" asp-controller="Supplier" asp-action="Update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess">
-        <div class="mainBox">
-            <div class="main-container">
-                <input type="hidden" id="Id" name="Id" value="@Model.Id" />
-                <input type="hidden" id="State" name="State" value="@Model.State" />
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">名称</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Name" value="@Model.Name" lay-verify="nameCheck" autocomplete="off" placeholder="请输入供应名称" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">联系人</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Contacts" value="@Model.Contacts" lay-verify="nameCheck" autocomplete="off" placeholder="请输入供应商联系人" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">手机号</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Phone" value="@Model.Phone" lay-verify="phone" autocomplete="off" placeholder="请输入供应商联系手机号" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">地址</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Address" value="@Model.Address" lay-verify="addressCheck" autocomplete="off" placeholder="请输入供应商地址" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">状态</label>
-                    <div class="layui-input-block">
-                        <select id="OptionState" lay-filter="SelectState" lay-verify="required">
-                            <option value="">请选择一个状态</option>
-                        </select>
-                    </div>
-                </div>
+    <form class="layui-form" asp-controller="Supplier" asp-action="Update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess" 
+        style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+        <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+        <input type="hidden" id="State" name="State" value="@Model.State" />
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Model.Name" lay-verify="required|nameCheck" autocomplete="off" placeholder="请输入供应名称" class="layui-input">
             </div>
         </div>
-        <div class="bottom">
-            <div class="button-container">
-                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="">
-                    <i class="layui-icon layui-icon-ok"></i>
-                    提交
-                </button>
-                <button type="reset" class="pear-btn pear-btn-sm">
-                    <i class="layui-icon layui-icon-refresh"></i>
-                    重置
-                </button>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">联系人</label>
+            <div class="layui-input-block">
+                <input type="text" name="Contacts" value="@Model.Contacts" lay-verify="required|contactsCheck" autocomplete="off" placeholder="请输入供应商联系人" class="layui-input">
             </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">手机号</label>
+            <div class="layui-input-block">
+                <input type="text" name="Phone" value="@Model.Phone" lay-verify="phone" autocomplete="off" placeholder="请输入供应商联系手机号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="Address" value="@Model.Address" lay-verify="addressCheck" autocomplete="off" placeholder="请输入供应商地址" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">状态</label>
+            <div class="layui-input-block">
+                <select id="OptionState" lay-filter="SelectState" lay-verify="required">
+                    <option value="">请选择一个状态</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="" 
+                style="margin-left: 333px;">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+            <button type="reset" class="pear-btn pear-btn-sm">
+                <i class="layui-icon layui-icon-refresh"></i>
+                重置
+            </button>
         </div>
     </form>
 
@@ -75,15 +72,19 @@
 
             form.verify({
                 nameCheck: function (value) {
-                    if (!str_2_32_len(value))
+                    if (!StrLenRangeVerify(value, 2, 32))
                         return '请输入正确的供应商名称！2到32位！'
+                },
+                contactsCheck: function (value) {
+                    if (!StrLenRangeVerify(value, 2, 32))
+                        return '请输入正确的联系人名称！2到32位！'
                 },
                 nullablePhone: function (value) {
                     if (!nullablePhoneCheck(value))
                         return '请输入正确的手机号！';
                 },
                 addressCheck: function (value) {
-                    if (!str_0_64_len(value))
+                    if (!StrLenRangeVerify(value, 0, 32))
                         return '请输入正确的供应商地址！2到32位！'
                 },
             });
