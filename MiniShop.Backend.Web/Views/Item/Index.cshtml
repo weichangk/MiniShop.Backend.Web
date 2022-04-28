@@ -244,13 +244,14 @@
                                         table.reload('item-table');
                                     });
                                 } else {
-                                    parent.layer.open({
+                                    let index = layer.open({
                                         type: 2,
                                         title: '',
                                         shade: 0.1,
-                                        area: ['900px', '600px'],
+                                        area: ['1280px', '760px'],
                                         content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
                                     });
+                                    layer.full(index);
                                 }
                             }
                         })
@@ -289,13 +290,14 @@
                                             table.reload('item-table');
                                     });
                                 } else {
-                                    parent.layer.open({
+                                    let index = layer.open({
                                         type: 2,
                                         title: '',
                                         shade: 0.1,
-                                        area: ['900px', '600px'],
+                                        area: ['1280px', '760px'],
                                         content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
                                     });
+                                    layer.full(index);
                                 }
                             }
                         })

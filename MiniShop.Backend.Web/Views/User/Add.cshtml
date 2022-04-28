@@ -10,74 +10,70 @@
 </head>
 
 <body>
-    <form class="layui-form" asp-controller="User" asp-action="Add" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess">
-        <div class="mainBox">
-            <div class="main-container">
-                <input type="hidden" id="ShopId" name="ShopId" value="@Model.ShopId" />
-                <input type="hidden" id="StoreId" name="StoreId" value="@Model.StoreId" />
-                <input type="hidden" id="Rank" name="Rank" value="@Model.Rank" />
-                @if (User.Claims.FirstOrDefault(s => s.Type == "rank").Value.Contains("Shop"))
-                {
-                    <div class="layui-form-item">
-                        <label class="layui-form-label" style="width: 20%">门店</label>
-                        <div class="layui-input-block">
-                            <select id="OptionStore" lay-filter="SelectStore" lay-verify="required">
-                                <option value="">请选择一个门店</option>
-                            </select>
-                        </div>
-                    </div>
-                }
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">角色</label>
-                    <div class="layui-input-block">
-                        <select id="OptionRank" lay-filter="SelectRank" lay-verify="required">
-                            <option value="">请选择一个职位</option>
-                        </select>
-                    </div>
+    <form class="layui-form" asp-controller="User" asp-action="Add" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess" 
+        style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+        <input type="hidden" id="ShopId" name="ShopId" value="@Model.ShopId" />
+        <input type="hidden" id="StoreId" name="StoreId" value="@Model.StoreId" />
+        <input type="hidden" id="Rank" name="Rank" value="@Model.Rank" />
+        @if (User.Claims.FirstOrDefault(s => s.Type == "rank").Value.Contains("Shop"))
+        {
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 20%">门店</label>
+                <div class="layui-input-block">
+                    <select id="OptionStore" lay-filter="SelectStore" lay-verify="required">
+                        <option value="">请选择一个门店</option>
+                    </select>
                 </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">用户名</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="UserName" value="@Model.UserName" lay-verify="userName" autocomplete="off" placeholder="请输入用户名" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">手机号</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" lay-verify="nullablePhone" autocomplete="off" placeholder="请输入手机号" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">邮箱</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Email" value="@Model.Email" lay-verify="nullableEmail" autocomplete="off" placeholder="请输入邮箱" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">密码</label>
-                    <div class="layui-input-block">
-                        <input type="password" name="PassWord" value="@Model.PassWord" lay-verify="pass" autocomplete="off" placeholder="请输入密码" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label" style="width: 20%">确认密码</label>
-                    <div class="layui-input-block">
-                        <input type="password" name="ConfirmPassWord" value="@Model.ConfirmPassWord" lay-verify="required|confirmPass" autocomplete="off" placeholder="请输入确认密码" class="layui-input">
-                    </div>
-                </div>
+            </div>
+        }
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">角色</label>
+            <div class="layui-input-block">
+                <select id="OptionRank" lay-filter="SelectRank" lay-verify="required">
+                    <option value="">请选择一个职位</option>
+                </select>
             </div>
         </div>
-        <div class="bottom">
-            <div class="button-container">
-                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="user-save">
-                    <i class="layui-icon layui-icon-ok"></i>
-                    提交
-                </button>
-                <button type="reset" class="pear-btn pear-btn-sm">
-                    <i class="layui-icon layui-icon-refresh"></i>
-                    重置
-                </button>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">用户名</label>
+            <div class="layui-input-block">
+                <input id="UserName" type="text" name="UserName" value="@Model.UserName" lay-verify="required|userName" autocomplete="off" placeholder="请输入用户名" class="layui-input">
             </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">手机号</label>
+            <div class="layui-input-block">
+                <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" lay-verify="nullablePhone" autocomplete="off" placeholder="请输入手机号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" name="Email" value="@Model.Email" lay-verify="nullableEmail" autocomplete="off" placeholder="请输入邮箱" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="PassWord" value="@Model.PassWord" lay-verify="required|pass" autocomplete="off" placeholder="请输入密码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">确认密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="ConfirmPassWord" value="@Model.ConfirmPassWord" lay-verify="required|confirmPass" autocomplete="off" placeholder="请输入确认密码" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="user-save"  style="margin-left: 333px;">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+            <button type="reset" class="pear-btn pear-btn-sm">
+                <i class="layui-icon layui-icon-refresh"></i>
+                重置
+            </button>
         </div>
     </form>
 
@@ -147,13 +143,14 @@
             } 
             else
             {
-                parent.layer.open({
+                let index = layer.open({
                     type: 2,
                     title: '',
                     shade: 0.1,
-                    area: ['900px', '600px'],
+                    area: ['1280px', '760px'],
                     content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
                 });
+                layer.full(index);
             }
         };
 

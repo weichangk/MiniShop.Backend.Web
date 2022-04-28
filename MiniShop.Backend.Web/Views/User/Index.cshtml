@@ -192,23 +192,37 @@
                 });
 
                 window.add = function () {
-                    layer.open({
+                    let index = layer.open({
                         type: 2,
-                        title: '新增',
+                        title: '新增用户',
                         shade: 0.1,
-                        area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '550px'],
+                        area: [common.isModile() ? '100%' : '1280px', common.isModile() ? '100%' : '760px'],
                         content: '/user/add',
+                        success : function () {       
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#UserName").focus();                                                       
+                        },
+                        cancel: function(){
+                        }
                     });
+                    layer.full(index);
                 };
 
                 window.edit = function (obj) {
-                    layer.open({
+                    let index = layer.open({
                         type: 2,
-                        title: '修改',
+                        title: '修改用户',
                         shade: 0.1,
-                        area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '400px'],
+                        area: [common.isModile() ? '100%' : '1280px', common.isModile() ? '100%' : '760px'],
                         content: '/user/update?name=' + obj.data['userName'],
+                        success : function () {       
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#submit").focus();                                                       
+                        },
+                        cancel: function(){
+                        }
                     });
+                    layer.full(index);
                 };
 
                 window.changeEnable = function (obj) {
@@ -222,13 +236,14 @@
                                     parent.layer.close(parent.layer.getFrameIndex(window.name));
                                 });
                             } else {
-                                parent.layer.open({
+                                let index = layer.open({
                                     type: 2,
                                     title: '',
                                     shade: 0.1,
-                                    area: ['900px', '600px'],
+                                    area: ['1280px', '760px'],
                                     content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
                                 });
+                                layer.full(index);
                                 window.refresh();//暂时找不到如果屏蔽角色为店长禁止更改checked，或还原checked的办法，目前就先刷新还原吧。。
                             }
                         }
@@ -257,13 +272,14 @@
                                         table.reload('user-table');
                                     });
                                 } else {
-                                    parent.layer.open({
+                                    let index = layer.open({
                                         type: 2,
                                         title: '',
                                         shade: 0.1,
-                                        area: ['900px', '600px'],
+                                        area: ['1280px', '760px'],
                                         content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
                                     });
+                                    layer.full(index);
                                 }
                             }
                         })
@@ -302,13 +318,14 @@
                                         table.reload('user-table');
                                     });
                                 } else {
-                                    parent.layer.open({
+                                    let index = layer.open({
                                         type: 2,
                                         title: '',
                                         shade: 0.1,
-                                        area: ['900px', '600px'],
+                                        area: ['1280px', '760px'],
                                         content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
                                     });
+                                    layer.full(index);
                                 }
                             }
                         })

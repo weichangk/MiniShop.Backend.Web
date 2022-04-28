@@ -9,57 +9,51 @@
 	<link rel="stylesheet" href="~/component/pear/css/pear.css" />
 </head>
 <body>
-    <form class="layui-form" asp-controller="User" asp-action="Update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess">
-        <div class="mainBox">
-            <div class="main-container">
-                <div class="main-container">
-                    <input type="hidden" id="Id" name="Id" value="@Model.Id" />
-                    <input type="hidden" id="Rank" name="Rank" value="@Model.Rank" />
-                    <input type="hidden" id="IsFreeze" name="IsFreeze" value="@Model.IsFreeze" />
-                    <div class="layui-form-item">
-                        <label class="layui-form-label" style="width: 20%">用户名</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="UserName" value="@Model.UserName" lay-verify="userName" autocomplete="off" placeholder="请输入用户名" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label" style="width: 20%">手机号</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" lay-verify="nullablePhone" autocomplete="off" placeholder="请输入手机号" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label" style="width: 20%">邮箱</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="Email" value="@Model.Email" lay-verify="nullableEmail" autocomplete="off" placeholder="请输入邮箱" class="layui-input">
-                        </div>
-                    </div>
-                    @* 老板职位屏蔽职位修改选择 *@
-                    @if (Model.Rank != MiniShop.Backend.Model.Enums.EnumRole.ShopManager)
-                    {
-                        <div class="layui-form-item">
-                            <label class="layui-form-label" style="width: 20%">职位</label>
-                            <div class="layui-input-block">
-                                <select id="OptionRank" lay-filter="SelectRank" lay-verify="required">
-                                    <option value="">请选择一个职位</option>
-                                </select>
-                            </div>
-                        </div>
-                    }
-                </div>
+    <form class="layui-form" asp-controller="User" asp-action="Update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess" 
+        style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+        <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+        <input type="hidden" id="Rank" name="Rank" value="@Model.Rank" />
+        <input type="hidden" id="IsFreeze" name="IsFreeze" value="@Model.IsFreeze" />
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="UserName" value="@Model.UserName" lay-verify="required|userName" autocomplete="off" placeholder="请输入用户名" class="layui-input">
             </div>
         </div>
-        <div class="bottom">
-            <div class="button-container">
-                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="user-save">
-                    <i class="layui-icon layui-icon-ok"></i>
-                    提交
-                </button>
-                <button type="reset" class="pear-btn pear-btn-sm">
-                    <i class="layui-icon layui-icon-refresh"></i>
-                    重置
-                </button>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">手机号</label>
+            <div class="layui-input-block">
+                <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" lay-verify="nullablePhone" autocomplete="off" placeholder="请输入手机号" class="layui-input">
             </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" name="Email" value="@Model.Email" lay-verify="nullableEmail" autocomplete="off" placeholder="请输入邮箱" class="layui-input">
+            </div>
+        </div>
+        @* 老板职位屏蔽职位修改选择 *@
+        @if (Model.Rank != MiniShop.Backend.Model.Enums.EnumRole.ShopManager)
+        {
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 20%">职位</label>
+                <div class="layui-input-block">
+                    <select id="OptionRank" lay-filter="SelectRank" lay-verify="required">
+                        <option value="">请选择一个职位</option>
+                    </select>
+                </div>
+            </div>
+        }
+    </div>
+        <div class="layui-form-item">
+            <button id="submit" type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="user-save"  style="margin-left: 333px;">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+            <button type="reset" class="pear-btn pear-btn-sm">
+                <i class="layui-icon layui-icon-refresh"></i>
+                重置
+            </button>
         </div>
     </form>
 
@@ -111,13 +105,14 @@
             }
             else
             {
-                parent.layer.open({
+                let index = layer.open({
                     type: 2,
                     title: '',
                     shade: 0.1,
-                    area: ['900px', '600px'],
+                    area: ['1280px', '760px'],
                     content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
                 });
+                layer.full(index);
             }
         };
 
