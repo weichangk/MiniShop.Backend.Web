@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Security.Cryptography.X509Certificates;
+using System;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using MiniShop.Backend.Model.Enums;
 
 namespace MiniShop.Backend.Web.Controllers
 {
@@ -78,6 +80,8 @@ namespace MiniShop.Backend.Web.Controllers
             var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.GetByIdAsync(id); });
             if (result.Success)
             {
+                result.Data.AuditOperatorName = _userInfo.UserName;
+                result.Data.AuditTime = DateTime.Now;
                 return View(result.Data);
             }
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
@@ -90,6 +94,17 @@ namespace MiniShop.Backend.Web.Controllers
             var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.UpdateAsync(dto); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AuditAsync(PurchaseOderDto model)
+        {
+            var dto = _mapper.Map<PurchaseOderAuditDto>(model);
+            dto.AuditOperatorName = _userInfo.UserName;
+            dto.AuditTime = DateTime.Now;
+            dto.AuditState = EnumAuditStatus.Audited;
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.AuditAsync(dto); });
+            return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
+        } 
 
         [ResponseCache(Duration = 0)]
         [HttpGet]

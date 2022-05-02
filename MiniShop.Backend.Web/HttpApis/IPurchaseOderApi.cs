@@ -39,6 +39,9 @@ namespace MiniShop.Backend.Web.HttpApis
         [HttpPut("/api/PurchaseOder/UpdateAsync")]
         ITask<ResultModel<PurchaseOderUpdateDto>> UpdateAsync([JsonContent] PurchaseOderUpdateDto model);
 
+        [HttpPut("/api/PurchaseOder/AuditAsync")]
+        ITask<ResultModel<PurchaseOderUpdateDto>> AuditAsync([JsonContent] PurchaseOderAuditDto model);
+
         [HttpPatch("/api/PurchaseOder/PatchAsync")]
         ITask<ResultModel<PurchaseOderDto>> PatchAsync(int id, [JsonContent] JsonPatchDocument<PurchaseOderUpdateDto> doc);
     }
