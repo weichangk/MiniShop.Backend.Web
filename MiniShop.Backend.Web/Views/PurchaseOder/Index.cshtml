@@ -183,8 +183,8 @@
                     return false;
                 });
 
-
                 window.add = function () {
+                    @* parent.layui.admin.addTab(15121, '采购订单 - 新增订单','/purchaseoder/add'); *@
                     let index = layer.open({
                         type: 2,
                         title: '新增订单',
@@ -197,6 +197,7 @@
                             body.find("#createOderNoBtn").focus();                                                       
                         },
                         cancel: function(){
+                            window.refresh();
                         }
                     });
                     layer.full(index);
@@ -220,7 +221,7 @@
                 }
 
                 window.remove = function (obj) {
-                    layer.confirm('确定要删除该单位', {
+                    layer.confirm('确定要删除该采购订单', {
                         icon: 3,
                         title: '提示'
                     }, function (index) {
@@ -267,7 +268,7 @@
                         return false;
                     }
 
-                    layer.confirm('确定要删除这些单位', {
+                    layer.confirm('确定要删除这些采购订单', {
                         icon: 3,
                         title: '提示'
                     }, function (index) {

@@ -45,26 +45,25 @@
                                 生成单号
                             </button>
                         </div>	
-                        <div class="layui-form-item layui-inline">
+                        @* <div class="layui-form-item layui-inline">
                             <button class="pear-btn pear-btn-md pear-btn-primary" type="button" lay-submit lay-filter="purchaseoder-examine">
                                 <i class="layui-icon layui-icon-ok"></i>
                                 审核订单
                             </button>
-                        </div>	
-                    </div>
-                </div>
-
-                <div class="layui-card">
-                    <div class="layui-card-body">
-                        <table id="purchaseoderitems-table" lay-filter="purchaseoderitems-table"></table>
+                        </div>	 *@
                     </div>
                 </div>
             </form>
         </div>
     </div>
 
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="purchaseoderitems-table" lay-filter="purchaseoderitems-table"></table>
+        </div>
+    </div>
 
-    <script type="text/html" id="purchaseoder-toolbar">
+    <script type="text/html" id="purchaseoderitems-toolbar">
         <button class="pear-btn pear-btn-primary pear-btn-md" type="button" lay-event="add">
             <i class="layui-icon layui-icon-add-1"></i>            
             新增商品
@@ -75,22 +74,22 @@
         </button>
     </script>
 
-    <script type="text/html" id="purchaseoder-bar">
+    <script type="text/html" id="purchaseoderitems-bar">
         <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
         <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
     </script>
 
-    <script type="text/html" id="purchaseoder-createTime">
+    <script type="text/html" id="purchaseoderitems-createTime">
         {{layui.util.toDateString(d.createdTime, 'yyyy-MM-dd')}}
     </script>
-    <script type="text/html" id="purchaseoder-auditTime">
+    <script type="text/html" id="purchaseoderitems-auditTime">
         {{layui.util.toDateString(d.auditTime, 'yyyy-MM-dd')}}
     </script>
 
     <script src="~/component/layui/layui.js"></script>
     <script src="~/component/pear/pear.js"></script>
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    @* <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script> *@
 
     <script>
         layui.use(['table', 'form', 'jquery', 'common'], function () {
@@ -114,6 +113,7 @@
                     title: '货号',
                     field: 'itemCode',
                     align: 'center',
+                    totalRowText: '合计'
                 },
                 {
                     title: '品名',
@@ -149,11 +149,12 @@
                     title: '小计',
                     field: 'amount',
                     align: 'center',
-                    align: 'center'
+                    align: 'center',
+                    totalRow: true
                 },
                 {
                     title: '操作',
-                    toolbar: '#purchaseoder-bar',
+                    toolbar: '#purchaseoderitems-bar',
                     align: 'center',
                     width: 130
                 }
@@ -165,9 +166,10 @@
                 //url: '@Url.Action("GetByOderNo","PurchaseOderItem", new {oderNo="111"})', 
                 url: '/PurchaseOderItem/GetPageByShopIdPurchaseOderId?purchaseOderId=' + $('#Id').val(), 
                 page: true,//开启分页
+                totalRow: true,//开启合并行
                 cols: cols,
                 skin: 'line',
-                toolbar: '#purchaseoder-toolbar',
+                toolbar: '#purchaseoderitems-toolbar',
                 defaultToolbar: [{
                     title: '刷新',
                     layEvent: 'refresh',
@@ -204,6 +206,7 @@
                             if(result.success)
                             {
                                 $('#Id').val(result.data.id);//单号创建成功标志
+                                $("#createOderNoBtn").hide();//隐藏
                                 layer.msg(result.msg, { icon: 1, time: 1000 });
                             }else {
                                 let index = layer.open({
@@ -220,7 +223,7 @@
             });
 
             window.add = function () {
-                if($('#Id').val() == "")
+                if($('#Id').val() == "" || $('#Id').val() == "0")
                 {
                     layer.msg("请先生成单号再新增商品", {icon: 1, time: 1000 });
                     return;
@@ -243,6 +246,110 @@
                     },
                 });
                 layer.full(index);
+            };
+
+            window.edit = function (obj) {
+                let index = layer.open({
+                    type: 2,
+                    title: '修改订单商品',
+                    shade: 0.1,
+                    area: [common.isModile() ? '100%' : '1280px', common.isModile() ? '100%' : '760px'],
+                    content: '/purchaseoderitem/update?id=' + obj.data['id'],
+                    success : function () {       
+                        var body = layer.getChildFrame('body', index);
+                        body.find("#submit").focus();                                                       
+                    },
+                    cancel: function(){
+                    }
+                });
+                layer.full(index);
+            };
+
+            window.remove = function (obj) {
+                layer.confirm('确定要删除该订单商品', {
+                    icon: 3,
+                    title: '提示'
+                }, function (index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: "/purchaseoderitem/delete?id=" + obj.data['id'],
+                        dataType: 'json',
+                        type: 'delete',
+                        success: function (result) {
+                            layer.close(loading);
+                            if (result.success) {
+                                layer.msg(result.msg, {
+                                    icon: 1,
+                                    time: 1000
+                                }, function () {
+                                    table.reload('purchaseoderitems-table');
+                                });
+                            } else {
+                                let index = layer.open({
+                                    type: 2,
+                                    title: '',
+                                    shade: 0.1,
+                                    area: ['1280px', '760px'],
+                                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                });
+                                layer.full(index);
+                            }
+                        }
+                    })
+                });
+            };
+
+            window.batchRemove = function (obj) {
+
+                var checkIds = common.checkField(obj, 'id');
+
+                if (checkIds === "") {
+                    layer.msg("未选中数据", {
+                        icon: 3,
+                        time: 1000
+                    });
+                    return false;
+                }
+
+                layer.confirm('确定要删除这些采购订单商品', {
+                    icon: 3,
+                    title: '提示'
+                }, function (index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: "/purchaseoderitem/batchDelete?ids=" + checkIds,
+                        dataType: 'json',
+                        type: 'delete',
+                        success: function (result) {
+                            layer.close(loading);
+                            if (result.success) {
+                                layer.msg(result.msg, {
+                                    icon: 1,
+                                    time: 1000
+                                }, function () {
+                                        table.reload('purchaseoderitems-table');
+                                });
+                            } else {
+                                let index = layer.open({
+                                    type: 2,
+                                    title: '',
+                                    shade: 0.1,
+                                    area: ['1280px', '760px'],
+                                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                });
+                                layer.full(index);
+                            }
+                        }
+                    })
+                });
+            };
+
+            window.refresh = function (param) {
+                table.reload('purchaseoderitems-table',{
+                    url: '/PurchaseOderItem/GetPageByShopIdPurchaseOderId?purchaseOderId=' + $('#Id').val(), 
+                });
             };
 
             //绑定供应商
