@@ -80,8 +80,8 @@ namespace MiniShop.Backend.Web.Controllers
             var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.GetByIdAsync(id); });
             if (result.Success)
             {
-                result.Data.AuditOperatorName = _userInfo.UserName;
-                result.Data.AuditTime = DateTime.Now;
+                // result.Data.AuditOperatorName = _userInfo.UserName;
+                // result.Data.AuditTime = DateTime.Now;
                 return View(result.Data);
             }
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
@@ -91,6 +91,9 @@ namespace MiniShop.Backend.Web.Controllers
         public async Task<IActionResult> UpdateAsync(PurchaseOderDto model)
         {
             var dto = _mapper.Map<PurchaseOderUpdateDto>(model);
+            dto.AuditOperatorName = _userInfo.UserName;
+            dto.AuditTime = DateTime.Now;
+            dto.AuditState = EnumAuditStatus.Audited;
             var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.UpdateAsync(dto); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }

@@ -103,5 +103,12 @@ namespace MiniShop.Backend.Web.Controllers
             }
 
         }
+
+        public async Task<IActionResult> GetSumAmountByPurchaseOderIdAsync(int purchaseOderId)
+        {
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.GetSumAmountByPurchaseOderIdAsync(purchaseOderId); });
+            return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
+        }
+
     }
 }

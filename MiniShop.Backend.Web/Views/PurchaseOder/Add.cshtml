@@ -244,6 +244,12 @@
                         };
                         iframe.GetParentIframeData(data)
                     },
+                    cancel: function(){
+                        window.refresh();
+                    },
+                    end: function(){ 
+                        window.refresh();
+                    }
                 });
                 layer.full(index);
             };
@@ -260,7 +266,12 @@
                         body.find("#submit").focus();                                                       
                     },
                     cancel: function(){
+                        window.refresh();
+                    },
+                    end: function(){ 
+                        window.refresh();
                     }
+                    
                 });
                 layer.full(index);
             };
