@@ -253,6 +253,7 @@
                     },
                     end: function(){ 
                         window.refresh();
+                        window.updateOderAmount();
                     }
                 });
                 layer.full(index);
@@ -274,6 +275,7 @@
                     },
                     end: function(){ 
                         window.refresh();
+                        window.updateOderAmount();
                     }
                     
                 });
@@ -299,6 +301,7 @@
                                     time: 1000
                                 }, function () {
                                     table.reload('purchaseoderitems-table');
+                                    window.updateOderAmount();
                                 });
                             } else {
                                 let index = layer.open({
@@ -345,6 +348,7 @@
                                     time: 1000
                                 }, function () {
                                         table.reload('purchaseoderitems-table');
+                                        window.updateOderAmount();
                                 });
                             } else {
                                 let index = layer.open({
@@ -366,6 +370,53 @@
                     url: '/PurchaseOderItem/GetPageByShopIdPurchaseOderId?purchaseOderId=' + $('#Id').val(), 
                 });
             };
+
+            window.updateOderAmount = function () {
+                $.ajax({
+                    url: "/purchaseoderitem/GetSumAmountByPurchaseOderId?purchaseOderId=" + $('#Id').val(),
+                    dataType: 'json',
+                    type: 'get',
+                    success: function (result) {
+                        if (result.success) {
+                            window.updateOderAmount1($('#Id').val(), result.data);
+                        } else {
+                            let index = layer.open({
+                                type: 2,
+                                title: '',
+                                shade: 0.1,
+                                area: ['1280px', '760px'],
+                                content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                            });
+                            layer.full(index);
+                        }
+                    }
+                })
+            }
+
+            window.updateOderAmount1 = function (id, oderAmount) {
+                $.ajax({
+                    url: "/purchaseoder/UpdateOderAmount",
+                    dataType: 'json',
+                    type: 'post',
+                    data:{
+                        'id':id,
+                        'oderAmount':oderAmount
+                    },
+                    success: function (result) {
+                        if (result.success) {                            
+                        } else {
+                        let index = layer.open({
+                            type: 2,
+                            title: '',
+                            shade: 0.1,
+                            area: ['1280px', '760px'],
+                            content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                        });
+                        layer.full(index);
+                        }
+                    }
+                })
+            }
 
             //绑定供应商
             BindSupplier($);
