@@ -34,6 +34,12 @@ namespace MiniShop.Backend.Web.Controllers
         }
 
         [HttpGet]
+        public IActionResult SelectAuditedUnReceivedPurchaseOder()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetSuppliersByCurrentShopAsync()
         {
             var result = await ExecuteApiResultModelAsync(() => { return _supplierApi.GetByShopIdAsync(_userInfo.ShopId); });
@@ -123,10 +129,35 @@ namespace MiniShop.Backend.Web.Controllers
 
         [ResponseCache(Duration = 0)]
         [HttpGet]
+        public async Task<IActionResult> GetAuditedUnReceivedPageByShopIdAsync(int page, int limit)
+        {
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.GetAuditedUnReceivedPageByShopIdAsync(page, limit, _userInfo.ShopId); });
+            if (!result.Success)
+            {
+                return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });
+            }
+            return Json(new Table() { Data = result.Data.Item, Count = result == null ? 0 : result.Data.Total });
+        }
+
+        [ResponseCache(Duration = 0)]
+        [HttpGet]
         public async Task<IActionResult> GetPageOnShopWhereQueryAsync(int page, int limit, int storeId, string oderNo)
         {
             oderNo = System.Web.HttpUtility.UrlEncode(oderNo);
             var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.GetPageByShopIdWhereQueryAsync(page, limit, _userInfo.ShopId, storeId, oderNo); });
+            if (!result.Success)
+            {
+                return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });
+            }
+            return Json(new Table() { Data = result.Data.Item, Count = result == null ? 0 : result.Data.Total });
+        }
+
+        [ResponseCache(Duration = 0)]
+        [HttpGet]
+        public async Task<IActionResult> GetAuditedUnReceivedPageByShopIdWhereQueryAsync(int page, int limit, string oderNo)
+        {
+            oderNo = System.Web.HttpUtility.UrlEncode(oderNo);
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.GetAuditedUnReceivedPageByShopIdWhereQueryAsync(page, limit, _userInfo.ShopId, oderNo); });
             if (!result.Success)
             {
                 return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });
