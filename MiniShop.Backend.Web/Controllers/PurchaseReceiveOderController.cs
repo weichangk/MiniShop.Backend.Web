@@ -17,13 +17,16 @@ namespace MiniShop.Backend.Web.Controllers
     public class PurchaseReceiveOderController : BaseController
     {
         private readonly IPurchaseReceiveOderApi _purchaseReceiveOderApi;
+        private readonly IPurchaseOderItemApi _purchaseOderItemApi;
         private readonly ISupplierApi _supplierApi;
         public PurchaseReceiveOderController(ILogger<PurchaseReceiveOderController> logger, IMapper mapper, IUserInfo userInfo,
             IPurchaseReceiveOderApi purchaseReceiveOderApi,
-            ISupplierApi supplierApi) : base(logger, mapper, userInfo)
+            ISupplierApi supplierApi,
+            IPurchaseOderItemApi purchaseOderItemApi) : base(logger, mapper, userInfo)
         {
             _purchaseReceiveOderApi = purchaseReceiveOderApi;
             _supplierApi = supplierApi;
+            _purchaseOderItemApi = purchaseOderItemApi;
         }
 
         [HttpGet]
@@ -54,24 +57,39 @@ namespace MiniShop.Backend.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Add()
+        public IActionResult Add()
         {
-            PurchaseReceiveOderCreateDto model = await Task.FromResult(
-                new PurchaseReceiveOderCreateDto
-                {
-                    ShopId = _userInfo.ShopId,
-                    OderNo = Guid.NewGuid().ToString(),//生成唯一单号
-                    OperatorName = _userInfo.UserName,
-                }
-            );
-            return View(model);
+            // PurchaseReceiveOderCreateDto model = await Task.FromResult(
+            //     new PurchaseReceiveOderCreateDto
+            //     {
+            //         ShopId = _userInfo.ShopId,
+            //         OderNo = Guid.NewGuid().ToString(),//生成唯一单号
+            //         OperatorName = _userInfo.UserName,
+            //     }
+            // );
+            // return View(model);
+            ViewBag.OderNo = Guid.NewGuid().ToString();//生成唯一单号
+            ViewBag.OperatorName = _userInfo.UserName;
+            return View();
         }
 
         [HttpPost]
         public IActionResult Add(PurchaseReceiveOderCreateDto model)
         {
             var result =  ExecuteApiResultModelAsync(() => { return _purchaseReceiveOderApi.InsertAsync(model); }).Result;
-            return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
+            if(result.Success)
+            {
+                var purchaseOderItemListResult =  ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.GetListAllByShopIdPurchaseOderIdAsync(model.ShopId, model.PurchaseOderId); }).Result;
+                if(purchaseOderItemListResult.Success)
+                {
+                    foreach (var item in purchaseOderItemListResult.Data)
+                    {
+                        
+                    }
+                }
+            }
+            return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
+            //return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
         }
 
         public async Task<IActionResult> UpdateAsync(int id)
@@ -148,6 +166,13 @@ namespace MiniShop.Backend.Web.Controllers
             }
 
         }
+
+        // [HttpPost]
+        // public IActionResult CreatePurchaseReceiveOder(PurchaseReceiveOderCreateDto model)
+        // {
+        //     var result =  ExecuteApiResultModelAsync(() => { return _purchaseReceiveOderApi.InsertAsync(model); }).Result;
+        //     return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
+        // }
 
     }
 }

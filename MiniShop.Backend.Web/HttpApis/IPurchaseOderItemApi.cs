@@ -17,6 +17,9 @@ namespace MiniShop.Backend.Web.HttpApis
     {
         [HttpGet("/api/PurchaseOderItem/GetByIdAsync")]
         ITask<ResultModel<PurchaseOderItemDto>> GetByIdAsync(int id);
+
+        [HttpGet("/api/PurchaseOderItem/GetListAllByShopIdPurchaseOderIdAsync")]
+        ITask<ResultModel<List<PurchaseOderItemDto>>> GetListAllByShopIdPurchaseOderIdAsync(Guid shopId, int purchaseOderId, bool isDescending = false);
         
         [HttpGet("/api/PurchaseOderItem/GetPageByShopIdAsync")]
         ITask<ResultModel<PagedList<PurchaseOderItemDto>>> GetPageByShopIdAsync(int pageIndex, int pageSize, Guid shopId);

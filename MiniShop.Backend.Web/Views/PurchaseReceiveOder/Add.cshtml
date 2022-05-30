@@ -1,5 +1,4 @@
-﻿@model PurchaseReceiveOderCreateDto
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -11,7 +10,7 @@
         <div class="layui-card-body">
             <form class="layui-form" id="Form">
                 <div class="layui-card">
-                    <input type="hidden" id="id" name="id" value="@Model.Id" />  
+                    <input type="hidden" id="id" name="id" value="" />  
                     <div class="layui-form-item">
                         <div class="layui-form-item layui-inline">
                             <label class="layui-form-label">采购订单</label>
@@ -395,8 +394,20 @@
             // 获取选择商品信息
             window.GetSelectAuditedUnReceivedPurchaseOderData = function (data) { 
                 $('#oderNo').val(data.oderNo);
-                $('#supplierId').val(data.supplierId);
                 $('#supplierName').val(data.supplierName);
+
+                var oderNo = '@ViewData["OderNo"]';
+                var operatorName = '@ViewData["OperatorName"]';
+                var data = {
+                    'PurchaseOderId':data.id,
+                    'ShopId':data.shopId,
+                    'OderNo':oderNo,
+                    'PurchaseOderNo':data.oderNo,
+                    'OderAmount': data.oderAmount,
+                    'SupplierId': data.supplierId,
+                    'OperatorName':operatorName
+                };
+                window.CreatePurchaseReceiveOder(data);
             };
 
             form.on('submit(purchaseoder-select)', function(){
@@ -413,6 +424,28 @@
                 });
                 layer.full(index)
             });
+
+            window.CreatePurchaseReceiveOder = function (model) {
+                $.ajax({
+                    url: "/PurchaseReceiveOder/Add",
+                    dataType: 'json',
+                    type: 'post',
+                    data: model,
+                    success: function (result) {
+                        if (result.success) {                            
+                        } else {
+                        let index = layer.open({
+                            type: 2,
+                            title: '',
+                            shade: 0.1,
+                            area: ['1280px', '760px'],
+                            content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                        });
+                        layer.full(index);
+                        }
+                    }
+                })
+            }
         });
             
     </script>

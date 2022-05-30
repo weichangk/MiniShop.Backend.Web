@@ -53,6 +53,7 @@ namespace MiniShop.Backend.Web.Controllers
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 
+
         [ResponseCache(Duration = 0)]
         [HttpGet]
         public async Task<IActionResult> GetPageOnShopAsync(int page, int limit)

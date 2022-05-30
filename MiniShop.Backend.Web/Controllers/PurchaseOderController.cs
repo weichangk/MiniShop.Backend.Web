@@ -61,6 +61,13 @@ namespace MiniShop.Backend.Web.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetByShopIdOderNoAsync(string oderNo)
+        {
+            var result =  await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.GetByShopIdOderNoAsync(_userInfo.ShopId, oderNo); });
+            return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Add()
         {
             PurchaseOderCreateDto model = await Task.FromResult(
