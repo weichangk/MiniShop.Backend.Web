@@ -17,16 +17,19 @@ namespace MiniShop.Backend.Web.Controllers
     public class PurchaseReceiveOderController : BaseController
     {
         private readonly IPurchaseReceiveOderApi _purchaseReceiveOderApi;
+        private readonly IPurchaseReceiveOderItemApi _purchaseReceiveOderItemApi;
         private readonly IPurchaseOderItemApi _purchaseOderItemApi;
         private readonly ISupplierApi _supplierApi;
         public PurchaseReceiveOderController(ILogger<PurchaseReceiveOderController> logger, IMapper mapper, IUserInfo userInfo,
             IPurchaseReceiveOderApi purchaseReceiveOderApi,
             ISupplierApi supplierApi,
-            IPurchaseOderItemApi purchaseOderItemApi) : base(logger, mapper, userInfo)
+            IPurchaseOderItemApi purchaseOderItemApi,
+            IPurchaseReceiveOderItemApi purchaseReceiveOderItemApi) : base(logger, mapper, userInfo)
         {
             _purchaseReceiveOderApi = purchaseReceiveOderApi;
             _supplierApi = supplierApi;
             _purchaseOderItemApi = purchaseOderItemApi;
+            _purchaseReceiveOderItemApi = purchaseReceiveOderItemApi;
         }
 
         [HttpGet]
@@ -74,9 +77,9 @@ namespace MiniShop.Backend.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(PurchaseReceiveOderCreateDto model)
+        public async Task<IActionResult> AddAsync(PurchaseReceiveOderCreateDto model)
         {
-            var result =  ExecuteApiResultModelAsync(() => { return _purchaseReceiveOderApi.InsertAsync(model); }).Result;
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseReceiveOderApi.InsertAsync(model); });
             if(result.Success)
             {
                 var purchaseOderItemListResult =  ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.GetListAllByShopIdPurchaseOderIdAsync(model.ShopId, model.PurchaseOderId); }).Result;
@@ -84,12 +87,25 @@ namespace MiniShop.Backend.Web.Controllers
                 {
                     foreach (var item in purchaseOderItemListResult.Data)
                     {
-                        
+                        PurchaseReceiveOderItemCreateDto purchaseReceiveOderItemCreateDto = new PurchaseReceiveOderItemCreateDto
+                        {
+                            ShopId = item.ShopId,
+                            ItemId = item.ItemId,
+                            PurchaseReceiveOderId = result.Data.Id,
+                            Number = item.Number,
+                            GiveNumber = item.GiveNumber,
+                            Amount = item.Amount,
+                            RealPurchasePrice = item.RealPurchasePrice,
+                        };
+                        var result1 = await ExecuteApiResultModelAsync(() => { return _purchaseReceiveOderItemApi.InsertAsync(purchaseReceiveOderItemCreateDto); });
+                        if(!result1.Success)
+                        {
+                            return Json(new Result() { Success = result1.Success, Msg = result1.Msg, Status = result1.Status });
+                        }
                     }
                 }
             }
-            return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
-            //return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
+            return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
         }
 
         public async Task<IActionResult> UpdateAsync(int id)
@@ -167,12 +183,12 @@ namespace MiniShop.Backend.Web.Controllers
 
         }
 
-        // [HttpPost]
-        // public IActionResult CreatePurchaseReceiveOder(PurchaseReceiveOderCreateDto model)
-        // {
-        //     var result =  ExecuteApiResultModelAsync(() => { return _purchaseReceiveOderApi.InsertAsync(model); }).Result;
-        //     return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
-        // }
+        [HttpPost]
+        public async Task<IActionResult> UpdateReceiveOderAmountAsync([FromForm]int id, [FromForm]decimal oderAmount)
+        {
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseReceiveOderApi.UpdateReceiveOderAmountAsync(id, oderAmount); });
+            return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
+        }
 
     }
 }

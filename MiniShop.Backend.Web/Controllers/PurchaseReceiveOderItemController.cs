@@ -92,9 +92,9 @@ namespace MiniShop.Backend.Web.Controllers
 
         }
 
-        public async Task<IActionResult> GetSumNumberByPurchaseReceiveOderIdAsync(int purchaseReceiveOderId)
+        public async Task<IActionResult> GetSumAmountByPurchaseReceiveOderIdAsync(int purchaseReceiveOderId)
         {
-            var result = await ExecuteApiResultModelAsync(() => { return _purchaseReceiveOderItemApi.GetSumNumberByPurchaseReceiveOderIdAsync(purchaseReceiveOderId); });
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseReceiveOderItemApi.GetSumAmountByPurchaseReceiveOderIdAsync(purchaseReceiveOderId); });
             return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
         }
 

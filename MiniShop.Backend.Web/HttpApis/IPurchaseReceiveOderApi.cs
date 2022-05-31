@@ -42,5 +42,7 @@ namespace MiniShop.Backend.Web.HttpApis
         [HttpPatch("/api/PurchaseReceiveOder/PatchAsync")]
         ITask<ResultModel<PurchaseReceiveOderDto>> PatchAsync(int id, [JsonContent] JsonPatchDocument<PurchaseReceiveOderUpdateDto> doc);
 
+        [HttpPut("/api/PurchaseReceiveOder/UpdateReceiveOderAmountAsync")]
+        ITask<ResultModel<decimal>> UpdateReceiveOderAmountAsync([FormContent]int id, [FormContent]decimal oderAmount);
     }
 }

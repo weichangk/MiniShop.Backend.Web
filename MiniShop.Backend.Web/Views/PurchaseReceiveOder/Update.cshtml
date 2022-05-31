@@ -1,53 +1,44 @@
-﻿<!DOCTYPE html>
+﻿@model PurchaseReceiveOderDto
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>采购收货订单-新增</title>
-	<link rel="stylesheet" href="~/component/pear/css/pear.css" />
+    <title>采购收货订单-修改</title>
+    <link rel="stylesheet" href="~/component/pear/css/pear.css" />
 </head>
 <body class="pear-container">
     <div class="layui-card">
         <div class="layui-card-body">
             <form class="layui-form" id="Form">
                 <div class="layui-card">
-                    <input type="hidden" id="purchaseReceiveOderId" name="purchaseReceiveOderId" value="0" />  
+                    <input type="hidden" id="Id" name="Id" value="@Model.Id" />              
+                    <input type="hidden" id="SupplierId" name="SupplierId" value="@Model.SupplierId" />
                     <div class="layui-form-item">
                         <div class="layui-form-item layui-inline">
-                            <label class="layui-form-label">采购订单</label>
-                            <div class="layui-input-inline" style="width: 290px;">
-                                <input type="text" id="oderNo" name="oderNo" value="" readonly="readonly" placeholder="" class="layui-input" lay-verify="">
-                            </div>
-                        </div>
-                        <div class="layui-form-item layui-inline">
                             <label class="layui-form-label">供应商</label>
-                            <div class="layui-input-inline" style="width: 290px;">
-                                <input type="text" id="supplierName" name="supplierName" value="" readonly="readonly" placeholder="" class="layui-input" lay-verify="">
+                            <div class="layui-input-block" style="width: 290px;">
+                                <select id="OptionSupplier" lay-filter="SelectSupplier" lay-verify="required">
+                                    <option value="">请选择一个供应商</option>
+                                </select>
                             </div>
-                        </div>
+                        </div>	
                         <div class="layui-form-item layui-inline">
                             <label class="layui-form-label">备注</label>
                             <div class="layui-input-inline" style="width: 290px;">
-                                <input type="text" id="remark" name="remark" value="" placeholder="" class="layui-input">
+                                <input type="text" id="Remark" name="Remark" value="@Model.Remark" placeholder="" class="layui-input">
                             </div>
                         </div>	
-                        <div id="purchasereceiveoderselect" class="layui-form-item layui-inline" style="margin-left: 60px;">
-                            <button id="selectOderNoBtn" class="pear-btn pear-btn-md pear-btn-primary" type="button" lay-submit lay-filter="purchasereceiveoder-select">
-                                <i class="layui-icon layui-icon-ok"></i>
-                                选择采购订单
-                            </button>
-                        </div>	
-                        <div id="purchasereceiveoderAudit" class="layui-form-item layui-inline" style="margin-left: 60px; display:none">
+                        <div class="layui-form-item layui-inline" style="margin-left: 60px;">
                             <button id="updateOderNoBtn" class="pear-btn pear-btn-md pear-btn-primary" type="button" lay-submit lay-filter="purchasereceiveoder-update">
                                 <i class="layui-icon layui-icon-ok"></i>
                                 审核订单
                             </button>
-                        </div>		
+                        </div>			
                     </div>
                 </div>
             </form>
         </div>
     </div>
-
     <div class="layui-card">
         <div class="layui-card-body">
             <table id="purchasereceiveoderitems-table" lay-filter="purchasereceiveoderitems-table"></table>
@@ -156,8 +147,8 @@
 
             table.render({
                 elem: '#purchasereceiveoderitems-table',
-                url: '/PurchaseReceiveOderItem/GetPageByShopIdPurchaseReceiveOderId?purchaseReceiveOderId=' + $('#purchaseReceiveOderId').val(), 
-                page: true,//开启分页
+                url: '/PurchaseReceiveOderItem/GetPageByShopIdPurchaseReceiveOderId?purchaseReceiveOderId=' + $('#Id').val(), 
+                page: true,
                 totalRow: true,//开启合并行
                 cols: cols,
                 skin: 'line',
@@ -187,12 +178,32 @@
                 }
             });
 
+            form.on('submit(purchasereceiveoder-update)', function(data){
+                $.ajax({
+                        url:'@Url.Action("Update","PurchaseReceiveOder")', 
+                        type:"post",
+                        dataType:"json",
+                        data: data.field,
+                        success: function (result) {
+                            if(result.success)
+                            {
+                                layer.msg(result.msg, { icon: 1, time: 1000 });
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            }else {
+                                let index = layer.open({
+                                    type: 2,
+                                    title: '',
+                                    shade: 0.1,
+                                    area: ['1280px', '760px'],
+                                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                });
+                                layer.full(index);
+                            }
+                        }
+                    });
+            });
+
             window.add = function () {
-                if($('#purchaseReceiveOderId').val() == "" || $('#purchaseReceiveOderId').val() == "0")
-                {
-                    layer.msg("请先选择单号再新增商品", {icon: 1, time: 1000 });
-                    return;
-                };
                 let index = layer.open({
                     type: 2,
                     title: '新增商品',
@@ -277,7 +288,7 @@
                         }
                     })
                 });
-            }; 
+            };
 
             window.batchRemove = function (obj) {
 
@@ -324,22 +335,22 @@
                         }
                     })
                 });
-            }; 
-
+            };
+           
             window.refresh = function (param) {
                 table.reload('purchasereceiveoderitems-table',{
-                    url: '/PurchaseReceiveOderItem/GetPageByShopIdPurchaseReceiveOderId?purchaseReceiveOderId=' + $('#purchaseReceiveOderId').val(), 
+                    url: '/PurchaseReceiveOderItem/GetPageByShopIdPurchaseReceiveOderId?purchaseReceiveOderId=' + $('#Id').val(), 
                 });
             };
 
             window.updateOderAmount = function () {
                 $.ajax({
-                    url: "/purchasereceiveoderitem/GetSumAmountByPurchaseReceiveOderId?purchaseReceiveOderId=" + $('#purchaseReceiveOderId').val(),
+                    url: "/purchasereceiveoderitem/GetSumAmountByPurchaseReceiveOderId?purchaseReceiveOderId=" + $('#Id').val(),
                     dataType: 'json',
                     type: 'get',
                     success: function (result) {
                         if (result.success) {
-                            window.updateOderAmount1($('#purchaseReceiveOderId').val(), result.data);
+                            window.updateOderAmount1($('#Id').val(), result.data);
                         } else {
                             let index = layer.open({
                                 type: 2,
@@ -379,95 +390,35 @@
                 })
             }
 
-            // 获取选择订单信息
-            window.GetSelectAuditedUnReceivedPurchaseOderData = function (data) { 
-                $('#oderNo').val(data.oderNo);
-                $('#supplierName').val(data.supplierName);
+            //绑定供应商
+            BindSupplier($);
 
-                var oderNo = '@ViewData["OderNo"]';
-                var operatorName = '@ViewData["OperatorName"]';
-                var data = {
-                    'PurchaseOderId':data.id,
-                    'ShopId':data.shopId,
-                    'OderNo':oderNo,
-                    'PurchaseOderNo':data.oderNo,
-                    'OderAmount': data.oderAmount,
-                    'SupplierId': data.supplierId,
-                    'OperatorName':operatorName
-                };
-                window.CreatePurchaseReceiveOder(data);              
-            };
-
-            form.on('submit(purchasereceiveoder-select)', function(){
-                let index = layer.open({
-                    type: 2,
-                    title: '选择采购订单',
-                    shade: 0.1,
-                    area: ['1280px', '768px'],
-                    content: '/purchaseoder/SelectAuditedUnReceivedPurchaseOder',
-                    success : function () {         
-                    },
-                    cancel: function(){
-                    }
-                });
-                layer.full(index)
+            //选择供应商更新@Model.Id
+            form.on('select(SelectSupplier)', function (data) {
+                $('#SupplierId').val(data.value);
+                $('#SupplierName').val($("#OptionSupplier option:selected").text());
             });
-
-            form.on('submit(purchasereceiveoder-update)', function(data){
-                $.ajax({
-                        url:'@Url.Action("Update","PurchaseReceiveOder")', 
-                        type:"post",
-                        dataType:"json",
-                        data: {
-                            'Id':$('#purchaseReceiveOderId').val(),
-                            'Remark':$('#remark').val(),                     
-                        },
-                        success: function (result) {
-                            if(result.success)
-                            {
-                                layer.msg(result.msg, { icon: 1, time: 1000 });
-                                parent.layer.close(parent.layer.getFrameIndex(window.name));
-                            }else {
-                                let index = layer.open({
-                                    type: 2,
-                                    title: '',
-                                    shade: 0.1,
-                                    area: ['1280px', '760px'],
-                                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
-                                });
-                                layer.full(index);
-                            }
-                        }
-                    });
-            });
-
-            window.CreatePurchaseReceiveOder = function (model) {
-                $.ajax({
-                    url: "/PurchaseReceiveOder/Add",
-                    dataType: 'json',
-                    type: 'post',
-                    data: model,
-                    success: function (result) {
-                        if (result.success) {   
-                            $('#purchaseReceiveOderId').val(result.data.id);  
-                            window.refresh();      
-                            $('#purchasereceiveoderselect').css("display", "none"); 
-                            $('#purchasereceiveoderAudit').css("display", "inline-block");     
-                        } else {
-                        let index = layer.open({
-                            type: 2,
-                            title: '',
-                            shade: 0.1,
-                            area: ['1280px', '760px'],
-                            content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
-                        });
-                        layer.full(index);
-                        }
-                    }
-                })
-            }
         });
             
+        function BindSupplier($) {
+            $.get('GetSuppliersByCurrentShop', function (result) {
+                layui.use('form', function () {
+                    var form = layui.form;
+                    if (result.success) {
+                        var str = '';
+                        var currentSupplierId = $('#SupplierId').val();//当前门店ID
+                        //var data = $.parseJSON(result.data);//转成Json对象
+                        $("#OptionSupplier option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                        $.each(result.data, function (i, obj) {
+                            str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                        });//遍历循环遍历
+                        $(str).appendTo("#OptionSupplier");//绑定
+                        $('#OptionSupplier').find("option[value=" + currentSupplierId + "]").attr("selected", true); //默认选择
+                        form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                    }
+                });
+            });
+        };
     </script>
 
 </body>

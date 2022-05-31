@@ -1,0 +1,161 @@
+﻿@model PurchaseReceiveOderItemDto
+
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/component/pear/css/pear.css" />
+</head>
+
+<body>
+    <form class="layui-form" asp-controller="PurchaseReceiveOderItem" asp-action="update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess" 
+        style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+        <input type="hidden" id="Id" name="Id" asp-for="Id"/>
+        <input type="hidden" id="ItemId" name="ItemId" asp-for="ItemId"/>
+        <input type="hidden" id="ItemCode" name="ItemCode" asp-for="ItemCode"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: auto">品名</label>
+            <div class="layui-input-block">
+                <input type="text" id="ItemName" name="ItemName" value="@Model.ItemName" readonly="readonly" lay-verify="required" autocomplete="off" placeholder="" class="layui-input" lay-click lay-filter="ClickItemName">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: auto">单位</label>
+            <div class="layui-input-block">
+                <input type="text" id="UnitName" name="UnitName" value="@Model.UnitName" readonly="readonly" lay-verify="required" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: auto">进货价</label>
+            <div class="layui-input-block">
+                <input type="number" step="0.01" id="PurchasePrice" name="PurchasePrice" value="@Model.PurchasePrice" readonly="readonly" lay-verify="" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: auto">实际进货价</label>
+            <div class="layui-input-block">
+                <input type="number" step="0.01" id="RealPurchasePrice" name="RealPurchasePrice" value="@Model.RealPurchasePrice" lay-verify="required|RealPurchasePriceCheck" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: auto">数量</label>
+            <div class="layui-input-block">
+                <input type="number" step="0.01" id="Number" name="Number" value="@Model.Number" lay-verify="required|NumberCheck" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: auto">赠送数量</label>
+            <div class="layui-input-block">
+                <input type="number" step="0.01" id="GiveNumber" name="GiveNumber" value="@Model.GiveNumber" lay-verify="GiveNumberCheck" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: auto">小计</label>
+            <div class="layui-input-block">
+                <input type="number" step="0.01" id="Amount" name="Amount" value="@Model.Amount" lay-verify="required|AmountCheck" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: auto">备注</label>
+            <div class="layui-input-block">
+                <input type="text" id="Remark" name="Remark" value="@Model.Remark" lay-verify="" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button id="submit" type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="" style="margin-left: 333px;">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+            <button type="reset" class="pear-btn pear-btn-sm">
+                <i class="layui-icon layui-icon-refresh"></i>
+                重置
+            </button>
+        </div>
+    </form>
+
+    <script src="~/component/layui/layui.js"></script>
+    <script src="~/component/pear/pear.js"></script>
+    <script src="~/js/verify.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script>
+        layui.use(['table', 'form',], function () {
+            let table = layui.table;
+            let form = layui.form;
+
+            form.verify({
+                RealPurchasePriceCheck: function (value) {
+                    if (!NumberRangeVerify(value, 0.01, 99999))
+                        return '请输入正确的进货价！0.01到99999元！'
+                },
+                NumberCheck: function (value) {
+                    if (!NumberRangeVerify(value, 0.01, 99999))
+                        return '请输入正确的数量！0.01到99999元！'
+                },
+                GiveNumberCheck: function (value) {
+                    if (!NumberRangeVerify(value, 0, 999))
+                        return '请输入正确的赠送数量！0到999元！'
+                },
+                AmountCheck: function (value) {
+                    if (!NumberRangeVerify(value, 0.01, 99999))
+                        return '请输入正确的小计金额！0.01到99999元！'
+                },
+            });
+
+            // 打开商品选择
+            $('#ItemName').on("click", itemName_input_click_handler);
+            // 获取选择商品信息
+            window.GetSelectItemData = function (data) { 
+                $('#ItemId').val(data.id);
+                $('#ItemCode').val(data.code);
+                $('#ItemName').val(data.name);
+                $('#UnitName').val(data.unitName);
+                $('#PurchasePrice').val(data.purchasePrice);
+            };
+
+        });
+
+        var onSuccess = function (result) {
+            if (result.success) 
+            {
+                layer.msg(result.msg, { icon: 1, time: 1000 }, function () {
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                });
+            } 
+            else
+            {
+                let index = layer.open({
+                    type: 2,
+                    title: '',
+                    shade: 0.1,
+                    area: ['1280px', '760px'],
+                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                });
+                layer.full(index);
+            }
+        };
+
+        // 打开商品选择窗体
+        function itemName_input_click_handler(){
+            let index = layer.open({
+                type: 2,
+                title: '选择商品',
+                shade: 0.1,
+                area: ['1280px', '768px'],
+                content: '/item/selectitem',
+                success : function () {            
+                },
+                cancel: function(){
+                }
+            });
+            layer.full(index)
+        };
+
+    </script>
+
+</body>
+</html>
+

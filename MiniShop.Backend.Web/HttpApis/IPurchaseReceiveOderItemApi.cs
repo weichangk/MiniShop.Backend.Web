@@ -36,8 +36,8 @@ namespace MiniShop.Backend.Web.HttpApis
         [HttpPatch("/api/PurchaseReceiveOderItem/PatchAsync")]
         ITask<ResultModel<PurchaseReceiveOderItemDto>> PatchAsync(int id, [JsonContent] JsonPatchDocument<PurchaseReceiveOderItemUpdateDto> doc);
 
-        [HttpGet("/api/PurchaseReceiveOderItem/GetSumNumberByPurchaseReceiveOderIdAsync")]
-        ITask<ResultModel<decimal>> GetSumNumberByPurchaseReceiveOderIdAsync(int purchaseOderId);
+        [HttpGet("/api/PurchaseReceiveOderItem/GetSumAmountByPurchaseReceiveOderIdAsync")]
+        ITask<ResultModel<decimal>> GetSumAmountByPurchaseReceiveOderIdAsync(int purchaseReceiveOderId);
         
     }
 }
