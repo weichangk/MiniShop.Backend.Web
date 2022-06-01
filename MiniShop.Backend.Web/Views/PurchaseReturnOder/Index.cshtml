@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>采购退货订单-列表</title>
+    <link rel="stylesheet" href="~/component/pear/css/pear.css" />
+</head>
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">订单编码</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="oderNo" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="purchasereturnoder-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="purchasereturnoder-table" lay-filter="purchasereturnoder-table"></table>
+        </div>
+    </div>
+
+    <script type="text/html" id="purchasereturnoder-toolbar">
+        <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+            <i class="layui-icon layui-icon-add-1"></i>            
+            新增
+        </button>
+        <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+            <i class="layui-icon layui-icon-delete"></i>
+            删除
+        </button>
+    </script>
+
+    <script type="text/html" id="purchasereturnoder-bar">
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
+        <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+    </script>
+
+    <script type="text/html" id="purchasereturnoder-createTime">
+        {{layui.util.toDateString(d.createdTime, 'yyyy-MM-dd')}}
+    </script>
+    <script type="text/html" id="purchasereturnoder-auditTime">
+        {{layui.util.toDateString(d.auditTime, 'yyyy-MM-dd')}}
+    </script>
+
+    <script src="~/component/layui/layui.js"></script>
+    <script src="~/component/pear/pear.js"></script>
+    <script>
+            layui.use(['table', 'form', 'jquery', 'common'], function () {
+                let table = layui.table;
+                let form = layui.form;
+                let $ = layui.jquery;
+                let common = layui.common;
+
+                let cols = [
+                    [{
+                        type: 'checkbox'
+                    },
+                    {
+                        title: 'ID',
+                        field: 'id',
+                        align: 'center',
+                        width: 100,
+                        hide: true
+                    },
+                    {
+                        title: '单号',
+                        field: 'oderNo',
+                        align: 'center',
+                    },
+                    {
+                        title: '采购收货单号',
+                        field: 'purchaseReceiveOderNo',
+                        align: 'center',
+                    },
+                    {
+                        title: '供应商',
+                        field: 'supplierName',
+                        align: 'center'
+                    },
+                    {
+                        title: '单据金额',
+                        field: 'oderAmount',
+                        align: 'center'
+                    },
+                    {
+                        title: '审核状态',
+                        field: 'auditStateDes',
+                        align: 'center'
+                    },
+                    {
+                        title: '制单人员',
+                        field: 'operatorName',
+                        align: 'center'
+                    },
+                    {
+                        title: '制单日期',
+                        field: 'createdTime',
+                        align: 'center',
+                        templet: '#purchasereturnoder-createTime'
+                    },
+                    {
+                        title: '审核人员',
+                        field: 'auditOperatorName',
+                        align: 'center'
+                    },
+                    {
+                        title: '审核日期',
+                        field: 'auditTime',
+                        align: 'center',
+                        templet: '#purchasereturnoder-auditTime'
+                    },
+                    {
+                        title: '订单状态',
+                        field: 'orderStateDes',
+                        align: 'center'
+                    },
+                    {
+                        title: '备注',
+                        field: 'remark',
+                        align: 'center'
+                    },
+                    {
+                        title: '操作',
+                        toolbar: '#purchasereturnoder-bar',
+                        align: 'center',
+                        width: 130
+                    }
+                    ]
+                ]
+
+                table.render({
+                    elem: '#purchasereturnoder-table',
+                    url: 'GetPageOnShop',
+                    page: true,//开启分页
+                    cols: cols,
+                    skin: 'line',
+                    toolbar: '#purchasereturnoder-toolbar',
+                    defaultToolbar: [{
+                        title: '刷新',
+                        layEvent: 'refresh',
+                        icon: 'layui-icon-refresh',
+                    }, 'filter', 'print', 'exports']
+                });
+
+                table.on('tool(purchasereturnoder-table)', function (obj) {
+                    if (obj.event === 'remove') {
+                        window.remove(obj);
+                    } else if (obj.event === 'edit') {
+                        window.edit(obj);
+                    }
+                });
+
+                table.on('toolbar(purchasereturnoder-table)', function (obj) {
+                    if (obj.event === 'add') {
+                        window.add();
+                    } else if (obj.event === 'refresh') {
+                        window.refresh();
+                    } else if (obj.event === 'batchRemove') {
+                        window.batchRemove(obj);
+                    }
+                });
+
+                form.on('submit(purchasereturnoder-query)', function (data) {
+                    table.reload('purchasereturnoder-table', {
+                        url: 'GetPageOnShopWhereQuery',
+                        page: {
+                            curr:1,//重新从第一页开始
+                        },
+                        where: data.field
+                    })
+                    return false;
+                });
+
+                window.add = function () {
+                    let index = layer.open({
+                        type: 2,
+                        title: '新增采购收货订单',
+                        shade: 0.1,
+                        area: ['1280px', '768px'],
+                        content: '/purchasereturnoder/add',
+                        success : function () {       
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#selectOderNoBtn").focus();                                                       
+                        },
+                        cancel: function(){
+                            window.refresh();
+                        },
+                        end: function(){ 
+                            window.refresh();
+                        }
+                    });
+                    layer.full(index);
+                }
+
+                window.edit = function (obj) {
+                    let index = layer.open({
+                        type: 2,
+                        title: '修改采购收货订单',
+                        shade: 0.1,
+                        area: ['1280px', '768px'],
+                        content: '/purchasereturnoder/update?id=' + obj.data['id'],
+                        success : function () {       
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#updateOderNoBtn").focus();                                                        
+                        },
+                        cancel: function(){
+                            window.refresh();
+                        },
+                        end: function(){ 
+                            window.refresh();
+                        }
+                    });
+                    layer.full(index);
+                }
+
+                window.remove = function (obj) {
+                    layer.confirm('确定要删除该采购收货订单', {
+                        icon: 3,
+                        title: '提示'
+                    }, function (index) {
+                        layer.close(index);
+                        let loading = layer.load();
+                        $.ajax({
+                            url: "/purchasereturnoder/delete?id=" + obj.data['id'],
+                            dataType: 'json',
+                            type: 'delete',
+                            success: function (result) {
+                                layer.close(loading);
+                                if (result.success) {
+                                    layer.msg(result.msg, {
+                                        icon: 1,
+                                        time: 1000
+                                    }, function () {
+                                        //obj.del();
+                                        table.reload('purchasereturnoder-table');
+                                    });
+                                } else {
+                                    let index = layer.open({
+                                        type: 2,
+                                        title: '',
+                                        shade: 0.1,
+                                        area: ['1280px', '760px'],
+                                        content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                    });
+                                    layer.full(index);
+                                }
+                            }
+                        })
+                    });
+                }
+
+                window.batchRemove = function (obj) {
+
+                    var checkIds = common.checkField(obj, 'id');
+
+                    if (checkIds === "") {
+                        layer.msg("未选中数据", {
+                            icon: 3,
+                            time: 1000
+                        });
+                        return false;
+                    }
+
+                    layer.confirm('确定要删除这些采购收货订单', {
+                        icon: 3,
+                        title: '提示'
+                    }, function (index) {
+                        layer.close(index);
+                        let loading = layer.load();
+                        $.ajax({
+                            url: "/purchasereturnoder/batchDelete?ids=" + checkIds,
+                            dataType: 'json',
+                            type: 'delete',
+                            success: function (result) {
+                                layer.close(loading);
+                                if (result.success) {
+                                    layer.msg(result.msg, {
+                                        icon: 1,
+                                        time: 1000
+                                    }, function () {
+                                            table.reload('purchasereturnoder-table');
+                                    });
+                                } else {
+                                    let index = layer.open({
+                                        type: 2,
+                                        title: '',
+                                        shade: 0.1,
+                                        area: ['1280px', '760px'],
+                                        content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                    });
+                                    layer.full(index);
+                                }
+                            }
+                        })
+                    });
+                }
+
+                window.refresh = function (param) {
+                    table.reload('purchasereturnoder-table',{
+                        url: 'GetPageOnShop'
+                    });
+                }
+            })
+    </script>
+
+</body>
+</html>
