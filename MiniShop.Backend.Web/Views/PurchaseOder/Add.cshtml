@@ -39,18 +39,18 @@
                                 <input type="text" id="Remark" name="Remark" value="@Model.Remark" placeholder="" class="layui-input">
                             </div>
                         </div>			
-                        <div class="layui-form-item layui-inline" style="margin-left: 60px;">
-                            <button id="createOderNoBtn" class="pear-btn pear-btn-md pear-btn-primary" type="button" lay-submit lay-filter="purchaseoder-create">
+                        <div id="PurchaseOderCreate"  class="layui-form-item layui-inline" style="margin-left: 60px;">
+                            <button id="createOderNoBtn" class="pear-btn pear-btn-md pear-btn-primary" type="button" lay-submit lay-filter="PurchaseOder-Create">
                                 <i class="layui-icon layui-icon-ok"></i>
                                 生成单号
                             </button>
                         </div>	
-                        @* <div class="layui-form-item layui-inline">
-                            <button class="pear-btn pear-btn-md pear-btn-primary" type="button" lay-submit lay-filter="purchaseoder-examine">
+                        <div id="PurchaseOderAudit" class="layui-form-item layui-inline" style="margin-left: 60px; display:none">
+                            <button id="updateOderNoBtn" class="pear-btn pear-btn-md pear-btn-primary" type="button" lay-submit lay-filter="PurchaseOder-Audit">
                                 <i class="layui-icon layui-icon-ok"></i>
                                 审核订单
                             </button>
-                        </div>	 *@
+                        </div>	
                     </div>
                 </div>
             </form>
@@ -97,6 +97,8 @@
             let form = layui.form;
             let $ = layui.jquery;
             let common = layui.common;
+
+            let purchaseoderitemcount = 0;
 
             let cols = [
                 [{
@@ -174,7 +176,10 @@
                     title: '刷新',
                     layEvent: 'refresh',
                     icon: 'layui-icon-refresh',
-                }, 'filter', 'print', 'exports']
+                }, 'filter', 'print', 'exports'],
+                done: function(res, curr, count){
+                    purchaseoderitemcount = count;
+                }
             });
 
             table.on('tool(purchaseoderitems-table)', function (obj) {
@@ -195,7 +200,7 @@
                 }
             });
 
-            form.on('submit(purchaseoder-create)', function(data){
+            form.on('submit(PurchaseOder-Create)', function(data){
                 $.ajax({
                         url:'@Url.Action("Add","PurchaseOder")', 
                         type:"post",
@@ -206,8 +211,40 @@
                             if(result.success)
                             {
                                 $('#Id').val(result.data.id);//单号创建成功标志
-                                $("#createOderNoBtn").hide();//隐藏
+                                @* $("#createOderNoBtn").hide();//隐藏 *@
+                                $('#PurchaseOderCreate').css("display", "none"); 
+                                $('#PurchaseOderAudit').css("display", "inline-block");  
                                 layer.msg(result.msg, { icon: 1, time: 1000 });
+                            }else {
+                                let index = layer.open({
+                                    type: 2,
+                                    title: '',
+                                    shade: 0.1,
+                                    area: ['1280px', '760px'],
+                                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                });
+                                layer.full(index);
+                            }
+                        }
+                    });
+            });
+
+            form.on('submit(PurchaseOder-Audit)', function(data){
+                if(purchaseoderitemcount == 0)
+                {
+                    layer.msg("请先生成新增商品再审核", {icon: 1, time: 1000 });
+                    return;
+                };
+                $.ajax({
+                        url:'@Url.Action("Update","PurchaseOder")', 
+                        type:"post",
+                        dataType:"json",
+                        data: data.field,
+                        success: function (result) {
+                            if(result.success)
+                            {
+                                layer.msg(result.msg, { icon: 1, time: 1000 });
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
                             }else {
                                 let index = layer.open({
                                     type: 2,

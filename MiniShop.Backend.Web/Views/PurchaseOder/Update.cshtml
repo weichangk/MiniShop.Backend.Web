@@ -11,7 +11,8 @@
         <div class="layui-card-body">
             <form class="layui-form" id="Form">
                 <div class="layui-card">
-                    <input type="hidden" id="Id" name="Id" value="@Model.Id" />    
+                    <input type="hidden" id="Id" name="Id" value="@Model.Id" /> 
+                    <input type="hidden" id="AuditState" name="AuditState" value="@Model.AuditState" />       
                     <input type="hidden" id="ShopId" name="ShopId" value="@Model.ShopId" />                
                     <input type="hidden" id="SupplierId" name="SupplierId" value="@Model.SupplierId" />
                     <div class="layui-form-item">
@@ -30,17 +31,11 @@
                             </div>
                         </div>	
                         <div class="layui-form-item layui-inline" style="margin-left: 60px;">
-                            <button id="updateOderNoBtn" class="pear-btn pear-btn-md pear-btn-primary" type="button" lay-submit lay-filter="purchaseoder-update">
+                            <button id="updateOderNoBtn" class="pear-btn pear-btn-md pear-btn-primary" type="button" lay-submit lay-filter="purchaseoder-audit">
                                 <i class="layui-icon layui-icon-ok"></i>
                                 审核订单
                             </button>
                         </div>			
-                        @* <div class="layui-form-item layui-inline">
-                            <button class="pear-btn pear-btn-md pear-btn-primary" type="button" lay-submit lay-filter="purchaseoder-audit">
-                                <i class="layui-icon layui-icon-ok"></i>
-                                审核订单
-                            </button>
-                        </div>	 *@
                     </div>
                 </div>
             </form>
@@ -86,6 +81,8 @@
             let form = layui.form;
             let $ = layui.jquery;
             let common = layui.common;
+
+            let purchaseoderitemcount = 0;
 
             let cols = [
                 [{
@@ -162,7 +159,10 @@
                     title: '刷新',
                     layEvent: 'refresh',
                     icon: 'layui-icon-refresh',
-                }, 'filter', 'print', 'exports']
+                }, 'filter', 'print', 'exports'],
+                done: function(res, curr, count){
+                    purchaseoderitemcount = count;
+                }
             });
 
             table.on('tool(purchaseoderitems-table)', function (obj) {
@@ -183,7 +183,16 @@
                 }
             });
 
-            form.on('submit(purchaseoder-update)', function(data){
+            form.on('submit(purchaseoder-audit)', function(data){
+                if(window.auditedCheck() === true)
+                {
+                    return;
+                }
+                if(purchaseoderitemcount == 0)
+                {
+                    layer.msg("请先生成新增商品再审核", {icon: 1, time: 1000 });
+                    return;
+                };
                 $.ajax({
                         url:'@Url.Action("Update","PurchaseOder")', 
                         type:"post",
@@ -193,30 +202,7 @@
                             if(result.success)
                             {
                                 layer.msg(result.msg, { icon: 1, time: 1000 });
-                            }else {
-                                let index = layer.open({
-                                    type: 2,
-                                    title: '',
-                                    shade: 0.1,
-                                    area: ['1280px', '760px'],
-                                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
-                                });
-                                layer.full(index);
-                            }
-                        }
-                    });
-            });
-
-            form.on('submit(purchaseoder-audit)', function(data){
-                $.ajax({
-                        url:'@Url.Action("Audit","PurchaseOder")', 
-                        type:"post",
-                        dataType:"json",
-                        data: data.field,
-                        success: function (result) {
-                            if(result.success)
-                            {
-                                layer.msg(result.msg, { icon: 1, time: 1000 });
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
                             }else {
                                 let index = layer.open({
                                     type: 2,
@@ -232,6 +218,10 @@
             });
 
             window.add = function () {
+                if(window.auditedCheck() === true)
+                {
+                    return;
+                }
                 let index = layer.open({
                     type: 2,
                     title: '新增商品',
@@ -260,6 +250,10 @@
             };
 
             window.edit = function (obj) {
+                if(window.auditedCheck() === true)
+                {
+                    return;
+                }
                 let index = layer.open({
                     type: 2,
                     title: '修改订单商品',
@@ -283,6 +277,10 @@
             };
 
             window.remove = function (obj) {
+                if(window.auditedCheck() === true)
+                {
+                    return;
+                }
                 layer.confirm('确定要删除该订单商品', {
                     icon: 3,
                     title: '提示'
@@ -319,6 +317,10 @@
             };
 
             window.batchRemove = function (obj) {
+                if(window.auditedCheck() === true)
+                {
+                    return;
+                }
 
                 var checkIds = common.checkField(obj, 'id');
 
@@ -416,6 +418,15 @@
                         }
                     }
                 })
+            }
+
+            window.auditedCheck = function() {
+                if($("#AuditState").val() === "Audited")
+                {
+                    layer.msg("订单已审核不能再修改", {icon: 1, time: 1000 });
+                    return true;
+                };
+                return false;
             }
 
             //绑定供应商
