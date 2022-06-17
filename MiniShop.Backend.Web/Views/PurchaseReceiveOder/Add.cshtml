@@ -9,7 +9,8 @@
     <div class="layui-card">
         <div class="layui-card-body">
             <form class="layui-form" id="Form">
-                <div class="layui-card">
+                <div class="layui-card">         
+                    <input type="hidden" id="PurchaseOderId" name="PurchaseOderId" value="0" />
                     <input type="hidden" id="purchaseReceiveOderId" name="purchaseReceiveOderId" value="0" />  
                     <div class="layui-form-item">
                         <div class="layui-form-item layui-inline">
@@ -193,6 +194,10 @@
                     layer.msg("请先选择单号再新增商品", {icon: 1, time: 1000 });
                     return;
                 };
+                if(window.onlySupportAllReceive() === true)
+                {
+                    return;
+                }
                 let index = layer.open({
                     type: 2,
                     title: '新增商品',
@@ -221,6 +226,10 @@
             };
 
             window.edit = function (obj) {
+                if(window.onlySupportAllReceive() === true)
+                {
+                    return;
+                }
                 let index = layer.open({
                     type: 2,
                     title: '修改订单商品',
@@ -244,6 +253,10 @@
             };
 
             window.remove = function (obj) {
+                if(window.onlySupportAllReceive() === true)
+                {
+                    return;
+                }
                 layer.confirm('确定要删除该订单商品', {
                     icon: 3,
                     title: '提示'
@@ -280,7 +293,10 @@
             }; 
 
             window.batchRemove = function (obj) {
-
+                if(window.onlySupportAllReceive() === true)
+                {
+                    return;
+                }
                 var checkIds = common.checkField(obj, 'id');
 
                 if (checkIds === "") {
@@ -386,6 +402,7 @@
 
                 var oderNo = '@ViewData["OderNo"]';
                 var operatorName = '@ViewData["OperatorName"]';
+                $('#PurchaseOderId').val(data.id);  
                 var data = {
                     'PurchaseOderId':data.id,
                     'ShopId':data.shopId,
@@ -394,7 +411,7 @@
                     'OderAmount': data.oderAmount,
                     'SupplierId': data.supplierId,
                     'OperatorName':operatorName
-                };
+                };             
                 window.CreatePurchaseReceiveOder(data);              
             };
 
@@ -425,6 +442,7 @@
                         success: function (result) {
                             if(result.success)
                             {
+                                window.updatePurchaseOderStatus($('#PurchaseOderId').val(), 1);//采购收货审核后修改采购订单状态为收货
                                 layer.msg(result.msg, { icon: 1, time: 1000 });
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             }else {
@@ -466,6 +484,35 @@
                     }
                 })
             }
+            window.onlySupportAllReceive = function() {
+                layer.msg("目前只支持整单收货", {icon: 1, time: 1000 });
+                return true;
+            }
+            window.updatePurchaseOderStatus = function (id, state) {
+                $.ajax({
+                    url: "/purchaseoder/updatePurchaseOderStatus",
+                    dataType: 'json',
+                    type: 'post',
+                    data:{
+                        'id':id,
+                        'state':state
+                    },
+                    success: function (result) {
+                        if (result.success) {                            
+                        } else {
+                        let index = layer.open({
+                            type: 2,
+                            title: '',
+                            shade: 0.1,
+                            area: ['1280px', '760px'],
+                            content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                        });
+                        layer.full(index);
+                        }
+                    }
+                })
+            }
+            
         });
             
     </script>

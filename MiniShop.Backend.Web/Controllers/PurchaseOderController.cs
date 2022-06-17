@@ -207,5 +207,12 @@ namespace MiniShop.Backend.Web.Controllers
             var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.UpdateOderAmountAsync(id, oderAmount); });
             return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdatePurchaseOderStatusAsync([FromForm]int id, [FromForm]EnumPurchaseOrderStatus state)
+        {
+            var result = await ExecuteApiResultModelAsync(() => { return _purchaseOderApi.UpdatePurchaseOderStatusAsync(id, state); });
+            return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
+        }
     }
 }

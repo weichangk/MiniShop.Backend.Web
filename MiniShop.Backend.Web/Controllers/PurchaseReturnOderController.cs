@@ -73,7 +73,7 @@ namespace MiniShop.Backend.Web.Controllers
             var result = await ExecuteApiResultModelAsync(() => { return _purchaseReturnOderApi.InsertAsync(model); });
             if(result.Success)
             {
-                var purchaseOderItemListResult =  ExecuteApiResultModelAsync(() => { return _purchaseReceiveOderItemApi.GetListAllByShopIdPurchaseReceiveOderIdAsync(model.ShopId, model.PurchaseReceiveOderId); }).Result;
+                var purchaseOderItemListResult =  ExecuteApiResultModelAsync(() => { return _purchaseReceiveOderItemApi.GetListAllByShopIdPurchaseReceiveOderIdAsync(model.ShopId, model.PurchaseOderId); }).Result;
                 if(purchaseOderItemListResult.Success)
                 {
                     foreach (var item in purchaseOderItemListResult.Data)

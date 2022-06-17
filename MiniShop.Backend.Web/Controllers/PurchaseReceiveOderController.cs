@@ -131,6 +131,7 @@ namespace MiniShop.Backend.Web.Controllers
             dto.AuditOperatorName = _userInfo.UserName;
             dto.AuditTime = DateTime.Now;
             dto.AuditState = EnumAuditStatus.Audited;
+            dto.OrderState = EnumPurchaseOrderStatus.Received;
             var result = await ExecuteApiResultModelAsync(() => { return _purchaseReceiveOderApi.UpdateAsync(dto); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }

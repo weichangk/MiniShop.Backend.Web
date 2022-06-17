@@ -1,4 +1,4 @@
-﻿@model PurchaseOderItemCreateDto
+﻿@model PurchaseReceiveOderItemCreateDto
 
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
@@ -13,7 +13,7 @@
     <form class="layui-form" asp-controller="PurchaseOderItem" asp-action="Add" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess" 
         style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
         <input type="hidden" id="ShopId" name="ShopId" asp-for="ShopId"/>
-        <input type="hidden" id="PurchaseOderId" name="PurchaseOderId" asp-for="PurchaseOderId"/>
+        <input type="hidden" id="PurchaseReceiveOderId" name="PurchaseReceiveOderId" asp-for="PurchaseReceiveOderId"/>
         <input type="hidden" id="ItemId" name="ItemId" asp-for="ItemId"/>
         <div class="layui-form-item">
             <label class="layui-form-label" style="width: auto">品名</label>
@@ -109,7 +109,6 @@
                 $('#UnitName').val(data.unitName);
                 $('#PurchasePrice').val(data.purchasePrice);
             };
-
         });
 
         var onSuccess = function (result) {
@@ -154,7 +153,7 @@
         // 获取父窗体信息
         function GetParentIframeData (data) {
             $('#ShopId').val(data.ShopId);
-            $('#PurchaseOderId').val(data.PurchaseOderId);
+            $('#PurchaseReceiveOderId').val(data.PurchaseReceiveOderId);
         };
 
     </script>

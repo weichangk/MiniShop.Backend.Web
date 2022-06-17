@@ -29,14 +29,6 @@
 				"type": 1,
 				"openType": "_iframe",
 				"href": "Unit/Index"
-			},
-			{
-				"id": 1013,
-				"title": "商品设置",
-				"icon": "layui-icon layui-icon-face-cry",
-				"type": 1,
-				"openType": "_iframe",
-				"href": "view/document/select.html"
 			}
 		]
 	},
@@ -53,7 +45,7 @@
 				"icon": "layui-icon layui-icon-face-smile",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/button.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1111,
@@ -61,63 +53,31 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/form.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1112,
-				"title": "销售设置",
+				"title": "支付接口",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/icon.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1113,
-				"title": "销售汇总",
+				"title": "销售流水",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/table.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1114,
-				"title": "流水报表",
-				"icon": "layui-icon layui-icon-face-cry",
-				"type": 1,
-				"openType": "_iframe",
-				"href": "view/document/step.html"
-			},
-			{
-				"id": 1115,
-				"title": "营业概况",
-				"icon": "layui-icon layui-icon-face-cry",
-				"type": 1,
-				"openType": "_iframe",
-				"href": "view/document/treetable.html"
-			},
-			{
-				"id": 1116,
-				"title": "收银员提成",
-				"icon": "layui-icon layui-icon-face-cry",
-				"type": 1,
-				"openType": "_iframe",
-				"href": "view/document/dtree.html"
-			},
-			{
-				"id": 1117,
 				"title": "收银对账",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
-			},
-			{
-				"id": 1118,
-				"title": "收银员交接班",
-				"icon": "layui-icon layui-icon-face-cry",
-				"type": 1,
-				"openType": "_iframe",
-				"href": "view/document/notice.html"
+				"href": "view/error/404.html"
 			}
 		]
 	},
@@ -134,15 +94,15 @@
 				"icon": "layui-icon layui-icon-face-smile",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/button.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1311,
-				"title": "当前促销查询",
+				"title": "促销销售",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			}
 		]
 	},
@@ -159,7 +119,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1411,
@@ -167,79 +127,79 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1412,
-				"title": "会员设置",
-				"icon": "layui-icon layui-icon-face-cry",
-				"type": 1,
-				"openType": "_iframe",
-				"href": "view/document/drawer.html"
-			},
-			{
-				"id": 1413,
-				"title": "储值设置",
-				"icon": "layui-icon layui-icon-face-cry",
-				"type": 1,
-				"openType": "_iframe",
-				"href": "view/document/drawer.html"
-			},
-			{
-				"id": 1414,
-				"title": "充值设备授权",
-				"icon": "layui-icon layui-icon-face-cry",
-				"type": 1,
-				"openType": "_iframe",
-				"href": "view/document/drawer.html"
-			},
-			{
-				"id": 1415,
-				"title": "操作员授权",
-				"icon": "layui-icon layui-icon-face-cry",
-				"type": 1,
-				"openType": "_iframe",
-				"href": "view/document/drawer.html"
-			},
-			{
-				"id": 1416,
-				"title": "充值优惠规则",
-				"icon": "layui-icon layui-icon-face-cry",
-				"type": 1,
-				"openType": "_iframe",
-				"href": "view/document/drawer.html"
-			},
-			{
-				"id": 1417,
 				"title": "积分设置",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
-				"id": 1418,
+				"id": 1413,
 				"title": "礼品管理",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
-				"id": 1419,
+				"id": 1414,
 				"title": "积分兑换",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
-				"id": 1420,
+				"id": 1415,
 				"title": "积分清零",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
+			},
+			{
+				"id": 1416,
+				"title": "积分转储值",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_iframe",
+				"href": "view/error/404.html"
+			},
+			{
+				"id": 1417,
+				"title": "储值设置",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_iframe",
+				"href": "view/error/404.html"
+			},
+			{
+				"id": 1418,
+				"title": "充值设备授权",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_iframe",
+				"href": "view/error/404.html"
+			},
+			{
+				"id": 1419,
+				"title": "操作员授权",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_iframe",
+				"href": "view/error/404.html"
+			},
+			{
+				"id": 1420,
+				"title": "充值优惠规则",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_iframe",
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1421,
@@ -247,7 +207,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1422,
@@ -255,7 +215,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1423,
@@ -263,7 +223,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1423,
@@ -271,7 +231,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1424,
@@ -279,7 +239,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1425,
@@ -287,7 +247,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			}
 		]
 	},
@@ -298,14 +258,6 @@
 		"type": 0,
 		"href": "",
 		"children": [
-			{
-				"id": 1510,
-				"title": "采购设置",
-				"icon": "layui-icon layui-icon-face-cry",
-				"type": 1,
-				"openType": "_iframe",
-				"href": "view/document/drawer.html"
-			},
 			{
 				"id": 1511,
 				"title": "供应商档案",
@@ -337,22 +289,6 @@
 				"type": 1,
 				"openType": "_iframe",
 				"href": "PurchaseReturnOder/Index"
-			},
-			{
-				"id": 1515,
-				"title": "采购汇总",
-				"icon": "layui-icon layui-icon-face-cry",
-				"type": 1,
-				"openType": "_iframe",
-				"href": "view/document/drawer.html"
-			},
-			{
-				"id": 1516,
-				"title": "采购订单查询",
-				"icon": "layui-icon layui-icon-face-cry",
-				"type": 1,
-				"openType": "_iframe",
-				"href": "view/document/drawer.html"
 			}
 		]
 	},
@@ -365,11 +301,11 @@
 		"children": [
 			{
 				"id": 1610,
-				"title": "商品库存查询",
+				"title": "库存查询",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			}
 		]
 	},
@@ -381,20 +317,12 @@
 		"href": "",
 		"children": [
 			{
-				"id": 1710,
-				"title": "批发设置",
-				"icon": "layui-icon layui-icon-face-cry",
-				"type": 1,
-				"openType": "_iframe",
-				"href": "view/document/drawer.html"
-			},
-			{
 				"id": 1711,
 				"title": "批发客户档案",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1712,
@@ -402,7 +330,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1713,
@@ -410,7 +338,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1714,
@@ -418,7 +346,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1715,
@@ -426,7 +354,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			}
 		]
 	},
@@ -443,7 +371,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1811,
@@ -451,7 +379,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1812,
@@ -459,7 +387,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1813,
@@ -467,7 +395,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1814,
@@ -475,7 +403,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1815,
@@ -483,7 +411,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			}
 		]
 	},
@@ -532,7 +460,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/document/drawer.html"
+				"href": "view/error/404.html"
 			},
 			{
 				"id": 1915,

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using WebApiClientCore;
 using WebApiClientCore.Attributes;
+using MiniShop.Backend.Model.Enums;
 
 namespace MiniShop.Backend.Web.HttpApis
 {
@@ -53,5 +54,8 @@ namespace MiniShop.Backend.Web.HttpApis
 
         [HttpPut("/api/PurchaseOder/UpdateOderAmountAsync")]
         ITask<ResultModel<decimal>> UpdateOderAmountAsync([FormContent]int id, [FormContent]decimal oderAmount);
+
+        [HttpPut("/api/PurchaseOder/UpdatePurchaseOderStatusAsync")]
+        ITask<ResultModel<bool>> UpdatePurchaseOderStatusAsync([FormContent]int id, [FormContent]EnumPurchaseOrderStatus state);
     }
 }
