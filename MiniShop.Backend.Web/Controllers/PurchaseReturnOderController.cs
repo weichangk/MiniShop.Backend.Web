@@ -18,17 +18,17 @@ namespace MiniShop.Backend.Web.Controllers
     {
         private readonly IPurchaseReturnOderApi _purchaseReturnOderApi;
         private readonly IPurchaseReturnOderItemApi _purchaseReturnOderItemApi;
-        private readonly IPurchaseReceiveOderItemApi _purchaseReceiveOderItemApi;
+        private readonly IPurchaseOderItemApi _purchaseOderItemApi;
         private readonly ISupplierApi _supplierApi;
         public PurchaseReturnOderController(ILogger<PurchaseReturnOderController> logger, IMapper mapper, IUserInfo userInfo,
             IPurchaseReturnOderApi purchaseReturnOderApi,
             ISupplierApi supplierApi,
-            IPurchaseReceiveOderItemApi purchaseReceiveOderItemApi,
+            IPurchaseOderItemApi purchaseOderItemApi,
             IPurchaseReturnOderItemApi purchaseReturnOderItemApi) : base(logger, mapper, userInfo)
         {
             _purchaseReturnOderApi = purchaseReturnOderApi;
             _supplierApi = supplierApi;
-            _purchaseReceiveOderItemApi = purchaseReceiveOderItemApi;
+            _purchaseOderItemApi = purchaseOderItemApi;
             _purchaseReturnOderItemApi = purchaseReturnOderItemApi;
         }
 
@@ -73,7 +73,7 @@ namespace MiniShop.Backend.Web.Controllers
             var result = await ExecuteApiResultModelAsync(() => { return _purchaseReturnOderApi.InsertAsync(model); });
             if(result.Success)
             {
-                var purchaseOderItemListResult =  ExecuteApiResultModelAsync(() => { return _purchaseReceiveOderItemApi.GetListAllByShopIdPurchaseReceiveOderIdAsync(model.ShopId, model.PurchaseOderId); }).Result;
+                var purchaseOderItemListResult =  ExecuteApiResultModelAsync(() => { return _purchaseOderItemApi.GetListAllByShopIdPurchaseOderIdAsync(model.ShopId, model.PurchaseOderId); }).Result;
                 if(purchaseOderItemListResult.Success)
                 {
                     foreach (var item in purchaseOderItemListResult.Data)
@@ -116,6 +116,7 @@ namespace MiniShop.Backend.Web.Controllers
             dto.AuditOperatorName = _userInfo.UserName;
             dto.AuditTime = DateTime.Now;
             dto.AuditState = EnumAuditStatus.Audited;
+            dto.OrderState = EnumPurchaseOrderStatus.Returned;
             var result = await ExecuteApiResultModelAsync(() => { return _purchaseReturnOderApi.UpdateAsync(dto); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }

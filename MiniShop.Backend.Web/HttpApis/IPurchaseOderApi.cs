@@ -34,6 +34,12 @@ namespace MiniShop.Backend.Web.HttpApis
         [HttpGet("/api/PurchaseOder/GetAuditedUnReceivedPageByShopIdWhereQueryAsync")]
         ITask<ResultModel<PagedList<PurchaseOderDto>>> GetAuditedUnReceivedPageByShopIdWhereQueryAsync(int pageIndex, int pageSize, Guid shopId, string oderNo);
 
+        [HttpGet("/api/PurchaseOder/GetAuditedUnReturnPageByShopIdAsync")]
+        ITask<ResultModel<PagedList<PurchaseOderDto>>> GetAuditedUnReturnPageByShopIdAsync(int pageIndex, int pageSize, Guid shopId);
+
+        [HttpGet("/api/PurchaseOder/GetAuditedUnReturnPageByShopIdWhereQueryAsync")]
+        ITask<ResultModel<PagedList<PurchaseOderDto>>> GetAuditedUnReturnPageByShopIdWhereQueryAsync(int pageIndex, int pageSize, Guid shopId, string oderNo);
+
         [HttpDelete("/api/PurchaseOder/DeleteAsync")]
         ITask<ResultModel<PurchaseOderDto>> DeleteAsync(int id);
 

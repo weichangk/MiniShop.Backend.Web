@@ -13,6 +13,7 @@
                 <div class="layui-card">
                     <input type="hidden" id="Id" name="Id" value="@Model.Id" />              
                     <input type="hidden" id="SupplierId" name="SupplierId" value="@Model.SupplierId" />
+                    <input type="hidden" id="PurchaseOderId" name="PurchaseOderId" value="@Model.PurchaseOderId" />
                     <div class="layui-form-item">
                         <div class="layui-form-item layui-inline">
                             <label class="layui-form-label">供应商</label>
@@ -179,6 +180,10 @@
             });
 
             form.on('submit(purchasereturnoder-update)', function(data){
+                if(window.auditedCheck() === true)
+                {
+                    return;
+                }   
                 $.ajax({
                         url:'@Url.Action("Update","PurchaseReturnOder")', 
                         type:"post",
@@ -187,6 +192,7 @@
                         success: function (result) {
                             if(result.success)
                             {
+                                window.updatePurchaseOderStatus($('#PurchaseOderId').val(), 3);//采购退审核后修改采购订单状态为已退货
                                 layer.msg(result.msg, { icon: 1, time: 1000 });
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             }else {
@@ -204,6 +210,14 @@
             });
 
             window.add = function () {
+                if(window.auditedCheck() === true)
+                {
+                    return;
+                }   
+                if(window.onlySupportAllReturn() === true)
+                {
+                    return;
+                }
                 let index = layer.open({
                     type: 2,
                     title: '新增商品',
@@ -216,7 +230,7 @@
                         var iframe = window['layui-layer-iframe' + index];
                         var data = {
                             ShopId: $('#ShopId').val(),
-                            PurchaseOderId: $('#Id').val(),
+                            PurchaseReturnOderId: $('#Id').val(),
                         };
                         iframe.GetParentIframeData(data)
                     },
@@ -232,6 +246,14 @@
             };
 
             window.edit = function (obj) {
+                if(window.auditedCheck() === true)
+                {
+                    return;
+                }   
+                if(window.onlySupportAllReturn() === true)
+                {
+                    return;
+                }
                 let index = layer.open({
                     type: 2,
                     title: '修改订单商品',
@@ -255,6 +277,14 @@
             };
 
             window.remove = function (obj) {
+                if(window.auditedCheck() === true)
+                {
+                    return;
+                }   
+                if(window.onlySupportAllReturn() === true)
+                {
+                    return;
+                }
                 layer.confirm('确定要删除该订单商品', {
                     icon: 3,
                     title: '提示'
@@ -291,7 +321,15 @@
             };
 
             window.batchRemove = function (obj) {
-
+                if(window.auditedCheck() === true)
+                {
+                    return;
+                }   
+                if(window.onlySupportAllReturn() === true)
+                {
+                    return;
+                }
+                
                 var checkIds = common.checkField(obj, 'id');
 
                 if (checkIds === "") {
@@ -388,6 +426,45 @@
                         }
                     }
                 })
+            }
+
+            window.updatePurchaseOderStatus = function (id, state) {
+                $.ajax({
+                    url: "/purchaseoder/updatePurchaseOderStatus",
+                    dataType: 'json',
+                    type: 'post',
+                    data:{
+                        'id':id,
+                        'state':state
+                    },
+                    success: function (result) {
+                        if (result.success) {                            
+                        } else {
+                        let index = layer.open({
+                            type: 2,
+                            title: '',
+                            shade: 0.1,
+                            area: ['1280px', '760px'],
+                            content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                        });
+                        layer.full(index);
+                        }
+                    }
+                })
+            }
+
+            window.auditedCheck = function() {
+                if($("#AuditState").val() === "Audited")
+                {
+                    layer.msg("订单已审核不能再修改", {icon: 1, time: 1000 });
+                    return true;
+                };
+                return false;
+            }
+
+            window.onlySupportAllReturn = function() {
+                layer.msg("目前只支持整单退货", {icon: 1, time: 1000 });
+                return true;
             }
 
             //绑定供应商

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>采购订单选择</title>
+    <link rel="stylesheet" href="~/component/pear/css/pear.css" />
+</head>
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">采购单号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="oderNo" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="purchase-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="purchase-table" lay-filter="purchase-table"></table>
+        </div>
+    </div>
+
+    <script type="text/html" id="purchase-bar">
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="select"><i class="layui-icon layui-icon-ok"></i>选择</button>
+    </script>
+
+    <script type="text/html" id="purchase-createTime">
+        {{layui.util.toDateString(d.createdTime, 'yyyy-MM-dd')}}
+    </script>
+
+    <script src="~/component/layui/layui.js"></script>
+    <script src="~/component/pear/pear.js"></script>
+    <script>
+            layui.use(['table', 'form', 'jquery', 'common'], function () {
+                let table = layui.table;
+                let form = layui.form;
+                let $ = layui.jquery;
+                let common = layui.common;
+
+                let cols = [
+                    [
+                    {
+                        title: 'ID',
+                        field: 'id',
+                        align: 'center',
+                        width: 100,
+                        hide: true
+                    },
+                    {
+                        title: '单号',
+                        field: 'oderNo',
+                        align: 'center',
+                    },
+                    {
+                        title: '供应商ID',
+                        field: 'supplierId',
+                        align: 'center',
+                        hide: true
+                    },
+                    {
+                        title: '供应商',
+                        field: 'supplierName',
+                        align: 'center'
+                    },
+                    {
+                        title: '单据状态',
+                        field: 'orderStateDes',
+                        align: 'center'
+                    },
+                    {
+                        title: '制单日期',
+                        field: 'createdTime',
+                        align: 'center',
+                        templet: '#purchase-createTime'
+                    },
+                    {
+                        title: '操作',
+                        toolbar: '#purchase-bar',
+                        align: 'center',
+                        width: 130
+                    }
+                    ]
+                ]
+
+                table.render({
+                    elem: '#purchase-table',
+                    url: 'GetAuditedUnReturnPageByShopId',
+                    page: true,//开启分页
+                    cols: cols,
+                    skin: 'line'
+                });
+
+                table.on('tool(purchase-table)', function (obj) {
+                    if (obj.event === 'select') {
+                        parent.GetSelectAuditedUnReturnPurchaseOderData(obj.data)  //调用父页面的方法
+                        parent.layer.closeAll()  //关闭父页面所有弹框
+                    } 
+                });
+
+                form.on('submit(purchase-query)', function (data) {
+                    table.reload('purchase-table', {
+                        url: 'GetAuditedUnReturnPageByShopIdWhereQuery',
+                        page: {
+                            curr:1,//重新从第一页开始
+                        },
+                        where: data.field
+                    })
+                    return false;
+                });
+
+            })
+    </script>
+</body>
+</html>
