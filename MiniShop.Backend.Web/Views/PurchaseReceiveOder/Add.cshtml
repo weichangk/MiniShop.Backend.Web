@@ -11,7 +11,7 @@
             <form class="layui-form" id="Form">
                 <div class="layui-card">         
                     <input type="hidden" id="PurchaseOderId" name="PurchaseOderId" value="0" />
-                    <input type="hidden" id="purchaseReceiveOderId" name="purchaseReceiveOderId" value="0" />  
+                    <input type="hidden" id="PurchaseReceiveOderId" name="PurchaseReceiveOderId" value="0" />  
                     <div class="layui-form-item">
                         <div class="layui-form-item layui-inline">
                             <label class="layui-form-label">采购订单</label>
@@ -157,7 +157,7 @@
 
             table.render({
                 elem: '#purchasereceiveoderitems-table',
-                url: '/PurchaseReceiveOderItem/GetPageByShopIdPurchaseReceiveOderId?purchaseReceiveOderId=' + $('#purchaseReceiveOderId').val(), 
+                url: '/PurchaseReceiveOderItem/GetPageByShopIdPurchaseReceiveOderId?purchaseReceiveOderId=' + $('#PurchaseReceiveOderId').val(), 
                 page: true,//开启分页
                 totalRow: true,//开启合并行
                 cols: cols,
@@ -189,7 +189,7 @@
             });
 
             window.add = function () {
-                if($('#purchaseReceiveOderId').val() == "" || $('#purchaseReceiveOderId').val() == "0")
+                if($('#PurchaseReceiveOderId').val() == "" || $('#PurchaseReceiveOderId').val() == "0")
                 {
                     layer.msg("请先选择单号再新增商品", {icon: 1, time: 1000 });
                     return;
@@ -344,18 +344,18 @@
 
             window.refresh = function (param) {
                 table.reload('purchasereceiveoderitems-table',{
-                    url: '/PurchaseReceiveOderItem/GetPageByShopIdPurchaseReceiveOderId?purchaseReceiveOderId=' + $('#purchaseReceiveOderId').val(), 
+                    url: '/PurchaseReceiveOderItem/GetPageByShopIdPurchaseReceiveOderId?purchaseReceiveOderId=' + $('#PurchaseReceiveOderId').val(), 
                 });
             };
 
             window.updateOderAmount = function () {
                 $.ajax({
-                    url: "/purchasereceiveoderitem/GetSumAmountByPurchaseReceiveOderId?purchaseReceiveOderId=" + $('#purchaseReceiveOderId').val(),
+                    url: "/purchasereceiveoderitem/GetSumAmountByPurchaseReceiveOderId?purchaseReceiveOderId=" + $('#PurchaseReceiveOderId').val(),
                     dataType: 'json',
                     type: 'get',
                     success: function (result) {
                         if (result.success) {
-                            window.updateOderAmount1($('#purchaseReceiveOderId').val(), result.data);
+                            window.updateOderAmount1($('#PurchaseReceiveOderId').val(), result.data);
                         } else {
                             let index = layer.open({
                                 type: 2,
@@ -436,13 +436,14 @@
                         type:"post",
                         dataType:"json",
                         data: {
-                            'Id':$('#purchaseReceiveOderId').val(),
+                            'Id':$('#PurchaseReceiveOderId').val(),
                             'Remark':$('#remark').val(),                     
                         },
                         success: function (result) {
                             if(result.success)
                             {
                                 window.updatePurchaseOderStatus($('#PurchaseOderId').val(), 1);//采购收货审核后修改采购订单状态为收货
+                                window.addStockNumber($('#PurchaseReceiveOderId').val());//更新库存
                                 layer.msg(result.msg, { icon: 1, time: 1000 });
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             }else {
@@ -467,7 +468,7 @@
                     data: model,
                     success: function (result) {
                         if (result.success) {   
-                            $('#purchaseReceiveOderId').val(result.data.id);  
+                            $('#PurchaseReceiveOderId').val(result.data.id);  
                             window.refresh();      
                             $('#purchasereceiveoderselect').css("display", "none"); 
                             $('#purchasereceiveoderAudit').css("display", "inline-block");     
@@ -512,7 +513,29 @@
                     }
                 })
             }
-            
+            window.addStockNumber = function (id) {
+                $.ajax({
+                    url: "/PurchaseReceiveOder/AddStockNumber",
+                    dataType: 'json',
+                    type: 'post',
+                    data:{
+                        'id':id,
+                    },
+                    success: function (result) {
+                        if (result.success) {                            
+                        } else {
+                        let index = layer.open({
+                            type: 2,
+                            title: '',
+                            shade: 0.1,
+                            area: ['1280px', '760px'],
+                            content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                        });
+                        layer.full(index);
+                        }
+                    }
+                })
+            }       
         });
             
     </script>

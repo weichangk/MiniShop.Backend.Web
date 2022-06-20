@@ -25,7 +25,7 @@ namespace MiniShop.Backend.Web.HttpApis
         ITask<ResultModel<PagedList<StockDto>>> GetPageByShopIdAsync(int pageIndex, int pageSize, Guid shopId);
 
         [HttpGet("/api/Stock/GetPageByShopIdWhereQueryAsync")]
-        ITask<ResultModel<PagedList<StockDto>>> GetPageByShopIdWhereQueryAsync(int pageIndex, int pageSize, Guid shopId, string name);
+        ITask<ResultModel<PagedList<StockDto>>> GetPageByShopIdWhereQueryAsync(int pageIndex, int pageSize, Guid shopId, string code, string name);
         
         [HttpPost("/api/Stock/InsertAsync")]
         ITask<ResultModel<StockCreateDto>> InsertAsync([JsonContent] StockCreateDto model);

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using MiniShop.Backend.Model.Enums;
+using Weick.Orm.Core.Result;
 
 namespace MiniShop.Backend.Web.Controllers
 {
@@ -182,5 +183,23 @@ namespace MiniShop.Backend.Web.Controllers
             return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SubStockNumber([FromForm]int id)
+        {
+            var getPurchaseReturnOderItem = (ResultModel<List<PurchaseReturnOderItemDto>>)(await _purchaseReturnOderItemApi.GetListAllByShopIdPurchaseReturnOderIdAsync(_userInfo.ShopId, id));
+            if(getPurchaseReturnOderItem.Success)
+            {
+                foreach(var item in getPurchaseReturnOderItem.Data)
+                {
+                    var addStockNumber =  await _purchaseReturnOderItemApi.AddOrSubStockNumberAsync(item.ShopId, item.ItemId, false, item.Number);
+                    if(!addStockNumber.Success)
+                    {
+                        return Json(new Result() { Success = addStockNumber.Success, Msg = addStockNumber.Msg, Status = addStockNumber.Status });
+                    }
+                }
+                return Json(new Result() { Success = true, Msg = "Success",  Status = 200 });
+            }
+            return Json(new Result() { Success = getPurchaseReturnOderItem.Success, Msg = getPurchaseReturnOderItem.Msg, Status = getPurchaseReturnOderItem.Status });
+        }
     }
 }

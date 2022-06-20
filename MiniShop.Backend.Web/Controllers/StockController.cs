@@ -29,6 +29,16 @@ namespace MiniShop.Backend.Web.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Add()
+        {
+            StockCreateDto model = new StockCreateDto
+            {
+                ShopId = _userInfo.ShopId,
+            };
+            return View(model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddAsync(StockCreateDto model)
         {
@@ -36,12 +46,29 @@ namespace MiniShop.Backend.Web.Controllers
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
  
+ 
+        public async Task<IActionResult> UpdateAsync(int id)
+        {
+            var result = await ExecuteApiResultModelAsync(() => { return _stockApi.GetByIdAsync(id); });
+            if (result.Success)
+            {
+                return View(result.Data);
+            }
+            return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
+        }
+
         [HttpPost]
         public async Task<IActionResult> UpdateAsync(StockDto model)
         {
             var dto = _mapper.Map<StockUpdateDto>(model);
             var result = await ExecuteApiResultModelAsync(() => { return _stockApi.UpdateAsync(dto); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
+        }
+
+        public async Task<IActionResult> GetByShopIdAndItemIdAsync(Guid shopId, int itemId)
+        {
+            var result = await ExecuteApiResultModelAsync(() => { return _stockApi.GetByShopIdAndItemIdAsync(shopId, itemId); });
+            return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
         }
 
         [ResponseCache(Duration = 0)]
@@ -58,10 +85,11 @@ namespace MiniShop.Backend.Web.Controllers
 
         [ResponseCache(Duration = 0)]
         [HttpGet]
-        public async Task<IActionResult> GetPageOnShopWhereQueryCodeOrNameAsync(int page, int limit, string name)
+        public async Task<IActionResult> GetPageByShopIdWhereQueryAsync(int page, int limit, string code, string name)
         {
+            code = System.Web.HttpUtility.UrlEncode(code);
             name = System.Web.HttpUtility.UrlEncode(name);
-            var result = await ExecuteApiResultModelAsync(() => { return _stockApi.GetPageByShopIdWhereQueryAsync(page, limit, _userInfo.ShopId, name); });
+            var result = await ExecuteApiResultModelAsync(() => { return _stockApi.GetPageByShopIdWhereQueryAsync(page, limit, _userInfo.ShopId, code, name); });
             if (!result.Success)
             {
                 return Json(new Result() { Success = result.Success, Status = result.Status, Msg = result.Msg });

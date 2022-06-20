@@ -41,6 +41,11 @@ namespace MiniShop.Backend.Web.HttpApis
 
         [HttpGet("/api/PurchaseReceiveOderItem/GetSumAmountByPurchaseReceiveOderIdAsync")]
         ITask<ResultModel<decimal>> GetSumAmountByPurchaseReceiveOderIdAsync(int purchaseReceiveOderId);
-        
+
+        [HttpGet("/api/PurchaseReceiveOderItem/GetListAllByShopIdPurchaseReceiveOderIdAsync")]
+        ITask<ResultModel<List<PurchaseReceiveOderItemDto>>> GetListAllByShopIdPurchaseReceiveOderIdAsync(Guid shopId, int purchaseReceiveOderId);     
+
+        [HttpPut("/api/Stock/AddOrSubStockNumberAsync")]
+        ITask<ResultModel<decimal>> AddOrSubStockNumberAsync([FormContent] Guid shopId, [FormContent] int itemId, [FormContent] bool isAdd, [FormContent] decimal number);   
     }
 }

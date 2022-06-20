@@ -193,6 +193,7 @@
                             if(result.success)
                             {
                                 window.updatePurchaseOderStatus($('#PurchaseOderId').val(), 3);//采购退审核后修改采购订单状态为已退货
+                                window.subStockNumber($('#PurchaseOderId').val());//更新库存
                                 layer.msg(result.msg, { icon: 1, time: 1000 });
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             }else {
@@ -466,6 +467,30 @@
                 layer.msg("目前只支持整单退货", {icon: 1, time: 1000 });
                 return true;
             }
+
+            window.subStockNumber = function (id) {
+                $.ajax({
+                    url: "/PurchaseReturnOder/SubStockNumber",
+                    dataType: 'json',
+                    type: 'post',
+                    data:{
+                        'id':id,
+                    },
+                    success: function (result) {
+                        if (result.success) {                            
+                        } else {
+                        let index = layer.open({
+                            type: 2,
+                            title: '',
+                            shade: 0.1,
+                            area: ['1280px', '760px'],
+                            content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                        });
+                        layer.full(index);
+                        }
+                    }
+                })
+            }  
 
             //绑定供应商
             BindSupplier($);

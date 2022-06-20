@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using MiniShop.Backend.Model.Enums;
+using Weick.Orm.Core.Result;
 
 namespace MiniShop.Backend.Web.Controllers
 {
@@ -77,6 +78,7 @@ namespace MiniShop.Backend.Web.Controllers
             //     }
             // );
             // return View(model);
+            ViewBag.ShopId = _userInfo.ShopId;
             ViewBag.OderNo = Guid.NewGuid().ToString();//生成唯一单号
             ViewBag.OperatorName = _userInfo.UserName;
             return View();
@@ -222,5 +224,23 @@ namespace MiniShop.Backend.Web.Controllers
             return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddStockNumber([FromForm]int id)
+        {
+            var getPurchaseReceiveOderItem = (ResultModel<List<PurchaseReceiveOderItemDto>>)(await _purchaseReceiveOderItemApi.GetListAllByShopIdPurchaseReceiveOderIdAsync(_userInfo.ShopId, id));
+            if(getPurchaseReceiveOderItem.Success)
+            {
+                foreach(var item in getPurchaseReceiveOderItem.Data)
+                {
+                    var addStockNumber =  await _purchaseReceiveOderItemApi.AddOrSubStockNumberAsync(item.ShopId, item.ItemId, true, item.Number);
+                    if(!addStockNumber.Success)
+                    {
+                        return Json(new Result() { Success = addStockNumber.Success, Msg = addStockNumber.Msg, Status = addStockNumber.Status });
+                    }
+                }
+               return Json(new Result() { Success = true, Msg = "Success",  Status = 200 });
+            }
+            return Json(new Result() { Success = getPurchaseReceiveOderItem.Success, Msg = getPurchaseReceiveOderItem.Msg, Status = getPurchaseReceiveOderItem.Status });
+        }
     }
 }
