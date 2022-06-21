@@ -23,13 +23,15 @@ namespace MiniShop.Backend.Web.Controllers
         private readonly IUnitApi _unitApi;
         private readonly ISupplierApi _supplierApi;
         private readonly IItemApi _itemApi;
+        private readonly IPaymentApi _paymentApi;
         public HomeController(ILogger<HomeController> logger, IMapper mapper, IUserInfo userInfo,
             IShopApi shopApi,
             IStoreApi storeApi,
             ICategorieApi categorieApi,
             IUnitApi unitApi,
             ISupplierApi supplierApi,
-            IItemApi itemApi) : base(logger, mapper, userInfo)
+            IItemApi itemApi,
+            IPaymentApi paymentApi) : base(logger, mapper, userInfo)
         {
             _shopApi = shopApi;
             _storeApi = storeApi;
@@ -37,6 +39,7 @@ namespace MiniShop.Backend.Web.Controllers
             _unitApi = unitApi;
             _supplierApi = supplierApi;
             _itemApi = itemApi;
+            _paymentApi = paymentApi;
         }
 
         [HttpGet]
@@ -118,6 +121,72 @@ namespace MiniShop.Backend.Web.Controllers
                         return RedirectToAction("Error", "Error", new { statusCode = addStore.Status, errorMsg = addStore.Msg });
                     }
                 }
+
+                #region 系统内置支付方式
+                var queryPayment = await ExecuteApiResultModelAsync(() => { return _paymentApi.GetByShopIdCodeAsync(_userInfo.ShopId, "CAS"); });
+                if (!queryPayment.Success)
+                {
+                    return RedirectToAction("Error", "Error", new { statusCode = queryShop.Status, errorMsg = queryShop.Msg });
+                }
+                if (queryPayment.Data == null)
+                {
+                    PaymentCreateDto paymentCreateDto = new PaymentCreateDto
+                    {
+                        ShopId = _userInfo.ShopId,
+                        Code = "CAS",
+                        Name = "现金",
+                        Enable = EnumEnableStatus.Enable,
+                        SystemPayment = EnumYesOrNoStatus.Yes,
+                    };
+                    var addPayment = await ExecuteApiResultModelAsync(() => { return _paymentApi.InsertAsync(paymentCreateDto); });
+                    if (!addPayment.Success)
+                    {
+                        return RedirectToAction("Error", "Error", new { statusCode = addPayment.Status, errorMsg = addPayment.Msg });
+                    }
+                }
+                queryPayment = await ExecuteApiResultModelAsync(() => { return _paymentApi.GetByShopIdCodeAsync(_userInfo.ShopId, "ALP"); });
+                if (!queryPayment.Success)
+                {
+                    return RedirectToAction("Error", "Error", new { statusCode = queryPayment.Status, errorMsg = queryPayment.Msg });
+                }
+                if (queryPayment.Data == null)
+                {
+                    PaymentCreateDto paymentCreateDto = new PaymentCreateDto
+                    {
+                        ShopId = _userInfo.ShopId,
+                        Code = "ALP",
+                        Name = "支付宝",
+                        Enable = EnumEnableStatus.Enable,
+                        SystemPayment = EnumYesOrNoStatus.Yes,
+                    };
+                    var addPayment = await ExecuteApiResultModelAsync(() => { return _paymentApi.InsertAsync(paymentCreateDto); });
+                    if (!addPayment.Success)
+                    {
+                        return RedirectToAction("Error", "Error", new { statusCode = addPayment.Status, errorMsg = addPayment.Msg });
+                    }
+                }
+                queryPayment = await ExecuteApiResultModelAsync(() => { return _paymentApi.GetByShopIdCodeAsync(_userInfo.ShopId, "WEC"); });
+                if (!queryPayment.Success)
+                {
+                    return RedirectToAction("Error", "Error", new { statusCode = queryPayment.Status, errorMsg = queryPayment.Msg });
+                }
+                if (queryPayment.Data == null)
+                {
+                    PaymentCreateDto paymentCreateDto = new PaymentCreateDto
+                    {
+                        ShopId = _userInfo.ShopId,
+                        Code = "WEC",
+                        Name = "微信",
+                        Enable = EnumEnableStatus.Enable,
+                        SystemPayment = EnumYesOrNoStatus.Yes,
+                    };
+                    var addPayment = await ExecuteApiResultModelAsync(() => { return _paymentApi.InsertAsync(paymentCreateDto); });
+                    if (!addPayment.Success)
+                    {
+                        return RedirectToAction("Error", "Error", new { statusCode = addPayment.Status, errorMsg = addPayment.Msg });
+                    }
+                }
+                #endregion
             }
 
             return Json(new Result() { Success = true });

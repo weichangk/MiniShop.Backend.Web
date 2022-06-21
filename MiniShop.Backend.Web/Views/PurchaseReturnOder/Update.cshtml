@@ -193,7 +193,7 @@
                             if(result.success)
                             {
                                 window.updatePurchaseOderStatus($('#PurchaseOderId').val(), 3);//采购退审核后修改采购订单状态为已退货
-                                window.subStockNumber($('#PurchaseOderId').val());//更新库存
+                                window.subStockNumber($('#Id').val());//更新库存
                                 layer.msg(result.msg, { icon: 1, time: 1000 });
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             }else {
