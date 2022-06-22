@@ -19,7 +19,7 @@ namespace MiniShop.Backend.Web.HttpApis
         ITask<ResultModel<PaymentDto>> GetByIdAsync(int id);
 
         [HttpGet("/api/Payment/GetByShopIdCodeAsync")]
-        ITask<ResultModel<CategorieDto>> GetByShopIdCodeAsync(Guid shopId, string code);
+        ITask<ResultModel<PaymentDto>> GetByShopIdCodeAsync(Guid shopId, string code);
    
         [HttpGet("/api/Payment/GetPageByShopIdAsync")]
         ITask<ResultModel<PagedList<PaymentDto>>> GetPageByShopIdAsync(int pageIndex, int pageSize, Guid shopId);

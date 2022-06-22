@@ -70,3 +70,13 @@ function NumberRangeVerify(num, min, max) {
         return false;
     }
 }
+
+function A_Z_StrLenRangeVerify(str, len) {
+    var pattern = '^[A-Z]{' + len + '}$';
+    var reg = new RegExp(pattern);
+    if (!str.match(reg)) {
+        return false;
+    } else {
+        return true;
+    }
+}

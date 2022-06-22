@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MiniShop.Backend.Model.Code;
 using MiniShop.Backend.Model.Dto;
+using MiniShop.Backend.Model.Enums;
 using MiniShop.Backend.Web.Code;
 using MiniShop.Backend.Web.HttpApis;
 using MiniShop.Backend.Web.Models;
@@ -26,13 +28,29 @@ namespace MiniShop.Backend.Web.Controllers
         {
             return View();
         }
-        
+
         [HttpGet]
-        public async Task<IActionResult> Add()
+        public IActionResult GetEnableStatus()
+        {
+            List<dynamic> statusSelect = new List<dynamic>();
+            var dic = EnumExtensions.ToNameAndDesDictionary<EnumEnableStatus>();
+            foreach (var item in dic)
+            {
+                var op = new { opValue = item.Key, opName = item.Value };
+                statusSelect.Add(op);
+            }
+
+            return Json(new Result() { Success = true, Data = statusSelect });
+        }
+
+        [HttpGet]
+        public IActionResult Add()
         {
             PaymentCreateDto model = new PaymentCreateDto
             {
                 ShopId = _userInfo.ShopId,
+                Enable = EnumEnableStatus.Enable,
+                SystemPayment = EnumYesOrNoStatus.No,
             };
             return View(model);
         }
@@ -66,6 +84,23 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateAsync(PaymentDto model)
         {
+            var getPayment1 = await _paymentApi.GetByIdAsync(model.Id);
+            if (!getPayment1.Success)
+            {
+                return Json(new Result() { Success = getPayment1.Success, Status = getPayment1.Status, Msg = getPayment1.Msg });
+            }
+            if(getPayment1.Data.Code != model.Code)
+            {
+                var getPayment2 = await _paymentApi.GetByShopIdCodeAsync(_userInfo.ShopId, model.Code);
+                if (!getPayment2.Success)
+                {
+                    return Json(new Result() { Success = getPayment2.Success, Status = getPayment2.Status, Msg = getPayment2.Msg });
+                }
+                if (getPayment2.Data != null)
+                {
+                    return Json(new Result() { Success = false, Msg = $"{model.Code}支付方式编码已经存在，请重新写入编码", Status = (int)HttpStatusCode.BadRequest });
+                }
+            }
             var dto = _mapper.Map<PaymentUpdateDto>(model);
             var result = await ExecuteApiResultModelAsync(() => { return _paymentApi.UpdateAsync(dto); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
