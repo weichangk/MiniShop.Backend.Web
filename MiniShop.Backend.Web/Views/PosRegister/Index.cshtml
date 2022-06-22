@@ -1,0 +1,317 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>POS登记管理</title>
+    <link rel="stylesheet" href="~/component/pear/css/pear.css" />
+</head>
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">唯一码</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="code" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">设备名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="posRegister-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="posRegister-table" lay-filter="posRegister-table"></table>
+        </div>
+    </div>
+
+    <script type="text/html" id="posRegister-toolbar">
+        @* <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+            <i class="layui-icon layui-icon-add-1"></i>
+            新增
+        </button> *@
+        <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+            <i class="layui-icon layui-icon-delete"></i>
+            删除
+        </button>
+    </script>
+
+    <script type="text/html" id="posRegister-bar">
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
+        <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+    </script>
+
+    <script type="text/html" id="posRegister-createTime">
+        {{layui.util.toDateString(d.createdTime, 'yyyy-MM-dd')}}
+    </script>
+
+    <script src="~/component/layui/layui.js"></script>
+    <script src="~/component/pear/pear.js"></script>
+    <script>
+            layui.use(['table', 'form', 'jquery', 'common'], function () {
+                let table = layui.table;
+                let form = layui.form;
+                let $ = layui.jquery;
+                let common = layui.common;
+
+                let cols = [
+                    [{
+                        type: 'checkbox'
+                    },
+                    {
+                        title: 'ID',
+                        field: 'id',
+                        align: 'center',
+                        width: 100,
+                        hide: true
+                    },
+                    {
+                        title: '唯一码',
+                        field: 'code',
+                        align: 'center',
+                    },
+                    {
+                        title: '设备名称',
+                        field: 'name',
+                        align: 'center'
+                    },
+                    {
+                        title: '状态',
+                        field: 'enableDes',
+                        align: 'center'
+                    },
+                    {
+                        title: '操作员',
+                        field: 'operatorName',
+                        align: 'center'
+                    },
+                    {
+                        title: '创建日期',
+                        field: 'createdTime',
+                        align: 'center',
+                        templet: '#posRegister-createTime'
+                    },
+                    {
+                        title: '修改日期',
+                        field: 'modifiedTime',
+                        align: 'center',
+                        templet: '#posRegister-modifiedTime'
+                    },
+                    {
+                        title: '最后登录时间',
+                        field: 'lastLoginTime',
+                        align: 'center',
+                        templet: '#posRegister-lastLoginTime'
+                    },
+                    {
+                        title: '客户端版本',
+                        field: 'clientVersion',
+                        align: 'center'
+                    },
+                    {
+                        title: 'IP',
+                        field: 'ip',
+                        align: 'center'
+                    },
+                    {
+                        title: 'IP地址',
+                        field: 'ipAddress',
+                        align: 'center'
+                    },
+                    {
+                        title: '操作',
+                        toolbar: '#posRegister-bar',
+                        align: 'center',
+                        width: 130
+                    }
+                    ]
+                ]
+
+                table.render({
+                    elem: '#posRegister-table',
+                    url: 'GetPage',
+                    page: true,//开启分页
+                    cols: cols,
+                    skin: 'line',
+                    toolbar: '#posRegister-toolbar',
+                    defaultToolbar: [{
+                        title: '刷新',
+                        layEvent: 'refresh',
+                        icon: 'layui-icon-refresh',
+                    }, 'filter', 'print', 'exports']
+                });
+
+                table.on('tool(posRegister-table)', function (obj) {
+                    if (obj.event === 'remove') {
+                        window.remove(obj);
+                    } else if (obj.event === 'edit') {
+                        window.edit(obj);
+                    }
+                });
+
+                table.on('toolbar(posRegister-table)', function (obj) {
+                    if (obj.event === 'refresh') {
+                        window.refresh();
+                    } else if (obj.event === 'batchRemove') {
+                        window.batchRemove(obj);
+                    }
+                });
+
+                form.on('submit(posRegister-query)', function (data) {
+                    table.reload('posRegister-table', {
+                        url: 'GetPageWhereQueryCodeOrName',
+                        page: {
+                            curr:1,//重新从第一页开始
+                        },
+                        where: data.field
+                    })
+                    return false;
+                });
+
+
+                window.add = function () {
+                    let index = layer.open({
+                        type: 2,
+                        title: '新增POS登记',
+                        shade: 0.1,
+                        area: [common.isModile() ? '100%' : '1280px', common.isModile() ? '100%' : '760px'],
+                        content: '/posRegister/add',
+                        success : function () {       
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#name").focus();                                                       
+                        },
+                        cancel: function(){
+                        }
+                    });
+                    layer.full(index);
+                }
+
+                window.edit = function (obj) {
+                    let index = layer.open({
+                        type: 2,
+                        title: '修改POS登记',
+                        shade: 0.1,
+                        area: [common.isModile() ? '100%' : '1280px', common.isModile() ? '100%' : '760px'],
+                        content: '/posRegister/update?id=' + obj.data['id'],
+                        success : function () {       
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#submit").focus();                                                       
+                        },
+                        cancel: function(){
+                        }
+                    });
+                    layer.full(index);
+                }
+
+                window.remove = function (obj) {
+                    if(window.isSystemposRegister(obj.data['systemposRegisterDes']))
+                    {
+                        return;
+                    }
+                    layer.confirm('确定要删除该POS登记', {
+                        icon: 3,
+                        title: '提示'
+                    }, function (index) {
+                        layer.close(index);
+                        let loading = layer.load();
+                        $.ajax({
+                            url: "/posRegister/delete/" + obj.data['id'],
+                            dataType: 'json',
+                            type: 'delete',
+                            success: function (result) {
+                                layer.close(loading);
+                                if (result.success) {
+                                    layer.msg(result.msg, {
+                                        icon: 1,
+                                        time: 1000
+                                    }, function () {
+                                        //obj.del();
+                                        table.reload('posRegister-table');
+                                    });
+                                } else {
+                                    let index = layer.open({
+                                        type: 2,
+                                        title: '',
+                                        shade: 0.1,
+                                        area: ['1280px', '760px'],
+                                        content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                    });
+                                    layer.full(index);
+                                }
+                            }
+                        })
+                    });
+                }
+
+                window.batchRemove = function (obj) {
+      
+                    var checkIds = common.checkField(obj, 'id');
+
+                    if (checkIds === "") {
+                        layer.msg("未选中数据", {
+                            icon: 3,
+                            time: 1000
+                        });
+                        return false;
+                    }
+
+                    layer.confirm('确定要删除这些POS登记', {
+                        icon: 3,
+                        title: '提示'
+                    }, function (index) {
+                        layer.close(index);
+                        let loading = layer.load();
+                        $.ajax({
+                            url: "/posRegister/batchDelete?ids=" + checkIds,
+                            dataType: 'json',
+                            type: 'delete',
+                            success: function (result) {
+                                layer.close(loading);
+                                if (result.success) {
+                                    layer.msg(result.msg, {
+                                        icon: 1,
+                                        time: 1000
+                                    }, function () {
+                                            table.reload('posRegister-table');
+                                    });
+                                } else {
+                                    let index = layer.open({
+                                        type: 2,
+                                        title: '',
+                                        shade: 0.1,
+                                        area: ['1280px', '760px'],
+                                        content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                    });
+                                    layer.full(index);
+                                }
+                            }
+                        })
+                    });
+                }
+
+                window.refresh = function (param) {
+                    table.reload('posRegister-table',{
+                        url: 'GetPage'
+                    });
+                }
+            })
+    </script>
+</body>
+</html>

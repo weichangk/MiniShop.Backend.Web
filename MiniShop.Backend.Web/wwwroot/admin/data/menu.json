@@ -45,7 +45,7 @@
 				"icon": "layui-icon layui-icon-face-smile",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/error/404.html"
+				"href": "PosRegister/Index"
 			},
 			{
 				"id": 1111,
