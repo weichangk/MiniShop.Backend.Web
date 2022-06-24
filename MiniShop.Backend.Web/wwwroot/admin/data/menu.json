@@ -65,19 +65,19 @@
 			},
 			{
 				"id": 1113,
-				"title": "销售流水",
+				"title": "付款流水",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/error/404.html"
+				"href": "Bill/PayFlowIndex"
 			},
 			{
 				"id": 1114,
-				"title": "收银对账",
+				"title": "商品流水",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/error/404.html"
+				"href": "Bill/SaleFlowIndex"
 			}
 		]
 	},
