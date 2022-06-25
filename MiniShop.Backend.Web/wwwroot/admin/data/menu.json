@@ -127,7 +127,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/error/404.html"
+				"href": "VipType/Index"
 			},
 			{
 				"id": 1412,
@@ -135,7 +135,7 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "view/error/404.html"
+				"href": "VipScoreSetting/Index"
 			},
 			{
 				"id": 1413,

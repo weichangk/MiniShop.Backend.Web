@@ -1,0 +1,262 @@
+﻿@model VipTypeDto
+
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/component/pear/css/pear.css" />
+</head>
+<body>
+    <form class="layui-form" asp-controller="VipType" asp-action="Update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess" 
+    style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" id="DiscountWay" name="DiscountWay" value="@Model.DiscountWay" />
+        <input type="hidden" id="IsScore" name="IsScore" value="@Model.IsScore" />
+        <input type="hidden" id="IsStore" name="IsStore" value="@Model.IsStore" />
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" value="@Model.Name" lay-verify="required|nameCheck" autocomplete="off" placeholder="请输入名称" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">优惠方式</label>
+            <div class="layui-input-block">
+                <select id="SelectDiscountWay" lay-filter="SelectDiscountWay" lay-verify="required">
+                    <option value="">请选择一个优惠方式</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">是否积分</label>
+            <div class="layui-input-block">
+                <select id="SelectIsScore" lay-filter="SelectIsScore" lay-verify="required">
+                    <option value="">请选择一个状态</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">是否储值</label>
+            <div class="layui-input-block">
+                <select id="SelectIsStore" lay-filter="SelectIsStore" lay-verify="required">
+                    <option value="">请选择一个状态</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">折扣率</label>
+            <div class="layui-input-block">
+                <input type="number" step="1" id="DiscountRate" name="DiscountRate" value="@Model.DiscountRate" lay-verify="required|DiscountRateCheck" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 20%">升级要求积分</label>
+            <div class="layui-input-block">
+                <input type="number" step="1" id="RequirementScore" name="RequirementScore" value="@Model.RequirementScore" lay-verify="required|RequirementScoreCheck" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <button id="submit" type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="" style="margin-left: 333px;">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+            <button type="reset" class="pear-btn pear-btn-sm">
+                <i class="layui-icon layui-icon-refresh"></i>
+                重置
+            </button>
+        </div>
+    </form>
+
+    <script src="~/component/layui/layui.js"></script>
+    <script src="~/component/pear/pear.js"></script>
+    <script src="~/js/verify.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+
+    <script>
+        layui.use(['form','jquery'],function(){
+            let form = layui.form;
+            let $ = layui.jquery;
+
+            form.verify({
+                nameCheck: function (value) {
+                    if (!StrLenRangeVerify(value, 2, 12))
+                        return '请输入正确的会员类别名称！2到12位！'
+                },
+                DiscountRateCheck: function (value) {
+                    if (!NumberRangeVerify(value, 10, 100))
+                        return '请输入正确的数量！10到100！'
+                },
+                RequirementScoreCheck: function (value) {
+                    if (!NumberRangeVerify(value, 100, 9999999))
+                        return '请输入正确的数量！100到9999999！'
+                },
+            });
+
+            BindDiscountWays();
+            form.on('select(SelectDiscountWay)', function(data){
+                $('#DiscountWay').val(data.value);
+	        });
+
+            BindIsScore();
+            form.on('select(SelectIsScore)', function(data){
+                $('#IsScore').val(data.value);
+	        });
+
+            BindIsStore();
+            form.on('select(SelectIsStore)', function(data){
+                $('#IsStore').val(data.value);
+	        });
+        });
+
+        var onSuccess = function(result){
+            if(result.success)
+            {
+                layer.msg(result.msg,{icon:1,time:1000},function(){
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    parent.layui.table.reload("viptype-table",{
+                        url: 'GetPageByShopId'
+                    });
+                });
+            }
+            else
+            {
+                let index = layer.open({
+                    type: 2,
+                    title: '',
+                    shade: 0.1,
+                    area: ['1280px', '760px'],
+                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                });
+                layer.full(index);
+            }
+        };
+
+        function BindDiscountWays() {
+            //不懂为什么使用 $.get 时请求地址为 /viptype/update/GetDiscountWays  在Add页面就会！！！
+            @* $.get('GetDiscountWays', function (result) {
+                layui.use('form', function () {
+                    var form = layui.form;
+                    if (result.success) {
+                        var str = ''; //声明字符串
+                        var currentState = $('#DiscountWay').val();
+                        //var data = $.parseJSON(result.data);//转成Json对象
+                        $("#SelectDiscountWay option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                        $.each(result.data, function (i, obj) {
+                            str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                        });//遍历循环遍历
+                        $(str).appendTo("#SelectDiscountWay");//绑定
+                        $('#SelectDiscountWay').find("option[value=" + currentState + "]").attr("selected", true); //默认选择
+                        form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                    }
+                });
+            }); *@
+            $.ajax({
+                url: "/viptype/GetDiscountWays",
+                type: 'get',
+                success: function (result) {
+                    layui.use('form', function () {
+                        var form = layui.form;
+                        if (result.success) {
+                            var str = ''; //声明字符串
+                            var currentState = $('#DiscountWay').val();
+                            //var data = $.parseJSON(result.data);//转成Json对象
+                            $("#SelectDiscountWay option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                            $.each(result.data, function (i, obj) {
+                                str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                            });//遍历循环遍历
+                            $(str).appendTo("#SelectDiscountWay");//绑定
+                            $('#SelectDiscountWay').find("option[value=" + currentState + "]").attr("selected", true); //默认选择
+                            form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                        }
+                    });
+                }
+            })
+        };
+        function BindIsScore() {
+            @* $.get('GetYesOrNoStatus', function (result) {
+                layui.use('form', function () {
+                    var form = layui.form;
+                    if (result.success) {
+                        var str = ''; //声明字符串
+                        var currentState = $('#IsScore').val();
+                        //var data = $.parseJSON(result.data);//转成Json对象
+                        $("#SelectIsScore option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                        $.each(result.data, function (i, obj) {
+                            str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                        });//遍历循环遍历
+                        $(str).appendTo("#SelectIsScore");//绑定
+                        $('#SelectIsScore').find("option[value=" + currentState + "]").attr("selected", true); //默认选择
+                        form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                    }
+                });
+            }); *@
+            $.ajax({
+                url: "/viptype/GetYesOrNoStatus",
+                type: 'get',
+                success: function (result) {
+                    layui.use('form', function () {
+                        var form = layui.form;
+                        if (result.success) {
+                            var str = ''; //声明字符串
+                            var currentState = $('#IsScore').val();
+                            //var data = $.parseJSON(result.data);//转成Json对象
+                            $("#SelectIsScore option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                            $.each(result.data, function (i, obj) {
+                                str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                            });//遍历循环遍历
+                            $(str).appendTo("#SelectIsScore");//绑定
+                            $('#SelectIsScore').find("option[value=" + currentState + "]").attr("selected", true); //默认选择
+                            form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                        }
+                    });
+                }
+            })
+        };
+        function BindIsStore() {
+            @* $.get('GetYesOrNoStatus', function (result) {
+                layui.use('form', function () {
+                    var form = layui.form;
+                    if (result.success) {
+                        var str = ''; //声明字符串
+                        var currentState = $('#IsStore').val();
+                        //var data = $.parseJSON(result.data);//转成Json对象
+                        $("#SelectIsStore option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                        $.each(result.data, function (i, obj) {
+                            str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                        });//遍历循环遍历
+                        $(str).appendTo("#SelectIsStore");//绑定
+                        $('#SelectIsStore').find("option[value=" + currentState + "]").attr("selected", true); //默认选择
+                        form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                    }
+                });
+            }); *@
+            $.ajax({
+                url: "/viptype/GetYesOrNoStatus",
+                type: 'get',
+                success: function (result) {
+                    layui.use('form', function () {
+                        var form = layui.form;
+                        if (result.success) {
+                            var str = ''; //声明字符串
+                            var currentState = $('#IsStore').val();
+                            //var data = $.parseJSON(result.data);//转成Json对象
+                            $("#SelectIsStore option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                            $.each(result.data, function (i, obj) {
+                                str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                            });//遍历循环遍历
+                            $(str).appendTo("#SelectIsStore");//绑定
+                            $('#SelectIsStore').find("option[value=" + currentState + "]").attr("selected", true); //默认选择
+                            form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                        }
+                    });
+                }
+            })
+        };
+        
+    </script>
+
+</body>
+</html>
