@@ -47,10 +47,12 @@ namespace MiniShop.Backend.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            VipScoreSettingCreateDto model = new VipScoreSettingCreateDto
-            {
-                ShopId = _userInfo.ShopId,       
-            };
+            VipScoreSettingCreateDto model = await Task.FromResult(
+                new VipScoreSettingCreateDto
+                {
+                    ShopId = _userInfo.ShopId,       
+                }
+            );
             return View(model);
         }
 

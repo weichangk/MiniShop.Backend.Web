@@ -1,0 +1,156 @@
+﻿@model VipDto
+
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/component/pear/css/pear.css" />
+</head>
+<body>
+    <form class="layui-form" asp-controller="Vip" asp-action="Update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess" 
+    style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" id="VipTypeId" name="VipTypeId" value="@Model.VipTypeId" />
+        <input type="hidden" id="State" name="State" value="@Model.State" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">类别</label>
+            <div class="layui-input-block">
+                <input type="text" id="VipTypeName" name="VipTypeName" value="@Model.VipTypeName" readonly="true" lay-verify="required" autocomplete="off" placeholder="请选择会员类别" class="layui-input"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" id="name" name="Name" value="@Model.Name" lay-verify="required|NameCheck" autocomplete="off" placeholder="请输入姓名" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机</label>
+            <div class="layui-input-block">
+                <input type="text" name="Phone" value="@Model.Phone" lay-verify="NullablePhone" autocomplete="off" placeholder="请输入手机号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    <select id="SelectState" lay-filter="SelectState" lay-verify="required">
+                        <option value="">请选择一个状态</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <button id="submit" type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="" style="margin-left: 333px;">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+            <button type="reset" class="pear-btn pear-btn-sm">
+                <i class="layui-icon layui-icon-refresh"></i>
+                重置
+            </button>
+        </div>
+    </form>
+
+    <script src="~/component/layui/layui.js"></script>
+    <script src="~/component/pear/pear.js"></script>
+    <script src="~/js/verify.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+
+    <script>
+        layui.use(['form','jquery'],function(){
+            let form = layui.form;
+            let $ = layui.jquery;
+
+            form.verify({
+                NameCheck: function (value) {
+                    if (!StrLenRangeVerify(value, 2, 4))
+                        return '请输入正确的会员姓名！2到4位！'
+                },
+                NullablePhone: function (value) {
+                    if (!nullablePhoneCheck(value))
+                        return '请输入正确的手机号！';
+                },
+            });
+
+            BindStatus();
+            form.on('select(SelectState)', function(data){
+                $('#State').val(data.value);
+	        });
+
+            $('#VipTypeName').on("click", OpenVipTypeSelect);
+            window.GetSelectVipTypeData = function (data) { 
+                $('#VipTypeId').val(data.id);
+                $('#VipTypeName').val(data.name);
+            };
+        });
+
+        var onSuccess = function(result){
+            if(result.success)
+            {
+                layer.msg(result.msg,{icon:1,time:1000},function(){
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    parent.layui.table.reload("vip-table",{
+                        url: 'GetPageByShopId'
+                    });
+                });
+            }
+            else
+            {
+                let index = layer.open({
+                    type: 2,
+                    title: '',
+                    shade: 0.1,
+                    area: ['1280px', '760px'],
+                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                });
+                layer.full(index);
+            }
+        };
+
+        function BindStatus() {
+            $.ajax({
+                url: "/vip/GetVipStatus",
+                type: 'get',
+                success: function (result) {
+                    layui.use('form', function () {
+                        var form = layui.form;
+                        if (result.success) {
+                            var str = ''; //声明字符串
+                            var currentState = $('#State').val();
+                            //var data = $.parseJSON(result.data);//转成Json对象
+                            $("#SelectState option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                            $.each(result.data, function (i, obj) {
+                                str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                            });//遍历循环遍历
+                            $(str).appendTo("#SelectState");//绑定
+                            $('#SelectState').find("option[value=" + currentState + "]").attr("selected", true); //默认选择
+                            form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                        }
+                    });
+                }
+            })
+        };
+
+        function OpenVipTypeSelect(){
+            let index = layer.open({
+                type: 2,
+                title: '选择会员类别',
+                shade: 0.1,
+                area: ['1280px', '768px'],
+                content: '/vipType/select',
+                success : function () {            
+                },
+                cancel: function(){
+                }
+            });
+            layer.full(index)
+        };
+        
+    </script>
+
+</body>
+</html>
