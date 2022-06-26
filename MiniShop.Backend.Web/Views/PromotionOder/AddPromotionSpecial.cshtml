@@ -1,0 +1,507 @@
+﻿@model PromotionOderCreateDto
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>特价促销订单-新增</title>
+    <link rel="stylesheet" href="~/component/pear/css/pear.css" />
+</head>
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" id="Form">
+                <div class="layui-card">
+                    <input type="hidden" id="Id" name="Id" value="@Model.Id" />         
+                    <input type="hidden" id="ShopId" name="ShopId" value="@Model.ShopId" />   
+                    <input type="hidden" id="VipTypeId" name="VipTypeId" value="@Model.VipTypeId" />   
+                    <input type="hidden" id="SpecialOfferWay" name="SpecialOfferWay" value="@Model.SpecialOfferWay" />    
+                    <input type="hidden" id="SpecialOfferScope" name="SpecialOfferScope" value="@Model.SpecialOfferScope" />    
+                    <input type="hidden" id="OperatorName" name="OperatorName" value="@Model.OperatorName" />
+                    <input type="hidden" id="CreatedTime" name="CreatedTime" value="@Model.CreatedTime" />
+                    <input type="hidden" id="AuditState" name="AuditState" value="@Model.AuditState" />
+                    <div class="layui-form-item">
+                        <div class="layui-form-item layui-inline">
+                            <label class="layui-form-label">订单号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="OderNo" name="OderNo" value="@Model.OderNo" placeholder="" class="layui-input" readonly="true" lay-verify="required">
+                            </div>
+                        </div>	
+                        <div class="layui-form-item layui-inline">
+                            <label class="layui-form-label">促销名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="Name" name="Name" value="@Model.Name" placeholder="" class="layui-input" lay-verify="required|NameCheck">
+                            </div>
+                        </div>	
+                        <div class="layui-form-item layui-inline">
+                            <label class="layui-form-label">会员类别</label>
+                            <div class="layui-input-block">
+                                <select id="SelectVipType" lay-filter="SelectVipType">
+                                    <option value="">请选择一个会员类别</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-inline">
+                            <label class="layui-form-label">促销模式</label>
+                            <div class="layui-input-block">
+                                <select id="SelectPromotionSpecialWay" lay-filter="SelectPromotionSpecialWay"  lay-verify="required">
+                                    <option value="">请选择一个特价促销模式</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-inline">
+                            <label class="layui-form-label">开始时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="StartTime" name="StartTime" value="" lay-verify="required" placeholder="" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-inline">
+                            <label class="layui-form-label">结束时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="EndTime" name="EndTime" value="" lay-verify="required" autocomplete="off" placeholder="" class="layui-input">
+                            </div>
+                        </div>                    
+                        <div class="layui-form-item layui-inline">
+                            <label class="layui-form-label">促销范围</label>
+                            <div class="layui-input-block">
+                                <select id="SelectPromotionSpecialScope" lay-filter="SelectPromotionSpecialScope" lay-verify="required">
+                                    <option value="">请选择一个特价促销范围</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-inline">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="Remark" name="Remark" value="@Model.Remark" placeholder="" class="layui-input">
+                            </div>
+                        </div>			
+                        <div id="PromotionOderCreate"  class="layui-form-item layui-inline" style="margin-left: 60px;">
+                            <button id="createOderNoBtn" class="pear-btn pear-btn-md pear-btn-primary" type="button" lay-submit lay-filter="promotion-oder-create">
+                                <i class="layui-icon layui-icon-ok"></i>
+                                生成单号
+                            </button>
+                        </div>	
+                        <div id="PromotionOderAudit" class="layui-form-item layui-inline" style="margin-left: 60px; display:none">
+                            <button id="AuditOderNoBtn" class="pear-btn pear-btn-md pear-btn-primary" type="button" lay-submit lay-filter="promotion-oder-audit">
+                                <i class="layui-icon layui-icon-ok"></i>
+                                审核订单
+                            </button>
+                        </div>	
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="promotion-oder-items-table" lay-filter="promotion-oder-items-table"></table>
+        </div>
+    </div>
+
+    <script type="text/html" id="promotion-oder-items-toolbar">
+        <button class="pear-btn pear-btn-primary pear-btn-md" type="button" lay-event="add">
+            <i class="layui-icon layui-icon-add-1"></i>            
+            新增商品
+        </button>
+        <button class="pear-btn pear-btn-danger pear-btn-md" type="button" lay-event="batchRemove">
+            <i class="layui-icon layui-icon-delete"></i>
+            删除商品
+        </button>
+    </script>
+
+    <script type="text/html" id="promotion-oder-items-bar">
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
+        <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+    </script>
+
+
+    <script src="~/component/layui/layui.js"></script>
+    <script src="~/component/pear/pear.js"></script>
+    <script src="~/js/verify.js"></script>
+
+    <script>
+        layui.use(['table', 'form', 'jquery', 'common', 'laydate'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let common = layui.common;
+            let laydate = layui.laydate;
+
+            let PromotionOderSpecialItemcount = 0;
+
+            let cols = [
+                [{
+                    type: 'checkbox'
+                },
+                {
+                    title: 'ID',
+                    field: 'id',
+                    align: 'center',
+                    width: 100,
+                    hide: true
+                },
+                {
+                    title: '货号',
+                    field: 'itemCode',
+                    align: 'center'
+                },
+                {
+                    title: '品名',
+                    field: 'itemName',
+                    align: 'center'
+                },
+                {
+                    title: '单位',
+                    field: 'unitName',
+                    align: 'center'
+                },
+                {
+                    title: '售价',
+                    field: 'price',
+                    align: 'center'
+                },
+                {
+                    title: '特价',
+                    field: 'specialPrice',
+                    align: 'center'
+                },
+                {
+                    title: '操作',
+                    toolbar: '#promotion-oder-items-bar',
+                    align: 'center',
+                    width: 130
+                }
+                ]
+            ]
+
+            form.verify({
+                NameCheck: function (value) {
+                    if (!StrLenRangeVerify(value, 2, 24))
+                        return '请输入正确的促销名称！2到24位！'
+                },
+            });
+
+            laydate.render({
+                elem: '#StartTime',
+                type: 'datetime'
+            });
+            laydate.render({
+                elem: '#EndTime',
+                type: 'datetime'
+            });
+
+            table.render({
+                elem: '#promotion-oder-items-table',
+                url: '/PromotionOderSpecialItem/GetPageByShopIdPromotionOderId?promotionOderId=' + $('#Id').val(), 
+                page: true,//开启分页
+                totalRow: true,//开启合并行
+                cols: cols,
+                skin: 'line',
+                toolbar: '#promotion-oder-items-toolbar',
+                defaultToolbar: [{
+                    title: '刷新',
+                    layEvent: 'refresh',
+                    icon: 'layui-icon-refresh',
+                }, 'filter', 'print', 'exports'],
+                done: function(res, curr, count){
+                    PromotionOderSpecialItemcount = count;
+                }
+            });
+
+            table.on('tool(promotion-oder-items-table)', function (obj) {
+                if (obj.event === 'remove') {
+                    window.remove(obj);
+                } else if (obj.event === 'edit') {
+                    window.edit(obj);
+                }
+            });
+
+            table.on('toolbar(promotion-oder-items-table)', function (obj) {
+                if (obj.event === 'add') {
+                    window.add();
+                } else if (obj.event === 'refresh') {
+                    window.refresh();
+                } else if (obj.event === 'batchRemove') {
+                    window.batchRemove(obj);
+                }
+            });
+
+            form.on('submit(promotion-oder-create)', function(data){
+                $.ajax({
+                        url:'@Url.Action("AddPromotionSpecial","PromotionOder")', 
+                        type:"post",
+                        dataType:"json",
+                        data: data.field,
+                        success: function (result) {
+                            if(result.success)
+                            {
+                                $('#Id').val(result.data.id);//单号创建成功标志
+                                $('#PromotionOderCreate').css("display", "none"); 
+                                $('#PromotionOderAudit').css("display", "inline-block");  
+                                layer.msg(result.msg, { icon: 1, time: 1000 });
+                            }else {
+                                let index = layer.open({
+                                    type: 2,
+                                    title: '',
+                                    shade: 0.1,
+                                    area: ['1280px', '760px'],
+                                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                });
+                                layer.full(index);
+                            }
+                        }
+                    });
+            });
+
+            form.on('submit(promotion-oder-audit)', function(data){
+                if(PromotionOderSpecialItemcount == 0)
+                {
+                    layer.msg("请先生成新增商品再审核", {icon: 1, time: 1000 });
+                    return;
+                };
+                $.ajax({
+                        url:'@Url.Action("Update","PromotionOder")', 
+                        type:"post",
+                        dataType:"json",
+                        data: data.field,
+                        success: function (result) {
+                            if(result.success)
+                            {
+                                layer.msg(result.msg, { icon: 1, time: 1000 });
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            }else {
+                                let index = layer.open({
+                                    type: 2,
+                                    title: '',
+                                    shade: 0.1,
+                                    area: ['1280px', '760px'],
+                                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                });
+                                layer.full(index);
+                            }
+                        }
+                    });
+            });
+
+            window.add = function () {
+                if($('#Id').val() == "" || $('#Id').val() == "0")
+                {
+                    layer.msg("请先生成单号再新增商品", {icon: 1, time: 1000 });
+                    return;
+                };
+                let index = layer.open({
+                    type: 2,
+                    title: '新增商品',
+                    shade: 0.1,
+                    area: ['1280px', '768px'],
+                    content: '/PromotionOderSpecialItem/add',
+                    success: function(layero, index) {
+                        var body = layer.getChildFrame('body', index); //获取子页面的dom对象
+                        body.find("#submit").focus();  
+                        var iframe = window['layui-layer-iframe' + index];
+                        var data = {
+                            ShopId: $('#ShopId').val(),
+                            PromotionOderId: $('#Id').val(),
+                        };
+                        iframe.GetParentIframeData(data)
+                    },
+                    cancel: function(){
+                        window.refresh();
+                    },
+                    end: function(){ 
+                        window.refresh();
+                        window.updateOderAmount();
+                    }
+                });
+                layer.full(index);
+            };
+
+            window.edit = function (obj) {
+                let index = layer.open({
+                    type: 2,
+                    title: '修改订单商品',
+                    shade: 0.1,
+                    area: [common.isModile() ? '100%' : '1280px', common.isModile() ? '100%' : '760px'],
+                    content: '/PromotionOderSpecialItem/update?id=' + obj.data['id'],
+                    success : function () {       
+                        var body = layer.getChildFrame('body', index);
+                        body.find("#submit").focus();                                                       
+                    },
+                    cancel: function(){
+                        window.refresh();
+                    },
+                    end: function(){ 
+                        window.refresh();
+                        window.updateOderAmount();
+                    }
+                    
+                });
+                layer.full(index);
+            };
+
+            window.remove = function (obj) {
+                layer.confirm('确定要删除该订单商品', {
+                    icon: 3,
+                    title: '提示'
+                }, function (index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: "/PromotionOderSpecialItem/delete?id=" + obj.data['id'],
+                        dataType: 'json',
+                        type: 'delete',
+                        success: function (result) {
+                            layer.close(loading);
+                            if (result.success) {
+                                layer.msg(result.msg, {
+                                    icon: 1,
+                                    time: 1000
+                                }, function () {
+                                    table.reload('promotion-oder-items-table');
+                                    window.updateOderAmount();
+                                });
+                            } else {
+                                let index = layer.open({
+                                    type: 2,
+                                    title: '',
+                                    shade: 0.1,
+                                    area: ['1280px', '760px'],
+                                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                });
+                                layer.full(index);
+                            }
+                        }
+                    })
+                });
+            };
+
+            window.batchRemove = function (obj) {
+
+                var checkIds = common.checkField(obj, 'id');
+
+                if (checkIds === "") {
+                    layer.msg("未选中数据", {
+                        icon: 3,
+                        time: 1000
+                    });
+                    return false;
+                }
+
+                layer.confirm('确定要删除这些特价促销订单商品', {
+                    icon: 3,
+                    title: '提示'
+                }, function (index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: "/PromotionOderSpecialItem/batchDelete?ids=" + checkIds,
+                        dataType: 'json',
+                        type: 'delete',
+                        success: function (result) {
+                            layer.close(loading);
+                            if (result.success) {
+                                layer.msg(result.msg, {
+                                    icon: 1,
+                                    time: 1000
+                                }, function () {
+                                        table.reload('promotion-oder-items-table');
+                                        window.updateOderAmount();
+                                });
+                            } else {
+                                let index = layer.open({
+                                    type: 2,
+                                    title: '',
+                                    shade: 0.1,
+                                    area: ['1280px', '760px'],
+                                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                                });
+                                layer.full(index);
+                            }
+                        }
+                    })
+                });
+            };
+
+            window.refresh = function (param) {
+                table.reload('promotion-oder-items-table',{
+                    url: '/PromotionOderSpecialItem/GetPageByShopIdPromotionOderId?promotionOderId=' + $('#Id').val(), 
+                });
+            };
+
+            BindVipTypes($);
+            form.on('select(SelectVipType)', function (data) {
+                $('#VipTypeId').val(data.value);
+            });
+
+            BindPromotionSpecialWays($);
+            form.on('select(SelectPromotionSpecialWay)', function(data){
+                $('#SpecialOfferWay').val(data.value);
+	        });
+
+            BindPromotionSpecialScopes($);
+            form.on('select(SelectPromotionSpecialScope)', function(data){
+                $('#SpecialOfferScope').val(data.value);
+	        });
+
+        });
+            
+        function BindVipTypes($) {
+            $.get('GetVipTypesByCurrentShop', function (result) {
+                layui.use('form', function () {
+                    var form = layui.form;
+                    if (result.success) {
+                        var str = '';
+                        var currentVipTypeId = $('#VipTypeId').val();//当前门店ID
+                        $("#SelectVipType option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                        $.each(result.data, function (i, obj) {
+                            str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                        });//遍历循环遍历
+                        $(str).appendTo("#SelectVipType");//绑定
+                        $('#SelectVipType').find("option[value=" + currentVipTypeId + "]").attr("selected", true); //默认选择
+                        form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                    }
+                });
+            });
+        };
+
+        function BindPromotionSpecialWays($) {
+            $.get('GetPromotionSpecialWays', function (result) {
+                layui.use('form', function () {
+                    var form = layui.form;
+                    if (result.success) {
+                        var str = ''; //声明字符串
+                        var currentState = $('#SpecialOfferWay').val();
+                        $("#SelectPromotionSpecialWay option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                        $.each(result.data, function (i, obj) {
+                            str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                        });//遍历循环遍历
+                        $(str).appendTo("#SelectPromotionSpecialWay");//绑定
+                        $('#SelectPromotionSpecialWay').find("option[value=" + currentState + "]").attr("selected", true); //默认选择
+                        form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                    }
+                });
+            });
+        };  
+
+        function BindPromotionSpecialScopes($) {
+            $.get('GetPromotionSpecialScopes', function (result) {
+                layui.use('form', function () {
+                    var form = layui.form;
+                    if (result.success) {
+                        var str = ''; //声明字符串
+                        var currentState = $('#SpecialOfferScope').val();
+                        $("#SelectPromotionSpecialScope option:gt(0)").remove();//重新加载前，移除第一个以外的option
+                        $.each(result.data, function (i, obj) {
+                            str += '<option value="' + obj.opValue + '">' + obj.opName + '</option>';
+                        });//遍历循环遍历
+                        $(str).appendTo("#SelectPromotionSpecialScope");//绑定
+                        $('#SelectPromotionSpecialScope').find("option[value=" + currentState + "]").attr("selected", true); //默认选择
+                        form.render("select");//注意：最后必须重新渲染下拉框，否则没有任何效果。
+                    }
+                });
+            });
+        };      
+    </script>
+
+</body>
+</html>

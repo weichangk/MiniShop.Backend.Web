@@ -23,7 +23,10 @@ namespace MiniShop.Backend.Web.HttpApis
 
         [HttpGet("/api/VipType/GetMaxCodeByShopIdAsync")]
         ITask<ResultModel<int>> GetMaxCodeByShopIdAsync(Guid shopId);
-        
+
+        [HttpGet("/api/VipType/GetByShopIdAsync")]
+        ITask<ResultModel<List<VipTypeDto>>> GetByShopIdAsync(Guid shopId);
+
         [HttpGet("/api/VipType/GetPageByShopIdAsync")]
         ITask<ResultModel<PagedList<VipTypeDto>>> GetPageByShopIdAsync(int pageIndex, int pageSize, Guid shopId);
 

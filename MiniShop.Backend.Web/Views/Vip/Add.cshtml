@@ -15,6 +15,7 @@
         <input type="hidden" asp-for="ShopId"/>
         <input type="hidden" id="VipTypeId" name="VipTypeId" value="@Model.VipTypeId" />
         <input type="hidden" id="Sex" name="Sex" value="@Model.Sex" />
+        <input type="hidden" id="ValidDate" name="ValidDate" value="@Model.ValidDate" />
         <div class="layui-form-item">
             <label class="layui-form-label">类别</label>
             <div class="layui-input-block">
@@ -55,7 +56,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">生日</label>
                 <div class="layui-input-block">
-                    <input type="text" id="Birthday" name="Birthday" value="@Model.Birthday" lay-verify="required" autocomplete="off" placeholder="" class="layui-input">
+                    <input type="text" id="Birthday" name="Birthday" value="" lay-verify="required" autocomplete="off" placeholder="" class="layui-input">
                 </div>
             </div>
         </div>
