@@ -49,6 +49,12 @@ namespace MiniShop.Backend.Web.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Console()
+        {
+            return View();
+        }
+
         public async Task Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
