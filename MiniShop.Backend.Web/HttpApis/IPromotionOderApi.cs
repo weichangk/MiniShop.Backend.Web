@@ -37,7 +37,7 @@ namespace MiniShop.Backend.Web.HttpApis
         [HttpPost("/api/PromotionOder/InsertAsync")]
         ITask<ResultModel<PromotionOderCreateDto>> InsertAsync([JsonContent] PromotionOderCreateDto model);
 
-        [HttpPut("/api/PromotionOder/AuditAsync")]
-        ITask<ResultModel<PromotionOderAuditDto>> AuditAsync([JsonContent] PromotionOderAuditDto model);
+        [HttpPut("/api/PromotionOder/UpdateAsync")]
+        ITask<ResultModel<PromotionOderUpdateDto>> UpdateAsync([JsonContent] PromotionOderUpdateDto model);
     }
 }

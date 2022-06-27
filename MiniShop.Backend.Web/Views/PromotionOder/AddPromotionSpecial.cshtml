@@ -14,6 +14,7 @@
                     <input type="hidden" id="Id" name="Id" value="@Model.Id" />         
                     <input type="hidden" id="ShopId" name="ShopId" value="@Model.ShopId" />   
                     <input type="hidden" id="VipTypeId" name="VipTypeId" value="@Model.VipTypeId" />   
+                    <input type="hidden" id="PromotionType" name="PromotionType" value="@Model.PromotionType" />   
                     <input type="hidden" id="SpecialOfferWay" name="SpecialOfferWay" value="@Model.SpecialOfferWay" />    
                     <input type="hidden" id="SpecialOfferScope" name="SpecialOfferScope" value="@Model.SpecialOfferScope" />    
                     <input type="hidden" id="OperatorName" name="OperatorName" value="@Model.OperatorName" />
@@ -23,7 +24,7 @@
                         <div class="layui-form-item layui-inline">
                             <label class="layui-form-label">订单号</label>
                             <div class="layui-input-inline">
-                                <input type="text" id="OderNo" name="OderNo" value="@Model.OderNo" placeholder="" class="layui-input" readonly="true" lay-verify="required">
+                                <input type="text" id="OderNo" name="OderNo" value="@Model.OderNo" readonly="readonly" placeholder="" class="layui-input" readonly="true" lay-verify="required">
                             </div>
                         </div>	
                         <div class="layui-form-item layui-inline">
@@ -35,7 +36,7 @@
                         <div class="layui-form-item layui-inline">
                             <label class="layui-form-label">会员类别</label>
                             <div class="layui-input-block">
-                                <select id="SelectVipType" lay-filter="SelectVipType">
+                                <select id="SelectVipType" lay-filter="SelectVipType" lay-verify="required">
                                     <option value="">请选择一个会员类别</option>
                                 </select>
                             </div>
@@ -256,11 +257,11 @@
             form.on('submit(promotion-oder-audit)', function(data){
                 if(PromotionOderSpecialItemcount == 0)
                 {
-                    layer.msg("请先生成新增商品再审核", {icon: 1, time: 1000 });
+                    layer.msg("请先新增商品再审核", {icon: 1, time: 1000 });
                     return;
                 };
                 $.ajax({
-                        url:'@Url.Action("Update","PromotionOder")', 
+                        url:'@Url.Action("UpdatePromotionSpecial","PromotionOder")', 
                         type:"post",
                         dataType:"json",
                         data: data.field,
@@ -310,7 +311,6 @@
                     },
                     end: function(){ 
                         window.refresh();
-                        window.updateOderAmount();
                     }
                 });
                 layer.full(index);
@@ -332,7 +332,6 @@
                     },
                     end: function(){ 
                         window.refresh();
-                        window.updateOderAmount();
                     }
                     
                 });
@@ -358,7 +357,6 @@
                                     time: 1000
                                 }, function () {
                                     table.reload('promotion-oder-items-table');
-                                    window.updateOderAmount();
                                 });
                             } else {
                                 let index = layer.open({
@@ -405,7 +403,6 @@
                                     time: 1000
                                 }, function () {
                                         table.reload('promotion-oder-items-table');
-                                        window.updateOderAmount();
                                 });
                             } else {
                                 let index = layer.open({

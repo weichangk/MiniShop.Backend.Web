@@ -84,6 +84,34 @@ namespace MiniShop.Backend.Web.Controllers
             return Json(new Result() { Success = true, Data = statusSelect });
         }
 
+        [HttpGet]
+        public IActionResult GetPromotionDiscountWays()
+        {
+            List<dynamic> statusSelect = new List<dynamic>();
+            var dic = EnumExtensions.ToNameAndDesDictionary<EnumPromotionDiscountWay>();
+            foreach (var item in dic)
+            {
+                var op = new { opValue = item.Key, opName = item.Value };
+                statusSelect.Add(op);
+            }
+
+            return Json(new Result() { Success = true, Data = statusSelect });
+        }
+
+        [HttpGet]
+        public IActionResult GetPromotionDiscountScopes()
+        {
+            List<dynamic> statusSelect = new List<dynamic>();
+            var dic = EnumExtensions.ToNameAndDesDictionary<EnumPromotionDiscountScope>();
+            foreach (var item in dic)
+            {
+                var op = new { opValue = item.Key, opName = item.Value };
+                statusSelect.Add(op);
+            }
+
+            return Json(new Result() { Success = true, Data = statusSelect });
+        }
+        
         private async Task<string> GetAutoOderNo()
         {
             byte[] buffer = _userInfo.ShopId.ToByteArray();
@@ -106,6 +134,7 @@ namespace MiniShop.Backend.Web.Controllers
                 new PromotionOderCreateDto
                 {
                     ShopId = _userInfo.ShopId,
+                    PromotionType = EnumPromotionType.SpecialOffer,
                     OderNo = await GetAutoOderNo(),
                     OperatorName = _userInfo.UserName,
                 }
@@ -127,7 +156,9 @@ namespace MiniShop.Backend.Web.Controllers
                 new PromotionOderCreateDto
                 {
                     ShopId = _userInfo.ShopId,
-                    OderNo = Guid.NewGuid().ToString(),//生成唯一单号
+                    PromotionType = EnumPromotionType.Discount,
+                    OderNo = await GetAutoOderNo(),
+                    OperatorName = _userInfo.UserName,
                 }
             );
             return View(model);
@@ -140,7 +171,7 @@ namespace MiniShop.Backend.Web.Controllers
             return Json(new Result() { Success = result.Success, Data = result.Data, Msg = result.Msg, Status = result.Status });
         }
 
-        public async Task<IActionResult> UpdateSpecialAsync(int id)
+        public async Task<IActionResult> UpdatePromotionSpecialAsync(int id)
         {
             var result = await ExecuteApiResultModelAsync(() => { return _promotionOderApi.GetByIdAsync(id); });
             if (result.Success)
@@ -150,7 +181,7 @@ namespace MiniShop.Backend.Web.Controllers
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         }
 
-        public async Task<IActionResult> UpdateDiscountAsync(int id)
+        public async Task<IActionResult> UpdatePromotionDiscountAsync(int id)
         {
             var result = await ExecuteApiResultModelAsync(() => { return _promotionOderApi.GetByIdAsync(id); });
             if (result.Success)
@@ -161,13 +192,24 @@ namespace MiniShop.Backend.Web.Controllers
         }  
 
         [HttpPost]
-        public async Task<IActionResult> AuditAsync(PromotionOderDto model)
+        public async Task<IActionResult> UpdatePromotionSpecialAsync(PromotionOderDto model)
         {
-            var dto = _mapper.Map<PromotionOderAuditDto>(model);
+            var dto = _mapper.Map<PromotionOderUpdateDto>(model);
             dto.AuditOperatorName = _userInfo.UserName;
             dto.AuditTime = DateTime.Now;
             dto.AuditState = EnumAuditStatus.Audited;
-            var result = await ExecuteApiResultModelAsync(() => { return _promotionOderApi.AuditAsync(dto); });
+            var result = await ExecuteApiResultModelAsync(() => { return _promotionOderApi.UpdateAsync(dto); });
+            return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
+        } 
+
+        [HttpPost]
+        public async Task<IActionResult> UpdatePromotionDiscountAsync(PromotionOderDto model)
+        {
+            var dto = _mapper.Map<PromotionOderUpdateDto>(model);
+            dto.AuditOperatorName = _userInfo.UserName;
+            dto.AuditTime = DateTime.Now;
+            dto.AuditState = EnumAuditStatus.Audited;
+            var result = await ExecuteApiResultModelAsync(() => { return _promotionOderApi.UpdateAsync(dto); });
             return Json(new Result() { Success = result.Success, Msg = result.Msg, Status = result.Status });
         } 
 

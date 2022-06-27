@@ -1,0 +1,121 @@
+﻿@model PromotionDiscountItemDto
+
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/component/pear/css/pear.css" />
+</head>
+
+<body>
+    <form class="layui-form" asp-controller="PromotionOderDiscountItem" asp-action="update" data-ajax="true" data-ajax-method="post" data-ajax-success="onSuccess" 
+        style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+        <input type="hidden" id="Id" name="Id" asp-for="Id"/>
+        <input type="hidden" id="ShopId" name="ShopId" asp-for="ShopId"/>
+        <input type="hidden" id="ItemId" name="ItemId" asp-for="ItemId"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: auto">品名</label>
+            <div class="layui-input-block">
+                <input type="text" id="ItemName" name="ItemName" value="@Model.ItemName" readonly="readonly" lay-verify="required" autocomplete="off" placeholder="" class="layui-input" lay-click lay-filter="ClickItemName">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: auto">货号</label>
+            <div class="layui-input-block">
+                <input type="text" id="ItemCode" name="ItemCode" value="@Model.ItemCode" readonly="readonly" lay-verify="required" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: auto">单位</label>
+            <div class="layui-input-block">
+                <input type="text" id="UnitName" name="UnitName" value="@Model.UnitName" readonly="readonly" lay-verify="required" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: auto">售价</label>
+            <div class="layui-input-block">
+                <input type="number" step="0.01" id="Price" name="Price" value="@Model.Price" readonly="readonly" lay-verify="" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button id="submit" type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit="" lay-filter="" style="margin-left: 333px;">
+                <i class="layui-icon layui-icon-ok"></i>
+                提交
+            </button>
+            <button type="reset" class="pear-btn pear-btn-sm">
+                <i class="layui-icon layui-icon-refresh"></i>
+                重置
+            </button>
+        </div>
+    </form>
+
+    <script src="~/component/layui/layui.js"></script>
+    <script src="~/component/pear/pear.js"></script>
+    <script src="~/js/verify.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script>
+        layui.use(['table', 'form',], function () {
+            let table = layui.table;
+            let form = layui.form;
+
+            form.verify({
+            });
+
+            // 打开商品选择
+            $('#ItemName').on("click", itemName_input_click_handler);
+            // 获取选择商品信息
+            window.GetSelectItemData = function (data) { 
+                $('#ItemId').val(data.id);
+                $('#ItemCode').val(data.code);
+                $('#ItemName').val(data.name);
+                $('#UnitName').val(data.unitName);
+                $('#Price').val(data.price);
+            };
+
+        });
+
+        var onSuccess = function (result) {
+            if (result.success) 
+            {
+                layer.msg(result.msg, { icon: 1, time: 1000 }, function () {
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                });
+            } 
+            else
+            {
+                let index = layer.open({
+                    type: 2,
+                    title: '',
+                    shade: 0.1,
+                    area: ['1280px', '760px'],
+                    content: '/Error/Error?statusCode=' + result.status + '&errorMsg=' + result.msg,
+                });
+                layer.full(index);
+            }
+        };
+
+        // 打开商品选择窗体
+        function itemName_input_click_handler(){
+            let index = layer.open({
+                type: 2,
+                title: '选择商品',
+                shade: 0.1,
+                area: ['1280px', '768px'],
+                content: '/item/selectitem',
+                success : function () {            
+                },
+                cancel: function(){
+                }
+            });
+            layer.full(index)
+        };
+
+    </script>
+
+</body>
+</html>
+
