@@ -9,7 +9,7 @@
     <PackageReference Include="WebApiClientCore" Version="2.0.2"/>
     <PackageReference Include="Weick.CommonTools.Core" Version="1.0.2"/>
     <PackageReference Include="MiniShop.Platform.Model" Version="1.0.3"/>
-    <PackageReference Include="MiniShop.Backend.Model" Version="1.0.1"/>
+    <PackageReference Include="MiniShop.Backend.Model" Version="1.0.5"/>
   </ItemGroup>
   <!-- <ItemGroup>
     <ProjectReference Include="..\..\MiniShop.Platform.Model\MiniShop.Platform.Model\MiniShop.Platform.Model.csproj"/>
